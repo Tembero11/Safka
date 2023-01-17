@@ -1,5 +1,6 @@
-import { DayMenu, Menus, WeekMenu } from "../types";
-import { Db, MongoClient } from 'mongodb';
+import { WeekMenu } from "../types";
+import { Collection, Db, MongoClient, ObjectId } from 'mongodb';
+import { DatabaseMenu, DatabaseWeek } from "./dbTypes";
 
 interface DatabaseOptions {
     dbUrl: string
@@ -19,9 +20,7 @@ export class Database {
     
     async newClient() {
         // Don't do a new client if we already have a client
-        if (this.client !== undefined) {
-            return
-        }
+        if (this.client !== undefined) return
 
         console.log(`\nAttempting connection to "${this.dbUrl}"...\nProgram will exit if connection does not succeed\n`)
         try {
@@ -49,21 +48,14 @@ export class Database {
     get client() {
         return this._client;
     }
-   
+    
 }
 
 ///////////////////////////////////////////////////////////
 
-interface Query {
-    foodName?: string
-    weekNumber?: number
-    date?: Date
-}
-
 export class Archiver extends Database {
     weekMenu?: WeekMenu;
-    dayMenu?: DayMenu;
-    _db?: Db = undefined
+    _db?: Db = undefined;
 
     constructor(options: DatabaseOptions, db: Db) {
         super(options);
@@ -71,22 +63,67 @@ export class Archiver extends Database {
         
     }
 
+    // Converts a WeekMenu to be suited for saving to a database
+    private convertMenu(): DatabaseMenu[] | Error {
+        let daysMenus: DatabaseMenu[] = [];
+        console.log(this.weekMenu);
+        if (this.weekMenu !== undefined) {
+            this.weekMenu.days.forEach((dayMenu) => {
+                // New object with date data for the week
+                const weekData: DatabaseWeek = { weekNumber: (this.weekMenu as WeekMenu).weekNumber, year: new Date().getUTCFullYear() };
+
+                // Construct full object which is then...
+                const full = { _id: new ObjectId(), version: 0, hash: dayMenu.hash, week: weekData, date: dayMenu.date, dayId: dayMenu.dayId, foods: dayMenu.menu };
+                // pushed into the array
+                daysMenus.push(full);
+            });
+        }
+        return daysMenus.length !== 0 ? daysMenus : new Error("Archiver is never given a weekMenu.");
+    }
+
     async saveMenus() {
         if (this._db !== undefined) {
-            const collection = this._db.collection("foods");
-            const menus: Menus = { weekMenu: this.weekMenu as WeekMenu, dayMenu: this.dayMenu as DayMenu }
+            // Menu conversation
+            const convertedMenu = this.convertMenu();
+            if (convertedMenu instanceof Error) {
+                console.error("Menu cannot be saved to database, no non-undefined menu was given to Archiver.");
+                return
+            }
 
-            await collection.insertOne(menus);
-            this.retrieveEntry({foodName: "Riisip", weekNumber: this.weekMenu?.weekNumber})
+            const collection: Collection = this._db.collection("foods");
+
+            for (let i = 0; i < 6+1; i++) {
+                const isEntrySaved: boolean = await collection.findOne({ hash: convertedMenu[i].hash }) !== null
+                const isDuplicate: boolean = await collection.findOne({ date: convertedMenu[i].date }) !== null
+                const isWeekend: boolean = convertedMenu[i].hash === null 
+
+                // Version updating; We want our frontend to take the most recent aka the least "problematic" version of the foods data.
+                // Sometimes they are updated during days because of typos or some other reason. This system basically tries to get around those typos and always
+                // give users the best service possible.
+                const oldVer = await collection.findOne({ date: convertedMenu[i].date, hash: !convertedMenu[i].hash });
+                // In case a match was found, just update the version to be itself + 1
+                oldVer !== null ? await collection.updateOne({ date: convertedMenu[i].date}, { $set: { version: oldVer.version + 1}}) : null
+
+                // Workdays
+                if (!isEntrySaved && !isDuplicate && !isWeekend) {
+                    await collection.insertOne(convertedMenu[i]);
+                // Weekends
+                } else if (isWeekend && !isDuplicate) {
+                    await collection.insertOne(convertedMenu[i]);
+                } else {
+                    console.log("on jo");
+                }
+            }
+
         }
     }
 
-    async retrieveEntry(query: Query ) {
-        if (this._db !== undefined) {
-            const xd: unknown = await this._db.collection("foods").findOne({"dayMenu.menu": {$elemMatch: {"name": "Lohimurekepihvit"}}})
+    // async retrieveEntry(query: Query ) {
+    //     if (this._db !== undefined) {
+    //         const xd: unknown = await this._db.collection("foods").findOne({"dayMenu.menu": {$elemMatch: {"name": "Lohimurekepihvit"}}})
 
-            if (query.weekNumber) console.log(query.weekNumber)
-            if (query.date) console.log(query.date)
-        }
-    }
+    //         if (query.weekNumber) console.log(query.weekNumber)
+    //         if (query.date) console.log(query.date)
+    //     }
+    // }
 }

@@ -46,7 +46,6 @@ export let currentMenu: WeekMenu;
         if (!DISABLE_DB && archiver) {
             // foodArchive menus                                                   
             archiver.weekMenu = currentMenu;
-            archiver.dayMenu = currentMenu.days[getCurrentDayIndex()];
             // Add current menu to MongoDb                                         
             archiver.saveMenus();
         }

@@ -1,7 +1,8 @@
 import { WeekMenu } from "./types";
 import MenuPoller from "./webScrape/MenuPoller";
 import dotenv from "dotenv";
-import { Archiver, Database } from "./database/db";
+import { Database } from "./database/db";
+import { Archiver } from "./database/archiver";
 import assert from "assert";
 import { startServer } from "./api/startServer";
 

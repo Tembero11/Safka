@@ -1,6 +1,11 @@
 import { ObjectId } from "mongodb";
 import { Food, Weekday } from "../types";
 
+export interface DatabaseOptions {
+    dbUrl: string
+    dbName: string
+}
+
 export interface DatabaseWeek {
     weekNumber: number;
     year: number;

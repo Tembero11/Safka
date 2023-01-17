@@ -15,7 +15,16 @@
   --ui-today-box-glow: #ff353548;
   --ui-header-color: #262c30;
   --ui-footer-color: #ff3535;
+
+  --ui-page-background: white;
+  --ui-page-text-color: black;
 }
+
+body {
+  background: var(--ui-page-background);
+  color: var(--ui-page-text-color);
+}
+
 ::-moz-selection {
   color: var(--ui-text-selection-color);
   background: var(--ui-text-selection-bg);
@@ -26,10 +35,6 @@
   background: var(--ui-text-selection-bg);
 }
 @media (prefers-color-scheme: dark) {
-  body {
-    background: #1b1619;
-    color: white;
-  }
   :root {
     --ui-day-box-color: #1b1619;
     --ui-text-not-important: #f4f4f4;
@@ -37,6 +42,8 @@
     --ui-header-color: #ffffff;
     --ui-footer-color: #481515;
     --ui-text-regular-color: white;
+    --ui-page-background: #1b1619;
+    --ui-page-text-color: white;
   }
 }
 

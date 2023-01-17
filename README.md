@@ -13,7 +13,7 @@ This is a monorepo for the [Safka Online](https://safka.online/) project which a
 | [nginx-service](https://github.com/Tembero11/Safka/tree/main/nginx-service) | Reverse-Proxy Configured For Docker |
 | [app](https://github.com/Tembero11/Safka/tree/main/app) | Flutter Mobile App |
 
-# Running and stopping containers
+### Running and stopping containers
 
 An extremely small script was made to reduce some typing while stopping and starting containers.
 Usage is dead-simple: `./mgr <run|stop> [dev]`

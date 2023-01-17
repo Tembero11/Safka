@@ -1,5 +1,5 @@
 import { WeekMenu } from "../types";
-import { Collection, Db, MongoClient, ObjectId } from 'mongodb';
+import { Collection, Db, MongoClient, ObjectId } from "mongodb";
 import { DatabaseMenu, DatabaseWeek } from "./dbTypes";
 
 interface DatabaseOptions {
@@ -20,9 +20,9 @@ export class Database {
     
     async newClient() {
         // Don't do a new client if we already have a client
-        if (this.client !== undefined) return
+        if (this.client !== undefined) return;
 
-        console.log(`\nAttempting connection to "${this.dbUrl}"...\nProgram will exit if connection does not succeed\n`)
+        console.log(`\nAttempting connection to "${this.dbUrl}"...\nProgram will exit if connection does not succeed\n`);
         try {
             // Creating a client
             const client = await MongoClient.connect(this.dbUrl);
@@ -59,14 +59,13 @@ export class Archiver extends Database {
 
     constructor(options: DatabaseOptions, db: Db) {
         super(options);
-        this._db = db
+        this._db = db;
         
     }
 
     // Converts a WeekMenu to be suited for saving to a database
     private convertMenu(): DatabaseMenu[] | Error {
-        let daysMenus: DatabaseMenu[] = [];
-        console.log(this.weekMenu);
+        const daysMenus: DatabaseMenu[] = [];
         if (this.weekMenu !== undefined) {
             this.weekMenu.days.forEach((dayMenu) => {
                 // New object with date data for the week
@@ -87,22 +86,22 @@ export class Archiver extends Database {
             const convertedMenu = this.convertMenu();
             if (convertedMenu instanceof Error) {
                 console.error("Menu cannot be saved to database, no non-undefined menu was given to Archiver.");
-                return
+                return;
             }
 
             const collection: Collection = this._db.collection("foods");
 
             for (let i = 0; i < 6+1; i++) {
-                const isEntrySaved: boolean = await collection.findOne({ hash: convertedMenu[i].hash }) !== null
-                const isDuplicate: boolean = await collection.findOne({ date: convertedMenu[i].date }) !== null
-                const isWeekend: boolean = convertedMenu[i].hash === null 
+                const isEntrySaved: boolean = await collection.findOne({ hash: convertedMenu[i].hash }) !== null;
+                const isDuplicate: boolean = await collection.findOne({ date: convertedMenu[i].date }) !== null;
+                const isWeekend: boolean = convertedMenu[i].hash === null;
 
                 // Version updating; We want our frontend to take the most recent aka the least "problematic" version of the foods data.
                 // Sometimes they are updated during days because of typos or some other reason. This system basically tries to get around those typos and always
                 // give users the best service possible.
                 const oldVer = await collection.findOne({ date: convertedMenu[i].date, hash: !convertedMenu[i].hash });
                 // In case a match was found, just update the version to be itself + 1
-                oldVer !== null ? await collection.updateOne({ date: convertedMenu[i].date}, { $set: { version: oldVer.version + 1}}) : null
+                oldVer !== null ? await collection.updateOne({ date: convertedMenu[i].date}, { $set: { version: oldVer.version + 1}}) : null;
 
                 // Workdays
                 if (!isEntrySaved && !isDuplicate && !isWeekend) {
@@ -110,8 +109,6 @@ export class Archiver extends Database {
                 // Weekends
                 } else if (isWeekend && !isDuplicate) {
                     await collection.insertOne(convertedMenu[i]);
-                } else {
-                    console.log("on jo");
                 }
             }
 

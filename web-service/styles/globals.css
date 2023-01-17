@@ -51,16 +51,6 @@ body {
   height: 100vh;
 }
 
-.content {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  margin-top: 40px;
-  margin-bottom: 40px;
-}
-
 #shortDesc {
   margin-left: 20px;
   margin-top: 0;

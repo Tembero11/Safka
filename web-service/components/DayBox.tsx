@@ -27,18 +27,17 @@ export default function DayBox(props: IProps) {
       <div className={styles.break}></div>
       <div className={styles.box}>
         <p className={styles.date}>{date}</p>
-        <ul style={{ listStyleType: "none", padding: 0 }}>
+        <ul className={styles.menuList}>
           {
             props.menu?.menu.map(food => {
               return (
                 <Fragment key={food.name}>
-                  <li>
+                  <li className={styles.menuListItem}>
                     {food.name}
                     {food.isLactoseFree ? <Diet longName="Laktoositon">L</Diet> : <></>}
                     {food.isDairyFree ? <Diet longName="Maidoton">M</Diet> : <></>}
                     {food.isGlutenFree ? <Diet longName="Gluteeniton">G</Diet> : <></>}
                   </li>
-                  <br />
                 </Fragment>
               )
             })

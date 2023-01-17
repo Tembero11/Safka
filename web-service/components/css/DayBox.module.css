@@ -4,8 +4,8 @@
   justify-content: center;
   align-items: center;
   gap: 15px;
-  width: 250px;
-  height: 400px;
+  width: 300px;
+  height: 450px;
 }
 
 .today > .box {
@@ -45,6 +45,21 @@
 .date {
   color: var(--ui-text-not-important);
   font-weight: 500;
+}
+
+.menuList {
+  display: flex;
+  /* justify-content: center; */
+  flex-direction: column;
+  gap: 1em;
+  /* text-align: center; */
+  width: calc(100% - 20px);
+  list-style-type: none;
+  padding: 0;
+}
+
+.menuListItem {
+  overflow-wrap: normal;
 }
 
 .diet {

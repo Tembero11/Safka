@@ -12,7 +12,7 @@ export default function Layout(props: { children: React.ReactNode }) {
         <Link href="/" className={styles.logoLink}><h1 className={styles.logo}>Safka.<br />Online</h1></Link>
         {/* <button onClick={() => router.push("/settings", undefined, { shallow: true })} className={styles.settingsBtn + " material-symbols-outlined"}>settings</button> */}
       </div>
-      <div>
+      <div className={styles.content}>
         { props.children }
       </div>
       <Footer/>

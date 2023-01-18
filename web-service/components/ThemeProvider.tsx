@@ -1,15 +1,17 @@
-import { useEffect, useState } from "react"
-import { Theme, UIThemeProperties, UserPreferences } from "../common/UserPreferences";
+import { Theme, UIThemeProperties } from "../common/UserPreferences";
 
 const darkTheme: Partial<UIThemeProperties> = {
     "--ui-day-box-color": "#1b1619",
     "--ui-text-not-important": "#f4f4f4",
     "--ui-divider-color": "#484848",
     "--ui-header-color": "#ffffff",
-    "--ui-footer-color": "#481515",
+    "--ui-footer-color": "transparent",
+    "--ui-footer-second-color": "#481515",
     "--ui-text-regular-color": "white",
     "--ui-page-background": "#1b1619",
     "--ui-page-text-color": "white",
+    "--ui-slight-highlight": "#292929",
+    "--ui-slight-highlight-hover": "#353535"
 }
 const lightTheme: Partial<UIThemeProperties> = {
     "--ui-text-not-important": "#8f8f8f",
@@ -22,29 +24,22 @@ const lightTheme: Partial<UIThemeProperties> = {
     "--ui-today-box-glow": "#ff353548",
     "--ui-header-color": "#262c30",
     "--ui-footer-color": "#ff3535",
+    "--ui-footer-second-color": "#ff3535",
     "--ui-page-background": "white",
     "--ui-page-text-color": "black",
+    "--ui-slight-highlight": "#ededed",
+    "--ui-slight-highlight-hover": "#dbdbdb"
 }
 
-export default function ThemeProvider() {
-    const [theme, setTheme] = useState(Theme.Default);
-
-    useEffect(() => {
-        if (typeof window != "undefined") {
-            console.log(theme)
-            setTheme(new UserPreferences().getTheme());
-        }
-    });
-
-
-    if (theme === Theme.Light) {
+export default function ThemeProvider(props: { theme: Theme }) {
+    if (props.theme === Theme.Light) {
         const css = themeToCSS(lightTheme);
-        return <style jsx global>{css}</style>;
-    }else if (theme === Theme.Dark) {
+        return <style jsx global key={Theme.Light}>{css}</style>;
+    }else if (props.theme === Theme.Dark) {
         const css = themeToCSS(darkTheme);
-        return <style jsx global>{css}</style>;
+        return <style jsx global key={Theme.Dark}>{css}</style>;
     }else {
-        return <></>
+        return <style jsx global key={Theme.Default}>{""}</style>
     }
 }
 

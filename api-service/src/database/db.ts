@@ -1,9 +1,6 @@
 import { Db, MongoClient } from "mongodb";
-
-interface DatabaseOptions {
-    dbUrl: string
-    dbName: string
-}
+import { Archiver } from "./archiver";
+import { DatabaseOptions } from "./dbTypes";
 
 export class Database {
     dbUrl: string;
@@ -31,7 +28,7 @@ export class Database {
             this._db = client.db(this.dbName);
             this._client = client;
 
-            return new Archiver({dbUrl: this.dbUrl, dbName: this.dbName}, this.database as Db);
+            return new Archiver({dbUrl: this.dbUrl, dbName: this.dbName}, this.database as Db); // Return a new archiver which holds crucial data in order to CRUD mongo
         } catch (err) {
             console.log(`Error happened. Shutting down. Logs: ${err}`);
             process.exit(1);

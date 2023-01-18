@@ -67,6 +67,17 @@ export class Archiver extends Database {
 
         }
     }
+
+    async query(term: unknown): Promise<DatabaseMenu | null>  {
+        if (this._db !== undefined) {
+            const collection: Collection = this._db.collection("foods");
+            const result = await collection.findOne({date: term});
+            if (result) {
+                return result as DatabaseMenu;
+            }
+        }
+        return null;
+    }
 }
 
     //         const xd: unknown = await this._db.collection("foods").findOne({"dayMenu.menu": {$elemMatch: {"name": "Lohimurekepihvit"}}});

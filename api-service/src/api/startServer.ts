@@ -1,7 +1,7 @@
 import cors from "cors";
 import express, { Router } from "express";
 import { getDayFromWeek } from "../foodUtils";
-import { currentMenu } from "../index";
+import { archiver, currentMenu } from "../index";
 import { Weekday } from "../types";
 import { getCurrentDayIndex } from "../utils";
 import { apiResponse } from "./apiResponse";

@@ -18,7 +18,7 @@ export function apiResponse(res: Response, httpCode: number, options?: Options) 
         httpCode,
         msg: options?.msg || http.STATUS_CODES[httpCode],
         ok: isOk(httpCode) 
-    }
+    };
 
     const jsonStr = options?.format ? JSON.stringify(json, null, 2) : JSON.stringify(json);
 

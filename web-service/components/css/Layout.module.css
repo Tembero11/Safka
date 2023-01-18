@@ -17,7 +17,7 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  background: var(--ui-footer-color);
+  background: linear-gradient(var(--ui-footer-color), var(--ui-footer-second-color));
   width: 100vw;
   height: 300px;
   padding-bottom: 20px;
@@ -70,9 +70,10 @@
 
 .settingsBtn {
   position: relative;
-  width: 50px;
-  height: 50px;
+  width: 60px;
+  height: 60px;
   margin-right: 50px;
+  user-select: none;
   outline: none;
   background: none;
   border: none;
@@ -97,12 +98,146 @@
   transform: translate(-50%, -50%) scale(1);
 }
 
-/* Layout media queries */
-@media (prefers-color-scheme: dark) {
-  .logo {
-    text-shadow: 1px 1px 10px rgba(255, 0, 0, 0.4);
+/* Preferences */
+.preferencesContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #0000004e;
+
+  z-index: 99999;
+  transition: opacity 200ms;
+}
+
+
+.preferences {
+  transition: transform 200ms;
+
+  width: 80%;
+  height: 65%;
+
+  padding: 30px;
+
+  background: var(--ui-page-background);
+
+  border-radius: 25px;
+
+  box-shadow: 1px 1px 25px rgba(0, 0, 0, 0.05);
+}
+
+.preferences h1 {
+  margin: 0;
+}
+
+.dietChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.dietChip {
+  background: var(--brand-primary);
+  color: white;
+  text-align: center;
+  font-weight: bold;
+  border-radius: 20px;
+  padding: 10px;
+  width: 120px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.preferencesSubmit {
+  margin-top: 10%;
+  position: absolute;
+  bottom: 40px;
+  right: 40px;
+
+  color: white;
+  background: var(--brand-primary);
+  padding: 15px;
+  border: none;
+  border-radius: 20px;
+  font-weight: bold;
+  cursor: pointer;
+
+  font-family: var(--ui-font-family);
+
+  width: 120px;
+
+  transition: transform 120ms;
+}
+.preferencesSubmit:hover {
+  transform: scale(1.05);
+}
+
+.themeSelectBlock {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 290px;
+  height: 40px;
+  background-color: var(--ui-slight-highlight);
+  font-weight: bold;
+  user-select: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 120ms;
+  
+  padding: 5px 20px 5px 20px;
+}
+
+.themeSelectBlock:hover {
+  background-color: var(--ui-slight-highlight-hover);
+}
+
+.defaultTheme {
+  color: var(--ui-text-not-important);
+}
+
+.themeSelect {
+  display: flex;
+  gap: 10px;
+  flex-direction: column;
+}
+
+.themeSelectBlock input[type=radio] {
+  -webkit-appearance: none;
+  appearance: none;
+  background-color: white;
+  margin: 0;
+  border: 4px solid transparent;
+
+  width: 15px;
+  height: 15px;
+  border-radius: 100%;
+  cursor: pointer;
+}
+.themeSelectBlock input[type=radio]:checked {
+  border-color: var(--brand-primary);
+}
+
+@media screen and (max-width: 700px) {
+  .preferences {
+    width: 90%;
+    padding: 10px;
   }
-  .footer {
-    background: linear-gradient(transparent, var(--ui-footer-color));
+  .themeSelectBlock {
+    box-sizing: border-box;
+    width: 100%;
+  }
+  .preferencesSubmit {
+    bottom: 25px;
+    right: 25px;
+  }
+}
+@media screen and (min-width: 999px) {
+  .preferences {
+    width: 55%;
   }
 }

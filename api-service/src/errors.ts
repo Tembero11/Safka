@@ -6,6 +6,6 @@ export class ElementUndefinedError extends Error {
 
 export class InvalidDateError extends Error {
     constructor(date: unknown) {
-        super(`Value ${date} could not be converted to a Date object.`)
+        super(`Value ${date} could not be converted to a Date object.`);
     }
 }

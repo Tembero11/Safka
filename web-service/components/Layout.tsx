@@ -31,8 +31,8 @@ function Footer() {
         </ul>
         <h3 className={styles.footerHeader}>Open Source</h3>
         <ul className={styles.footerLinks}>
-          <li><FooterLink href="https://github.com/Tembero11/SafkaArchiver">API</FooterLink></li>
-          <li><FooterLink href="https://github.com/Tembero11/SafkaNext">Web</FooterLink></li>
+          <li><FooterLink href="https://github.com/Tembero11/Safka/tree/main/api-service">API</FooterLink></li>
+          <li><FooterLink href="https://github.com/Tembero11/Safka/tree/main/web-service">Web</FooterLink></li>
         </ul>
     </footer>
   );

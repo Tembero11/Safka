@@ -1,8 +1,8 @@
 import { WeekMenu } from "./types";
 import MenuPoller from "./webScrape/MenuPoller";
 import dotenv from "dotenv";
-import { getCurrentDayIndex } from "./utils";
-import { Archiver, Database } from "./database/db";
+import { Database } from "./database/db";
+import { Archiver } from "./database/archiver";
 import assert from "assert";
 import { startServer } from "./api/startServer";
 
@@ -17,10 +17,10 @@ const API_PREFIX = process.env.API_PREFIX || "/api";
 export const PORT = process.env.PORT || 5000;
 
 if (DISABLE_POLL) {
-    console.log("Menu polling is disabled. This can be changed in the root directory's .env file by setting the 'DISABLE_POLL=false'.")
+    console.log("Menu polling is disabled. This can be changed in the root directory's .env file by setting the 'DISABLE_POLL=false'.");
 }
 if (DISABLE_DB) {
-    console.log("Database is disabled. This can be changed in the root directory's .env file by setting the 'DISABLE_DB=false'.")
+    console.log("Database is disabled. This can be changed in the root directory's .env file by setting the 'DISABLE_DB=false'.");
 }
 
 export let currentMenu: WeekMenu;
@@ -46,7 +46,6 @@ export let currentMenu: WeekMenu;
         if (!DISABLE_DB && archiver) {
             // foodArchive menus                                                   
             archiver.weekMenu = currentMenu;
-            archiver.dayMenu = currentMenu.days[getCurrentDayIndex()];
             // Add current menu to MongoDb                                         
             archiver.saveMenus();
         }
@@ -56,4 +55,4 @@ export let currentMenu: WeekMenu;
 
     // Start the http api server
     startServer(Number(PORT), { apiBaseRoute: API_PREFIX });
-})()
+})();

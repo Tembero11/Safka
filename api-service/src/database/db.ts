@@ -1,5 +1,4 @@
-import { DayMenu, Menus, WeekMenu } from "../types";
-import { Db, MongoClient } from 'mongodb';
+import { Db, MongoClient } from "mongodb";
 
 interface DatabaseOptions {
     dbUrl: string
@@ -19,11 +18,9 @@ export class Database {
     
     async newClient() {
         // Don't do a new client if we already have a client
-        if (this.client !== undefined) {
-            return
-        }
+        if (this.client !== undefined) return;
 
-        console.log(`\nAttempting connection to "${this.dbUrl}"...\nProgram will exit if connection does not succeed\n`)
+        console.log(`\nAttempting connection to "${this.dbUrl}"...\nProgram will exit if connection does not succeed\n`);
         try {
             // Creating a client
             const client = await MongoClient.connect(this.dbUrl);
@@ -49,44 +46,5 @@ export class Database {
     get client() {
         return this._client;
     }
-   
-}
-
-///////////////////////////////////////////////////////////
-
-interface Query {
-    foodName?: string
-    weekNumber?: number
-    date?: Date
-}
-
-export class Archiver extends Database {
-    weekMenu?: WeekMenu;
-    dayMenu?: DayMenu;
-    _db?: Db = undefined
-
-    constructor(options: DatabaseOptions, db: Db) {
-        super(options);
-        this._db = db
-        
-    }
-
-    async saveMenus() {
-        if (this._db !== undefined) {
-            const collection = this._db.collection("foods");
-            const menus: Menus = { weekMenu: this.weekMenu as WeekMenu, dayMenu: this.dayMenu as DayMenu }
-
-            await collection.insertOne(menus);
-            this.retrieveEntry({foodName: "Riisip", weekNumber: this.weekMenu?.weekNumber})
-        }
-    }
-
-    async retrieveEntry(query: Query ) {
-        if (this._db !== undefined) {
-            const xd: unknown = await this._db.collection("foods").findOne({"dayMenu.menu": {$elemMatch: {"name": "Lohimurekepihvit"}}})
-
-            if (query.weekNumber) console.log(query.weekNumber)
-            if (query.date) console.log(query.date)
-        }
-    }
+    
 }

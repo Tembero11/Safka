@@ -23,7 +23,6 @@ api.get("/v1/menu/today", (req, res) => {
   apiResponse(res, 200, { ...today });
 });
 
-
 api.get("/v1/menu/:dayId", (req, res) => {
   const dayId = +req.params.dayId;
 
@@ -31,7 +30,7 @@ api.get("/v1/menu/:dayId", (req, res) => {
     const day = getDayFromWeek(currentMenu, dayId);
     apiResponse(res, 200, { ...day });
   } else {
-    apiResponse(res, 400, { msg: "Invalid dayId" })
+    apiResponse(res, 400, { msg: "Invalid dayId" });
   }
 });
 

@@ -1,0 +1,16 @@
+#!/bin/sh
+
+run() {
+  [ "$1" = "dev" ] && docker-compose -f docker-compose.dev.yml up --build -d || docker-compose -f docker-compose.yml up --build -d
+}
+
+stop() {
+  [ "$1" = "dev" ] && docker-compose -f docker-compose.dev.yml down || docker-compose -f docker-compose.yml down
+}
+
+main() {
+  [ "$1" = "run" ] && run "$2" 
+  [ "$1" = "stop" ] && stop "$2" 
+}
+
+main "$1" "$2"; exit

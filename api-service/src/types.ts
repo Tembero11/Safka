@@ -5,8 +5,6 @@ export interface Food {
     isGlutenFree: boolean;
 }
 
-
-
 export interface DayMenu {
     // If the day has no menu the hash will be null
     hash: string | null;

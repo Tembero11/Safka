@@ -19,18 +19,3 @@ services:
       - 27017:27017
     volumes:
       - ~/db-data:/data/db
-  nginx-service:
-    container_name: 'nginx-service'
-    build:
-      context: .
-      dockerfile: ./nginx-service/nginx.Dockerfile
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-    ports:
-      - 80:80
-      - 443:443
-    volumes:
-      - ./nginx-service/config:/config
-      - /etc/letsencrypt:/etc/letsencrypt:ro
-      - /tmp/acme_challenge:/tmp/acme_challenge
-    restart: always

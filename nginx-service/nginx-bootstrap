@@ -1,0 +1,108 @@
+#!/bin/sh
+
+# In case you are setting your Docker environment up on a VPS, you need to run this script! While arguments are bad, it will complain and give you a small help print.
+# Basically, this script does two things:
+#   1. Uses string interpolation to smartly adjust your configs based on what arguments you give to the program
+#   2. If you used to have old configs or you accidentally ran this script with typos or something, it backs them up and renames them in a unique, sortable way.
+# This script will not be neccessary if you are not deploying this on a production PC. In that case, please use the "docker-compose.dev.yaml" file to build and run your docker containers!
+
+[ -z "$1" ] || [ -z "$2" ] && { echo "Usage: nginx-bootstrap <domain name> <email>\n\nExample: nginx-bootstrap example.org john.smith@gmail.com"; exit 1; } # Check for correct args
+
+DOMAIN_NAME="$1"
+EMAIL="$2"
+
+# Big text for a nginx config
+nginx_text="server {
+    listen 80;
+    listen [::]:80;
+    server_name $DOMAIN_NAME;
+
+    location / {
+        return 301 https://\$host\$request_uri;
+    }
+
+    location ~ /.well-known/acme-challenge {
+        allow all;
+        root /tmp/acme_challenge;
+    }
+
+}
+
+server {
+    listen 443 ssl;
+    listen [::]:443 ssl http2;
+    server_name $DOMAIN_NAME;
+    ssl_certificate /etc/letsencrypt/live/$DOMAIN_NAME/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/$DOMAIN_NAME/privkey.pem;
+
+    location / {
+        proxy_pass http://host.docker.internal:3000/;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header Host \$host;
+        proxy_redirect off;
+    }
+    location /static/ {
+        alias /static/;
+    }
+}
+
+server {
+    listen 80;
+    listen [::]:80;
+    server_name api.$DOMAIN_NAME;
+    location / {
+        return 301 https://\$host\$request_uri;
+    }
+    location ~ /.well-known/acme-challenge {
+        allow all;
+        root /tmp/acme_challenge;
+    }
+}
+server {
+    listen 443 ssl;
+    listen [::]:443 ssl http2;
+    server_name api.$DOMAIN_NAME;
+    ssl_certificate /etc/letsencrypt/live/api.$DOMAIN_NAME/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/api.$DOMAIN_NAME/privkey.pem;
+
+    location / {
+        proxy_pass http://host.docker.internal:5000/;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header Host \$host;
+        proxy_redirect off;
+    }
+    location /static/ {
+        alias /static/;
+    }
+}"
+
+# Smaller text for docker-compose file which takes care of certbot configuring
+yaml_text="version: '3.3' 
+services:
+  letsencrypt:
+    container_name: 'certbot-service'
+    image: certbot/certbot:v1.17.0
+    command: sh -c 'certbot certonly --webroot -w /tmp/acme_challenge -d $DOMAIN_NAME --text --agree-tos --email $EMAIL --rsa-key-size 4096 --verbose --keep-until-expiring --preferred-challenges=http'
+    entrypoint: ''
+    volumes:
+      - '/etc/letsencrypt:/etc/letsencrypt'
+      - '/tmp/acme_challenge:/tmp/acme_challenge'
+    environment:
+      - TERM=xterm
+"
+
+backup() {
+  FILEDIR="$(dirname $1)"
+  FILENAME="$(basename $1)"
+  NEW_FILEPATH="$FILEDIR/$FILENAME.bak.$(date +%s)"
+  echo "Backing up $FILEPATH..."; cp "$FILEDIR/$FILENAME" "$NEW_FILEPATH" # Move files to another extension 
+  echo "It has been backupped to $NEW_FILEPATH"
+}
+
+# If either file exists, back them up.
+[ -f "./nginx-service/docker-compose-le.yaml" ] && backup "./nginx-service/docker-compose-le.yaml"
+[ -f "./nginx-service/config/nginx.conf" ] &&  backup "./nginx-service/config/nginx.conf"
+
+# Write files to their respective locations
+printf "%s" "$nginx_text" > ./nginx-service/config/nginx.conf
+printf "%s" "$yaml_text" > ./nginx-service/docker-compose-le.yaml

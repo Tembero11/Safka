@@ -32,7 +32,7 @@ export default class Webpage {
 
         // This might break when the year changes
         const mondayDate = getDateOfISOWeek(weekNum, new Date().getFullYear());
-        mondayDate.setHours(0, 0, 0)
+        mondayDate.setHours(0, 0, 0);
 
         for (let i = 0; i < 7; i++) {
             const date = addDaysToDate(mondayDate, i);
@@ -43,7 +43,7 @@ export default class Webpage {
                 dayId: i,
                 date,
                 menu: []   
-            }
+            };
 
             // if the html for the day is not found push the empty day to the array
             if (!dayHTML) {
@@ -61,7 +61,7 @@ export default class Webpage {
             foodsHTML.getElementsByTagName("p").forEach(element => {
                 if (element.innerText.trim()) {
                     ogFoods.push(element.innerText);
-                    processedFoods.push(this.getDietsAndName(element.innerText))
+                    processedFoods.push(this.getDietsAndName(element.innerText));
                 }
             });
             // Add all the foods to the day object
@@ -124,7 +124,7 @@ export default class Webpage {
             isLactoseFree: false,
             isDairyFree: false,
             isGlutenFree: false,
-        }
+        };
 
         // Change all empty characters into a space and remove spaces from the start and end of the string
         // Also fix typos with slash not having a space infront
@@ -147,12 +147,12 @@ export default class Webpage {
         .replaceAll(/  +/g, " ").trim();
 
         // Capitalize the first letter
-        processedName = processedName.charAt(0).toLocaleUpperCase() + processedName.substring(1)
+        processedName = processedName.charAt(0).toLocaleUpperCase() + processedName.substring(1);
 
         if (!matches) return {
             name: processedName,
             ...result
-        }
+        };
 
         // String might contain other chars as well
         const dietString = matches.join("");
@@ -176,6 +176,6 @@ export default class Webpage {
         return {
             name: processedName,
             ...result
-        }
+        };
     }
 }

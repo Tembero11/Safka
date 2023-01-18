@@ -25,3 +25,12 @@ export interface DatabaseMenu {
     dayId: Weekday;
     foods: Food[];
 }
+
+export interface DatabaseQuery {
+    version?: number;
+    hash?: string | null;
+    week?: DatabaseWeek;
+    date?: Date;
+    dayId?: Weekday;
+    food?: Food;
+}

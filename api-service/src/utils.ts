@@ -21,7 +21,15 @@ export function parseDate(dateStr: string) {
     const month = parseInt(monthStr);
     const year = parseInt(yearStr);
 
-    return new Date(year, month - 1, day);
+    return new Date(year, month - 1, day + 1);
+}
+
+export function getWeekNumber(): number {
+    const currentDate: Date = new Date();
+    const startDate: Date = new Date(currentDate.getFullYear(), 0, 1);
+    const days = Math.floor((+currentDate - +startDate) / (24 * 60 * 60 * 1000));
+
+    return Math.ceil(days / 7);
 }
 
 export function isValidDigit(digitStr: string, minAllowedLength = 1, maxAllowedLength = 2) {

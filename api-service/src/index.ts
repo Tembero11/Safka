@@ -1,8 +1,7 @@
 import { WeekMenu } from "./types";
 import MenuPoller from "./webScrape/MenuPoller";
 import dotenv from "dotenv";
-import { Database } from "./database/db";
-import { Archiver } from "./database/db";
+import { Archiver, newClient } from "./database/db";
 import assert from "assert";
 import { startServer } from "./api/startServer";
 
@@ -13,7 +12,7 @@ const DISABLE_POLL = process.env.DISABLE_POLL == "true";
 const DISABLE_DB = process.env.DISABLE_DB == "true";
 const DB_URL = process.env.DB_URL || "mongodb://127.0.0.1:27017";
 const DB_NAME = process.env.DB_NAME || "SafkaArchiverDB";
-const API_PREFIX = process.env.API_PREFIX || "/api";
+const API_PREFIX = process.env.API_PREFIX || "";
 export const PORT = process.env.PORT || 5000;
 
 if (DISABLE_POLL) {
@@ -28,12 +27,10 @@ export let archiver: Archiver | undefined;
 
 // Async setup code
 (async function () {
-const db = new Database({ dbUrl: DB_URL, dbName: DB_NAME });
-
-assert(db, new Error("Database undefined"));
-
+// Code for when database enabled
 if (!DISABLE_DB) {
-    archiver = await db.newClient();
+    archiver = new Archiver(await newClient({ dbUrl: DB_URL, dbName: DB_NAME }));
+
     assert(archiver, "Archiver is undefined");
 }
 

@@ -1,9 +1,14 @@
-import { ObjectId } from "mongodb";
+import { Db, ObjectId } from "mongodb";
 import { Food, Weekday } from "../types";
 
+export interface ArchiverOptions {
+    dbName: string;
+    db: Db;
+}
+
 export interface DatabaseOptions {
-    dbUrl: string
-    dbName: string
+    dbUrl: string;
+    dbName: string;
 }
 
 export interface DatabaseWeek {

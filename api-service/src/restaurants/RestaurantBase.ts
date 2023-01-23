@@ -16,6 +16,7 @@ declare interface RestaurantBase {
 abstract class RestaurantBase extends EventEmitter {
     readonly name;
     readonly url;
+    readonly srcUrl;
     readonly desc;
     readonly defaultLunchTime;
 
@@ -28,6 +29,7 @@ abstract class RestaurantBase extends EventEmitter {
         super();
         this.name = info.name;
         this.url = info.url;
+        this.srcUrl = info.srcUrl;
         this.desc = info.desc;
         this.defaultLunchTime = info.defaultLunchTime;
     }

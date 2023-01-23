@@ -21,6 +21,7 @@ export interface Restaurant {
     _id: ObjectId
     name: string,
     url: string,
+    srcUrl: string
     desc: string
     defaultLunchTime?: LunchTime[]
 }

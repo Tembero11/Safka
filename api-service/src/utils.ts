@@ -54,11 +54,24 @@ export function addDaysToDate(date: Date, days: number) {
 
 export function getDateOfISOWeek(week: number, year: number) {
     const simple = new Date(Date.UTC(year, 0, 1 + (week - 1) * 7));
-    const dow = simple.getDay();
-    const ISOweekStart = simple;
+    const dow = simple.getDay(); // day of week
+    let ISOweekStart = simple;
     if (dow <= 4)
         ISOweekStart.setDate(simple.getDate() - simple.getDay() + 1);
     else
         ISOweekStart.setDate(simple.getDate() + 8 - simple.getDay());
+    ISOweekStart = new Date(ISOweekStart.getTime() + ISOweekStart.getTimezoneOffset() * 60000);
     return ISOweekStart;
 }
+
+// export function getDateOfISOWeek(weekNum: number, year: number): Date {
+//     const sunday = new Date(year, 0, (1 + (weekNum) * 7));
+//     while (sunday.getDay() !== 0) {
+//         sunday.setDate(sunday.getDate() - 1);
+//     }
+//     return sunday;
+// }
+
+// export function getDateOfISOWeek(week: number, year: number) {
+//     return parse(`${week}`,"I", new Date());
+// }

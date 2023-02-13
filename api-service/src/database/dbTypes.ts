@@ -17,7 +17,7 @@ export interface DatabaseWeek {
 }
 
 export interface DatabaseMenu {
-    _id: ObjectId;
+    _id?: ObjectId;
     version: number;
     hash: string | null;
     week: DatabaseWeek;
@@ -26,11 +26,20 @@ export interface DatabaseMenu {
     foods: Food[];
 }
 
-export interface DatabaseQuery {
+export interface MenuQuery {
     version?: number;
     hash?: string | null;
     week?: DatabaseWeek;
     date?: Date;
     dayId?: Weekday;
     food?: Food;
+}
+
+export interface QueryOptions {
+    count:  number;
+}
+
+export interface DatabaseQuery {
+    query: MenuQuery;
+    opts?: QueryOptions;
 }

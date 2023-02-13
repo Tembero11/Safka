@@ -13,6 +13,7 @@ const DISABLE_POLL = process.env.DISABLE_POLL == "true";
 const DISABLE_DB = process.env.DISABLE_DB == "true";
 const DB_URL = process.env.DB_URL || "mongodb://127.0.0.1:27017";
 const DB_NAME = process.env.DB_NAME || "SafkaArchiverDB";
+const SHOULD_REVERT_TO_V1 = process.env.SHOULD_REVERT_TO_V1 == "true"; // If true, uses legacy api v1 which puts data directly from the poller to the API
 const API_PREFIX = process.env.API_PREFIX || "";
 export const PORT = process.env.PORT || 5000;
 
@@ -31,7 +32,6 @@ export let archiver: Archiver | undefined;
 // Code for when database enabled
 if (!DISABLE_DB) {
     archiver = new Archiver(await newClient({ dbUrl: DB_URL, dbName: DB_NAME }));
-
     assert(archiver, "Archiver is undefined");
 }
 
@@ -52,5 +52,5 @@ poller.on("polled", (menu) => {
 if (!DISABLE_POLL) poller.startPolling();
 
 // Start the http api server
-startServer(Number(PORT), { apiBaseRoute: API_PREFIX });
+startServer(Number(PORT), { apiBaseRoute: API_PREFIX, revertToV1: SHOULD_REVERT_TO_V1 });
 })();

@@ -1,5 +1,4 @@
 import { Db, ObjectId, Collection } from "mongodb";
-import objectHash from "object-hash";
 import { WeekMenu } from "../types";
 import { ArchiverOptions, DatabaseMenu, DatabaseQuery, DatabaseWeek } from "./dbTypes";
 
@@ -67,25 +66,28 @@ export class Archiver {
     }
 
     async query(query: DatabaseQuery): Promise<DatabaseMenu | DatabaseMenu[]> {
-        if (this._db !== undefined) {
-            const collection: Collection = this._db.collection("foods");
+//         function menuArrBuilder(elemCount: number, oldArr: DatabaseMenu[]): DatabaseMenu[] {
+//             const arr: DatabaseMenu[] = [];
+//             for (let j = 0; j < elemCount; j++);
+//                 arr.push(oldArr[j] as DatabaseMenu);
+//             return arr as DatabaseMenu[];
+//         }
+// 
+        const collection: Collection = this._db.collection("foods");
 
-            const key = Object.keys(query);
-            const value = Object.values(query);
-            console.log(key);
-            console.log(value);
-            const result = await collection.find(Object.keys(query).length !== 0 ? query : {}).toArray();
+        if (Object.keys(query.query).length <= 0) return {} as DatabaseMenu;
 
-            if (result.length > 1) {
-                const allDays: DatabaseMenu[] = [];
-                result.forEach(element => {
-                    allDays.push(element as DatabaseMenu);
-                });
-                return result as DatabaseMenu[];
-            }
+        // Search from the collection based on query terms and after turning results to an array, remove mongoids
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const result = await (await collection.find(query.query).toArray()).map(({_id, ...item}) => item) as DatabaseMenu[];
+
+        if (result.length === 1) return result[0] as DatabaseMenu;
+
+        if (query.opts?.count !== undefined && query.opts.count >= 1) {
             return result[0] as DatabaseMenu;
-        }
-        return {} as DatabaseMenu;
+        } 
+
+        return result;
     }
 }
 

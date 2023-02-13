@@ -81,7 +81,7 @@ class MenuPoller extends EventEmitter {
                 console.log(err);
                 console.log("Page load failed. Retrying in " + ms(this.retryTime, { long: true }));
             }
-            this.pollNextIn(this.retryTime)
+            this.pollNextIn(this.retryTime);
             return;
         }
 
@@ -89,7 +89,7 @@ class MenuPoller extends EventEmitter {
 
         this.emit("polled", menu);
         
-        this.pollNextIn(timeUntilNextPoll)
+        this.pollNextIn(timeUntilNextPoll);
     }
 
     pollNextIn(timeUntilNextPoll: number) {

@@ -33,6 +33,10 @@ export default class Webpage {
         // This might break when the year changes
         const mondayDate = getDateOfISOWeek(weekNum, new Date().getFullYear());
         mondayDate.setHours(0, 0, 0);
+        console.log("Monday date: "+ mondayDate);
+        console.log(mondayDate.toLocaleDateString());
+        console.log(new Date(mondayDate.toLocaleDateString()));
+        console.log(mondayDate);
 
         for (let i = 0; i < 7; i++) {
             const date = addDaysToDate(mondayDate, i);

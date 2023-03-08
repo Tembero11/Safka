@@ -1,5 +1,10 @@
 import { Weekday } from "./getWeekMenu";
 
+export function isProduction() {
+    if (process.env.NODE_ENV !== "development") return true
+    return false
+}
+
 export function getDayFromMonday(date: Date) {
   return [6, 0, 1, 2, 3, 4, 5][date.getDay()];
 }

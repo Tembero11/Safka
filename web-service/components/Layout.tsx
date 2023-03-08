@@ -1,12 +1,15 @@
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { Theme, UserPreferences } from "../common/UserPreferences";
+import { getCookie } from 'cookies-next';
 import styles from "./css/Layout.module.css";
 import ThemeProvider from "./ThemeProvider";
 
 export default function Layout(props: { children: React.ReactNode }) {
   const [isSettingsOpen, setSettingsOpen] = useState(false);
   const [isSettingsDisplay, setSettingsDisplay] = useState(false);
+
+  const acceptedCookies = getCookie("accepted") === "true"
 
   // Contains the currently selected theme
   const [selectedTheme, setSelectedTheme] = useState(Theme.Default);
@@ -74,6 +77,7 @@ export default function Layout(props: { children: React.ReactNode }) {
 
   return (
     <>
+      { !acceptedCookies ? <CookiePopup/> : null }
       <ThemeProvider key={currentAppTheme} theme={currentAppTheme} />
       <div className={styles.container}>
         <div className={styles.navbar}>
@@ -129,6 +133,14 @@ export default function Layout(props: { children: React.ReactNode }) {
 
     </>
   );
+}
+
+function CookiePopup() {
+  return (
+    <>
+      <p>no cookies accepted</p>
+    </>
+  )
 }
 
 function Footer() {

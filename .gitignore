@@ -1,3 +1,4 @@
 # Contains a bit of personal/preferential data.
 nginx-service/docker-compose-le*
 nginx-service/config/nginx.*
+node_modules

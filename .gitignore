@@ -2,3 +2,4 @@
 nginx-service/docker-compose-le*
 nginx-service/config/nginx.*
 node_modules
+web-service/.env

@@ -1,8 +1,8 @@
 import { Weekday } from "./getWeekMenu";
 
 export function isProduction() {
-    if (process.env.NODE_ENV !== "development") return true
-    return false
+  if (process.env.NODE_ENV !== "development") return true
+  return false
 }
 
 export function getDayFromMonday(date: Date) {
@@ -15,6 +15,14 @@ export function getCurrentDayIndex() {
 
 export function isSameDate(aDate: Date, bDate: Date) {
   return aDate.toLocaleDateString() == bDate.toLocaleDateString();
+}
+
+export function isToday(date: Date) {
+  const today = new Date();
+  today.setHours(0, 0, 0);
+  const compareDate = new Date(date);
+  compareDate.setHours(0, 0, 0);
+  return isSameDate(today, compareDate);
 }
 
 

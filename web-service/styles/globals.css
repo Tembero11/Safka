@@ -5,6 +5,7 @@
   /* Brand Colors */
   --brand-primary: #ff3535;
   --brand-primary-dark: #ca2e2e;
+  --on-brand-primary: white;
 
   /* UI colors */
   --ui-text-not-important: #8f8f8f;

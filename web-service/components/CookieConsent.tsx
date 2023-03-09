@@ -14,8 +14,8 @@ export default function CookieConsent(props: IProps) {
     <>
       <div className={styles.container}>
         <div className={styles.header}>
-          <h1>Maistuisiko sinulle keksi?</h1>
-          <Image src="/assets/cookie.svg" width={100} height={50} style={{marginTop: "2%"}} alt="keksi"/>
+          <h1>Maistuisiko keksi?</h1>
+          <Image className={styles.cookie} src="/assets/cookie.svg" width={100} height={50} style={{marginTop: "2%"}} alt="keksi"/>
         </div>
 
         <div className={styles.desc}>

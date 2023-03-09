@@ -8,17 +8,19 @@
   width: 100%;
   height: 100%;
 }
+
 .header {
   margin: 0;
   font-size: 40px;
 }
+
 .explanation {
   margin: 0;
   font-size: 17px;
   font-weight: 500;
 }
 
-.homeButton {
+.home-button {
   background: var(--brand-primary);
   padding: 15px;
   text-decoration: none;
@@ -27,7 +29,7 @@
   border-radius: 20px;
 }
 
-.errDigit {
+.err-digit {
   display: inline-block;
   position: relative;
   animation-name: errDigit;
@@ -37,13 +39,16 @@
   animation-timing-function: cubic-bezier(0.445, 0.05, 0.55, 0.95);
   transform: translateY(5px);
 }
-@keyframes errDigit {
+
+@keyframes err-digit {
   0% {
     transform: translateY(5px);
   }
+
   50% {
     transform: translateY(-5px);
   }
+  
   100% {
     transform: translateY(5px);
   }

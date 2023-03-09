@@ -1,8 +1,8 @@
 import parse, { HTMLElement } from "node-html-parser";
-import assert from "node:assert";
+import assert, { match } from "node:assert";
 import crypto from "crypto";
 import { ElementUndefinedError } from "../errors";
-import { DayMenu, Food, WeekMenu } from "../types";
+import { DayMenu, DietaryRestrictions, Food, WeekMenu } from "../types";
 import { addDaysToDate, getDateOfISOWeek, isValidDateString } from "../utils";
 
 export default class Webpage {
@@ -138,8 +138,42 @@ export default class Webpage {
     // A hacky way for the regex to handle the end of the string
     const matches = (name + " ").match(dietRegex);
 
-    // Remove all characters that are considered not allowed
     const notAllowedCharacters = /[^a-zA-ZåäöÅÄÖ/ ]{1,}/g;
+
+
+    // Doesn't work (yet)
+    if (foodName == "Falafelpyöryköitä (M, G), paholaisen kastiketta (M, G)") {
+      const matches = [{text: "", index: -1}];
+      let match;
+      while (null != (match=dietRegex.exec(name + "  "))) {
+        matches.push({text: match[0], index: match.index});
+      }
+
+      const dishes = {names: [], diets: []} as {names: string[], diets: DietaryRestrictions[]};
+      for (let i = 0; i < matches.length; i++) {
+        const match1 = matches[i];
+        const match2 = matches.at(i + 1);
+        if (match2) {
+          const subStrStart = match1.index + 1;
+          const subStrEnd = match2.index;
+
+          const str = foodName.substring(subStrStart, subStrEnd).replaceAll(notAllowedCharacters, "").trim();
+
+          if (str.length > 0) {
+            const dishName = str.charAt(0).toLocaleUpperCase() + str.substring(1);
+            dishes.names.push(dishName);
+            dishes.diets.push({isLactoseFree: false, isGlutenFree: false, isDairyFree: false});
+          }else {
+            const lastDishIndex = dishes.names.length - 1;
+            const diets = match1.text + match2.text;
+            dishes.diets[lastDishIndex] = this.dietsFromString(diets);
+          }
+        }
+      }
+      console.log(dishes);
+    }
+
+    // Remove all characters that are considered not allowed
     let processedName = name
       .replaceAll(dietRegex, "")
       .replaceAll(notAllowedCharacters, "")
@@ -177,5 +211,31 @@ export default class Webpage {
       name: processedName,
       ...result
     };
+  }
+
+
+  private dietsFromString(dietString: string) {
+    // The default state for diets
+    const result = {
+      isLactoseFree: false,
+      isDairyFree: false,
+      isGlutenFree: false,
+    };
+    for (const possibleDiet of dietString) {
+      switch (possibleDiet) {
+      case "L":
+        result.isLactoseFree = true;
+        break;
+      case "M":
+        result.isDairyFree = true;
+        break;
+      case "G":
+        result.isGlutenFree = true;
+        break;
+      default:
+        break;
+      }
+    }
+    return result;
   }
 }

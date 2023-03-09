@@ -1,4 +1,5 @@
-import { NextPage } from "next";
+import { getCookie } from "cookies-next";
+import { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import { Diet } from "../components/DayBox";
 import Week from "../components/Week";
@@ -23,14 +24,14 @@ const Home: NextPage<{ menu: WeekMenu | null }> = ({menu}) => {
   );
 }
 
-
-Home.getInitialProps = async () => {
+export const getServerSideProps = async () => {
   try {
     const menu = await getWeekMenu();
-    return { menu }
+    return { props: { menu }}
   } catch (err) {
-    return { menu: null }
+    return { props: { menu: null }}
   }
-}
+};
+
 
 export default Home;

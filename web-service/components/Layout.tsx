@@ -1,15 +1,14 @@
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { Theme, UserPreferences } from "../common/UserPreferences";
-import { getCookie } from 'cookies-next';
+import { getCookie, getCookies, setCookie } from 'cookies-next';
+import CookieConsent from "./CookieConsent"
 import styles from "./css/Layout.module.css";
 import ThemeProvider from "./ThemeProvider";
 
 export default function Layout(props: { children: React.ReactNode }) {
   const [isSettingsOpen, setSettingsOpen] = useState(false);
   const [isSettingsDisplay, setSettingsDisplay] = useState(false);
-
-  const acceptedCookies = getCookie("accepted") === "true"
 
   // Contains the currently selected theme
   const [selectedTheme, setSelectedTheme] = useState(Theme.Default);
@@ -18,7 +17,12 @@ export default function Layout(props: { children: React.ReactNode }) {
   const [currentAppTheme, setCurrentAppTheme] = useState(Theme.Default);
   const [currentOsTheme, setCurrentOsTheme] = useState(Theme.Light);
 
+  const [hasConsented, setHasConsented] = useState(true);
+
   useEffect(() => {
+    // Check if has consented
+    setHasConsented(getCookie("accepted") === true)
+
     const preferences = new UserPreferences();
     const theme = preferences.getTheme();
     setSelectedTheme(theme);
@@ -75,9 +79,15 @@ export default function Layout(props: { children: React.ReactNode }) {
     changeSettingsState(false);
   }
 
+  function handleConsent() {
+    setCookie("accepted", "true")
+    setHasConsented(true)
+  }
+
   return (
     <>
-      { !acceptedCookies ? <CookiePopup/> : null }
+      { !hasConsented ? <CookieConsent onConsent={() => handleConsent()}/> : null }
+
       <ThemeProvider key={currentAppTheme} theme={currentAppTheme} />
       <div className={styles.container}>
         <div className={styles.navbar}>
@@ -135,13 +145,7 @@ export default function Layout(props: { children: React.ReactNode }) {
   );
 }
 
-function CookiePopup() {
-  return (
-    <>
-      <p>no cookies accepted</p>
-    </>
-  )
-}
+
 
 function Footer() {
   return (
@@ -164,9 +168,6 @@ function Footer() {
 function FooterLink(props: { href: string, children: string }) {
   return <a className={styles.link} href={props.href} target="_blank" rel="noreferrer">{props.children} <span className="material-symbols-outlined">open_in_new</span></a>
 }
-
-
-
 
 function DietChip(props: { children: React.ReactNode, isActive?: boolean }) {
   return (

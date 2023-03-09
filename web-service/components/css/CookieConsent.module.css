@@ -1,0 +1,47 @@
+.container {
+    display: grid;
+    background-color: var(--ui-page-background);
+    grid-template-rows: 1fr 1fr;
+    z-index: 999999;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    padding: 1% 1% 1% 1%;
+    margin-left: 2%;
+    margin-bottom: 3%;
+    border: 10px solid var(--brand-primary);
+    border-radius: 25px
+}
+
+.header {
+    display: inline-flex;
+}
+
+.desc {
+    margin: 0;
+}
+
+.buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.consentBtn {
+  color: white;
+  background: var(--brand-primary);
+  padding: 15px;
+  border: none;
+  border-radius: 20px;
+  font-weight: bold;
+  cursor: pointer;
+
+  font-family: var(--ui-font-family);
+
+  width: 120px;
+
+  transition: transform 120ms;
+}
+
+.preferencesSubmit:hover {
+  transform: scale(1.05);
+}

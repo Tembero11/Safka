@@ -18,125 +18,125 @@ declare interface MenuPoller {
 }
 
 class MenuPoller extends EventEmitter {
-    isRunning = false;
-    // 16 min in ms
-    readonly defaultTime = 16 * 60 * 1000;
-    // 3 min in ms
-    readonly retryTime = 3 * 60 * 1000;
+  isRunning = false;
+  // 16 min in ms
+  readonly defaultTime = 16 * 60 * 1000;
+  // 3 min in ms
+  readonly retryTime = 3 * 60 * 1000;
 
-    enableLogs = true;
+  enableLogs = true;
 
-    /**
+  /**
      * Contains the latest menu loaded.
      */
-    private latestMenu: WeekMenu | undefined;
+  private latestMenu: WeekMenu | undefined;
 
-    constructor(options?: PollerOptions) {
-        super();
-        if (options?.enableLogs === false) {
-            this.enableLogs = false;
-        }
+  constructor(options?: PollerOptions) {
+    super();
+    if (options?.enableLogs === false) {
+      this.enableLogs = false;
+    }
+  }
+
+  startPolling() {
+    if (this.isRunning) return;
+    this.isRunning = true;
+    this.poll();
+  }
+  stopPolling() {
+    this.isRunning = false;
+  }
+
+  private async poll() {
+    // Check that the poller is running
+    if (!this.isRunning) return;
+
+    let pollResult;
+    try {
+      pollResult = await this.getWebpage();
+    } catch (err) {
+      if (this.enableLogs) {
+        console.log(err);
+        console.log("Page load failed. Retrying in " + ms(this.retryTime, { long: true }));
+      }
+      this.pollNextIn(this.retryTime);
+      return;
     }
 
-    startPolling() {
-        if (this.isRunning) return;
-        this.isRunning = true;
-        this.poll();
+    const { document, lastPossiblyModified } = pollResult;
+
+    const timeUntilNextPoll = this.getNextPollTime(lastPossiblyModified);
+
+    if (this.enableLogs) {
+      console.log("Page will be polled in " + ms(timeUntilNextPoll, { long: true }));
     }
-    stopPolling() {
-        this.isRunning = false;
-    }
 
-    private async poll() {
-        // Check that the poller is running
-        if (!this.isRunning) return;
-
-        let pollResult;
-        try {
-            pollResult = await this.getWebpage();
-        } catch (err) {
-            if (this.enableLogs) {
-                console.log(err);
-                console.log("Page load failed. Retrying in " + ms(this.retryTime, { long: true }));
-            }
-            this.pollNextIn(this.retryTime);
-            return;
-        }
-
-        const { document, lastPossiblyModified } = pollResult;
-
-        const timeUntilNextPoll = this.getNextPollTime(lastPossiblyModified);
-
-        if (this.enableLogs) {
-            console.log("Page will be polled in " + ms(timeUntilNextPoll, { long: true }));
-        }
-
-        const webpage = new Webpage(TAI_SAFKA_URL, document);
+    const webpage = new Webpage(TAI_SAFKA_URL, document);
         
-        let menu;
-        try {
-            menu = webpage.parse();
-        } catch (err) {
-            if (this.enableLogs) {
-                console.log(err);
-                console.log("Page load failed. Retrying in " + ms(this.retryTime, { long: true }));
-            }
-            this.pollNextIn(this.retryTime)
-            return;
-        }
+    let menu;
+    try {
+      menu = webpage.parse();
+    } catch (err) {
+      if (this.enableLogs) {
+        console.log(err);
+        console.log("Page load failed. Retrying in " + ms(this.retryTime, { long: true }));
+      }
+      this.pollNextIn(this.retryTime);
+      return;
+    }
 
-        this.latestMenu = menu;
+    this.latestMenu = menu;
 
-        this.emit("polled", menu);
+    this.emit("polled", menu);
         
-        this.pollNextIn(timeUntilNextPoll)
-    }
+    this.pollNextIn(timeUntilNextPoll);
+  }
 
-    pollNextIn(timeUntilNextPoll: number) {
-        setTimeout(() => this.poll.bind(this)(),  timeUntilNextPoll);
-    }
+  pollNextIn(timeUntilNextPoll: number) {
+    setTimeout(() => this.poll.bind(this)(),  timeUntilNextPoll);
+  }
 
 
-    /**
+  /**
      * Sends a GET request
      * @returns `last-modified` header converted to a date
      * @returns current page's HTML
      */
-    async getWebpage() {
-        const resp = await axios.get(TAI_SAFKA_URL);
+  async getWebpage() {
+    const resp = await axios.get(TAI_SAFKA_URL);
 
-        const lastModified = resp.headers["last-modified"];
+    const lastModified = resp.headers["last-modified"];
 
-        assert(typeof lastModified === "string", new InvalidDateError(lastModified));
-        assert(isValidDateString(lastModified), new InvalidDateError(lastModified));
+    assert(typeof lastModified === "string", new InvalidDateError(lastModified));
+    assert(isValidDateString(lastModified), new InvalidDateError(lastModified));
 
-        return {
-            /**
+    return {
+      /**
              * Page HTML as a string
              */
-            document: resp.data as string,
-            /**
+      document: resp.data as string,
+      /**
              * The date when the webpage was last possibly modified
              */
-            lastPossiblyModified: new Date(lastModified)
-        };
-    }
+      lastPossiblyModified: new Date(lastModified)
+    };
+  }
 
-    /**
+  /**
      * Calculates the next time until the page should be polled.
      * @param lastModified
      */
-    getNextPollTime(lastModified: Date) {
-        return this.defaultTime - (new Date().getTime() - lastModified.getTime());
-    }
+  getNextPollTime(lastModified: Date) {
+    return this.defaultTime - (new Date().getTime() - lastModified.getTime());
+  }
 
-    /**
+  /**
      * @throws {AssertionError} if there is no menu loaded.
      */
-    getLatestMenu() {
-        assert(this.latestMenu);
-        return this.latestMenu;
-    }
+  getLatestMenu() {
+    assert(this.latestMenu);
+    return this.latestMenu;
+  }
 }
 
 export default MenuPoller;

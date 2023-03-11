@@ -1,6 +1,32 @@
 export function getCurrentDayIndex() {
   return [6, 0, 1, 2, 3, 4, 5][new Date().getDay()];
 }
+interface IndexRange {
+  start: number,
+  end: number
+}
+
+export function splitByIndexRange(str: string, ranges: IndexRange[]): string[] {
+  const result: string[] = [];
+
+  let nextStartIndex = 0;
+  for (let i = 0; i < ranges.length + 1; i++) {
+    let resultStr = "";
+    if (i == ranges.length) {
+      resultStr = str.substring(nextStartIndex, str.length);
+      continue;
+    }
+    const { start, end } = ranges[i];
+    
+    resultStr = str.substring(nextStartIndex, start);
+
+    if (resultStr.length > 0) result.push(resultStr);
+
+    nextStartIndex = end;
+  }
+
+  return result;
+}
 
 export function jsonPrettyPrinter(jsonObj: object) {
   return JSON.stringify(jsonObj, null, 4);

@@ -3,7 +3,7 @@ import assert from "node:assert";
 import crypto from "crypto";
 import { ElementUndefinedError } from "../errors";
 import { DayMenu, Food, WeekMenu } from "../types";
-import { addDaysToDate, getDateOfISOWeek, isValidDateString } from "../utils";
+import { addDaysToDate, getDateOfISOWeek, isValidDateString, splitByIndexRange } from "../utils";
 
 export default class Webpage {
   readonly url;
@@ -183,17 +183,32 @@ export default class Webpage {
     const dietLetters = ["L", "M", "G"];
     const dietLetterRegex = new RegExp(`[^${dietLetters.join("")}]`, "g");
     const dietRegex = new RegExp(`(${dietLetters.join("|")})[^a-zåäö]+`, "g");
+    const name = foodName + " ";
     
     const matches = [];
     let currentMatch;
-    while (null != (currentMatch = dietRegex.exec(foodName + " "))) {
+    while (null != (currentMatch = dietRegex.exec(name))) {
       const originalText = currentMatch[0];
       // Remove the last character
       // Regex might match the starting of a new word that starts with a capital letter
       const dietLetters = originalText.substring(0, originalText.length - 1).replaceAll(dietLetterRegex, "").split("");
       
-      matches.push({ foodName, dietLetters, index: currentMatch.index });
+      let matchLen = -1;
+      for (const matchStr of currentMatch) {
+        if (matchLen < matchStr.length) {
+          matchLen = matchStr.length;
+        }
+      }
+
+      const matchStart = currentMatch.index;
+      const matchEnd = matchStart + matchLen - 1;
+
+      matches.push({ name, dietLetters, start: matchStart, end: matchEnd});
     }
-    console.log(matches);
+
+    const result = splitByIndexRange(name, matches);
+
+    // console.log(matches);
+    console.log(result);
   }
 }

@@ -2,8 +2,8 @@ import parse, { HTMLElement } from "node-html-parser";
 import assert from "node:assert";
 import crypto from "crypto";
 import { ElementUndefinedError } from "../errors";
-import { DayMenu, Food, WeekMenu } from "../types";
-import { addDaysToDate, getDateOfISOWeek, isValidDateString, splitByIndexRange } from "../utils";
+import { DayMenu, DietaryRestrictions, Food, Meal, WeekMenu } from "../types";
+import { addDaysToDate, getDateOfISOWeek, IndexRange, isValidDateString, splitByIndexRange } from "../utils";
 
 export default class Webpage {
   readonly url;
@@ -130,7 +130,7 @@ export default class Webpage {
     // Also fix typos with slash not having a space infront
     // This might in a rare condition where a diet character is infront of a slash fix the misinterpretation
     const name = foodName.replaceAll(/\s/g, " ").split("/").join(" / ").trim();
-    this.findDiets(name);
+    this.mealFromUnparsedFoodName(name);
     // This regex finds any of the L, M, G characters that have a lower case nonalphabetic character after them
     const dietRegex = /(L|M|G)[^a-zåäö]/g;
 
@@ -179,19 +179,20 @@ export default class Webpage {
     };
   }
 
-  private findDiets(foodName: string) {
-    const dietLetters = ["L", "M", "G"];
-    const dietLetterRegex = new RegExp(`[^${dietLetters.join("")}]`, "g");
-    const dietRegex = new RegExp(`(${dietLetters.join("|")})[^a-zåäö]+`, "g");
+  private mealFromUnparsedFoodName(foodName: string): Meal {
+    const validDietLetters = ["L", "M", "G"];
+    const dietLetterRegex = new RegExp(`[^${validDietLetters.join("")}]`, "g");
+    const dietRegex = new RegExp(`[^a-zA-ZåäöÅÄÖ]+(${validDietLetters.join("|")})[^a-zåäö]+`, "g");
     const name = foodName + " ";
     
-    const matches = [];
+    const matches: IndexRange[] = [];
+    const matchedDiets = [];
     let currentMatch;
     while (null != (currentMatch = dietRegex.exec(name))) {
       const originalText = currentMatch[0];
       // Remove the last character
       // Regex might match the starting of a new word that starts with a capital letter
-      const dietLetters = originalText.substring(0, originalText.length - 1).replaceAll(dietLetterRegex, "").split("");
+      const dietLetters = originalText.substring(0, originalText.length - 1).replaceAll(dietLetterRegex, "");
       
       let matchLen = -1;
       for (const matchStr of currentMatch) {
@@ -202,13 +203,41 @@ export default class Webpage {
 
       const matchStart = currentMatch.index;
       const matchEnd = matchStart + matchLen - 1;
-
-      matches.push({ name, dietLetters, start: matchStart, end: matchEnd});
+      matchedDiets.push(this.dietaryRestrictionsFromString(dietLetters));
+      matches.push({ start: matchStart, end: matchEnd});
     }
 
-    const result = splitByIndexRange(name, matches);
+    const names = splitByIndexRange(name, matches);
 
-    // console.log(matches);
-    console.log(result);
+    const result = {
+      names,
+      diets: matchedDiets
+    };
+    return result;
+  }
+
+  private dietaryRestrictionsFromString(dietString: string): DietaryRestrictions {
+    const result: DietaryRestrictions = {
+      isLactoseFree: false,
+      isDairyFree: false,
+      isGlutenFree: false
+    };
+
+    for (const possibleDiet of dietString) {
+      switch (possibleDiet) {
+      case "L":
+        result.isLactoseFree = true;
+        break;
+      case "M":
+        result.isDairyFree = true;
+        break;
+      case "G":
+        result.isGlutenFree = true;
+        break;
+      default:
+        break;
+      }
+    }
+    return result;
   }
 }

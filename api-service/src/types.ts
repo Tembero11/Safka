@@ -1,3 +1,13 @@
+export interface DietaryRestrictions {
+    isLactoseFree: boolean;
+    isDairyFree: boolean;
+    isGlutenFree: boolean;
+}
+export interface Meal {
+    names: string[];
+    diets: DietaryRestrictions[];
+}
+
 export interface Food {
     name: string;
     isLactoseFree: boolean;

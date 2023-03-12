@@ -130,7 +130,7 @@ export default class Webpage {
     // Also fix typos with slash not having a space infront
     // This might in a rare condition where a diet character is infront of a slash fix the misinterpretation
     const name = foodName.replaceAll(/\s/g, " ").split("/").join(" / ").trim();
-    this.mealFromUnparsedFoodName(name);
+    console.log(this.mealFromUnparsedFoodName(name));
     // This regex finds any of the L, M, G characters that have a lower case nonalphabetic character after them
     const dietRegex = /(L|M|G)[^a-zåäö]/g;
 
@@ -210,7 +210,7 @@ export default class Webpage {
     const names = splitByIndexRange(name, matches);
 
     const result = {
-      names,
+      names: names.map(name => this.formatFoodName(name)),
       diets: matchedDiets
     };
     return result;
@@ -238,6 +238,22 @@ export default class Webpage {
         break;
       }
     }
+    return result;
+  }
+
+  private formatFoodName(foodName: string): string {
+    const notAllowedCharacters = /[^a-zA-ZåäöÅÄÖ/\- ]+/g;
+
+    let result = foodName.replaceAll(notAllowedCharacters, "");
+
+    // Capitalize the first letter
+    result = result.charAt(0).toLocaleUpperCase() + result.substring(1);
+
+    // Remove multiple spaces
+    result = result.replaceAll(/  +/g, " ");
+    // Remove leading & trailing spaces
+    result = result.trim();
+
     return result;
   }
 }

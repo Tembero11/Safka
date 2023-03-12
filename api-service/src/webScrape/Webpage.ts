@@ -139,7 +139,7 @@ export default class Webpage {
     const matches = (name + " ").match(dietRegex);
 
     // Remove all characters that are considered not allowed
-    const notAllowedCharacters = /[^a-zA-ZåäöÅÄÖ/ ]{1,}/g;
+    const notAllowedCharacters = /[^a-zA-ZåäöÅÄÖ/\- ]+/g;
     let processedName = name
       .replaceAll(dietRegex, "")
       .replaceAll(notAllowedCharacters, "")

@@ -21,13 +21,22 @@ const migrate = async () => {
     const collection: Collection = db.collection("foods");
 
     await collection.find({}).forEach((doc) => {
-        doc.foods.forEach((element: Food[], index: number) => {
+        collection.updateOne({ $or: [{ meals: null }, { meals: { $size: 0 } }] }, { $set: { meals: [] } })
+        let meals: any[] = []
+
+        doc.foods.forEach((_: any, index: number) => {
             const names = [doc.foods[index].name]
-            const diets = [doc.foods[index].isLactoseFree, doc.foods[index].isDairyFree, doc.foods[index].isGlutenFree]
-            console.log(names)
-            console.log(diets)
-        });
+            const diets =
+                [{ isLactoryFree: doc.foods[index].isLactoseFree },
+                { isDairyFree: doc.foods[index].isDairyFree },
+                { isGlutenFree: doc.foods[index].isGlutenFree }]
+            const meal = { names: names, diets: diets }
+            meals.push(meal)
+        })
+        collection.updateOne({_id: doc._id}, { $set: { meals: meals }})
     })
+
+    await collection.find({}).forEach(doc => console.log(doc))
 }
 
 migrate()

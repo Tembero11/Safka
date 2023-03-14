@@ -13,17 +13,17 @@ app.disable("x-powered-by");
 const api = Router();
 api.use(cors());
 
-api.get("/v1/menu", (req, res) => {
+api.get("/v2/menu", (req, res) => {
   apiResponse(res, 200, { ...currentMenu });
 });
 
-api.get("/v1/menu/today", (req, res) => {
+api.get("/v2/menu/today", (req, res) => {
   const today = getDayFromWeek(currentMenu, getCurrentDayIndex());
 
   apiResponse(res, 200, { ...today });
 });
 
-api.get("/v1/menu/:dayId", (req, res) => {
+api.get("/v2/menu/:dayId", (req, res) => {
   const dayId = +req.params.dayId;
 
   if (Object.hasOwn(Weekday, dayId)) {

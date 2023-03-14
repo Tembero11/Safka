@@ -1,5 +1,5 @@
 import type { AppProps } from 'next/app'
-import '../styles/globals.css'
+import '../styles/globals.scss'
 import Layout from '../components/Layout'
 import Script from 'next/script'
 import * as gtag from "../utils/gtag"
@@ -28,7 +28,7 @@ export default function App({ Component, pageProps }: AppProps) {
       { isProd ? (<>
         <Script
           strategy="afterInteractive"
-          src={`https://www.googletagmanager.com/gtag/js?id=${process.env.GA_TAG}`}/>
+          src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_TAG}`}/>
         <Script id="gtag-script"
           strategy="afterInteractive"
           dangerouslySetInnerHTML={{
@@ -36,7 +36,7 @@ export default function App({ Component, pageProps }: AppProps) {
 window.dataLayer = window.dataLayer || [];
 function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
-gtag('config', '${process.env.GA_TAG}', {
+gtag('config', '${process.env.NEXT_PUBLIC_GA_TAG}', {
 page_path: window.location.pathname,
 });
 `,

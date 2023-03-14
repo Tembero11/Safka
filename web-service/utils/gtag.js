@@ -1,6 +1,6 @@
 // https://developers.google.com/analytics/devguides/collection/gtagjs/pages
 export const pageview = (url) => {
-  window.gtag("config", process.env.GA_TAG, {
+  window.gtag("config", process.env.NEXT_PUBLIC_GA_TAG, {
     page_path: url,
   });
 };

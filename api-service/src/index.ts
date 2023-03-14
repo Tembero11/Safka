@@ -17,10 +17,10 @@ const API_PREFIX = process.env.API_PREFIX || "/api";
 export const PORT = process.env.PORT || 5000;
 
 if (DISABLE_POLL) {
-console.log("Menu polling is disabled. This can be changed in the root directory's .env file by setting the 'DISABLE_POLL=false'.");
+  console.log("Menu polling is disabled. This can be changed in the root directory's .env file by setting the 'DISABLE_POLL=false'.");
 }
 if (DISABLE_DB) {
-console.log("Database is disabled. This can be changed in the root directory's .env file by setting the 'DISABLE_DB=false'.");
+  console.log("Database is disabled. This can be changed in the root directory's .env file by setting the 'DISABLE_DB=false'.");
 }
 
 export let currentMenu: WeekMenu;
@@ -28,31 +28,31 @@ export let archiver: Archiver | undefined;
 
 // Async setup code
 (async function () {
-const db = new Database({ dbUrl: DB_URL, dbName: DB_NAME });
+  const db = new Database({ dbUrl: DB_URL, dbName: DB_NAME });
 
-assert(db, new Error("Database undefined"));
+  assert(db, new Error("Database undefined"));
 
-if (!DISABLE_DB) {
+  if (!DISABLE_DB) {
     archiver = await db.newClient();
     assert(archiver, "Archiver is undefined");
-}
+  }
 
-const poller = new MenuPoller({ enableLogs: true });
+  const poller = new MenuPoller({ enableLogs: true });
 
-poller.on("polled", (menu) => {
+  poller.on("polled", (menu) => {
     currentMenu = menu;
 
     // Check that the database is not disabled
     if (!DISABLE_DB && archiver) {
-        // foodArchive menus                                                   
-        archiver.weekMenu = currentMenu;
-        // Add current menu to MongoDb                                         
-        archiver.saveMenus();
+      // foodArchive menus                                                   
+      archiver.weekMenu = currentMenu;
+      // Add current menu to MongoDb                                         
+      archiver.saveMenus();
     }
-});
+  });
 
-if (!DISABLE_POLL) poller.startPolling();
+  if (!DISABLE_POLL) poller.startPolling();
 
-// Start the http api server
-startServer(Number(PORT), { apiBaseRoute: API_PREFIX });
+  // Start the http api server
+  startServer(Number(PORT), { apiBaseRoute: API_PREFIX });
 })();

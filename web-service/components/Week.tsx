@@ -29,7 +29,7 @@ export default function Week(props: { menu: WeekMenu | null }) {
   }
 
   return (
-    <div className={styles.weekContainer}>
+    <div className={styles["week-container"]}>
       {
         timeframe.slice(0, 6).map((dayMenu, index) => {
           if (dayMenu instanceof Date) {

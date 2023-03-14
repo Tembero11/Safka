@@ -91,8 +91,8 @@ export default function Layout(props: { children: React.ReactNode }) {
       <ThemeProvider key={currentAppTheme} theme={currentAppTheme} />
       <div className={styles.container}>
         <div className={styles.navbar}>
-          <Link href="/" className={styles.logoLink}><h1 className={styles.logo}>Safka.<br />Online</h1></Link>
-          <button onClick={() => changeSettingsState(!isSettingsOpen)} className={styles.settingsBtn + " material-symbols-outlined"}>settings</button>
+          <Link href="/" className={styles["logo-link"]}><h1 className={styles.logo}>Safka.<br />Online</h1></Link>
+          <button onClick={() => changeSettingsState(!isSettingsOpen)} className={styles["settings-btn"] + " material-symbols-outlined"}>settings</button>
         </div>
         <div className={styles.content}>
           {props.children}
@@ -100,7 +100,7 @@ export default function Layout(props: { children: React.ReactNode }) {
         <Footer />
       </div>
 
-      <div className={styles.preferencesContainer} onClick={e => {
+      <div className={styles["preferences-container"]} onClick={e => {
         if (e.target === e.currentTarget) {
           onSettingsCancel();
         }
@@ -109,34 +109,34 @@ export default function Layout(props: { children: React.ReactNode }) {
         opacity: isSettingsOpen ? 1 : 0
       }}>
         <form onSubmit={onSettingsSubmit} className={styles.preferences} style={{ transform: `scale(${isSettingsOpen ? 1 : 0})` }}>
-          <div className={styles.preferencesContent}>
+          <div className={styles["preferences-content"]}>
             <h1>Käyttäjän Asetukset</h1>
             <h2>Teemat</h2>
-            <div className={styles.themeSelect}>
-              <label className={styles.themeSelectBlock}>
-                <span>Järjestelmän Oletus <span className={styles.defaultTheme}>({currentOsTheme == Theme.Light ? "Vaalea" : "Tumma"})</span></span>
+            <div className={styles["theme-select"]}>
+              <label className={styles["theme-select-block"]}>
+                <span>Järjestelmän Oletus <span className={styles["default-theme"]}>({currentOsTheme == Theme.Light ? "Vaalea" : "Tumma"})</span></span>
                 <input type="radio" value={Theme.Default} checked={selectedTheme == Theme.Default} onChange={onThemeChanged} />
               </label>
-              <label className={styles.themeSelectBlock}>
+              <label className={styles["theme-select-block"]}>
                 Vaalea Teema
                 <input type="radio" value={Theme.Light} checked={selectedTheme == Theme.Light} onChange={onThemeChanged} />
               </label>
-              <label className={styles.themeSelectBlock}>
+              <label className={styles["theme-select-block"]}>
                 Tumma Teema
                 <input type="radio" value={Theme.Dark} checked={selectedTheme == Theme.Dark} onChange={onThemeChanged} />
               </label>
             </div>
             {/* <h2>Erityisruokavaliot</h2>
                 <p>Näät vain ruuat joilla nämä erityisruokavaliot</p>
-                <div className={styles.dietChips}>
+                <div className={styles["diet-chips"]}>
                   <DietChip>Laktoositon</DietChip>
                   <DietChip>Gluteeniton</DietChip>
                   <DietChip>Maidoton</DietChip>
                 </div> */}
           </div>
-          <div className={styles.preferencesBottomBar}>
-            <input className={styles.preferencesBottomBtn} onClick={onSettingsCancel} type="button" value="Peruuta" />
-            <input className={styles.preferencesBottomBtn} type="submit" value="Tallenna" />
+          <div className={styles["preferences-bottom-bar"]}>
+            <input className={styles["preferences-bottom-btn"]} onClick={onSettingsCancel} type="button" value="Peruuta" />
+            <input className={styles["preferences-bottom-btn"]} type="submit" value="Tallenna" />
           </div>
         </form>
       </div>
@@ -150,14 +150,14 @@ export default function Layout(props: { children: React.ReactNode }) {
 function Footer() {
   return (
     <footer className={styles.footer}>
-      <h3 className={styles.footerHeader}>Resources</h3>
-      <ul className={styles.footerLinks}>
+      <h3 className={styles["footer-header"]}>Resources</h3>
+      <ul className={styles["footer-links"]}>
         <li><FooterLink href="https://api.safka.online/v1/menu">API</FooterLink></li>
         <li><FooterLink href="https://www.turkuai.fi/turun-ammatti-instituutti/opiskelijalle/ruokailu-ja-ruokalistat/ruokalista-juhannuskukkula-topseli">Data Source</FooterLink></li>
 
       </ul>
-      <h3 className={styles.footerHeader}>Open Source</h3>
-      <ul className={styles.footerLinks}>
+      <h3 className={styles["footer-header"]}>Open Source</h3>
+      <ul className={styles["footer-links"]}>
         <li><FooterLink href="https://github.com/Tembero11/Safka/tree/main/api-service">API</FooterLink></li>
         <li><FooterLink href="https://github.com/Tembero11/Safka/tree/main/web-service">Web</FooterLink></li>
       </ul>
@@ -171,6 +171,6 @@ function FooterLink(props: { href: string, children: string }) {
 
 function DietChip(props: { children: React.ReactNode, isActive?: boolean }) {
   return (
-    <div className={styles.dietChip}>{props.children}</div>
+    <div className={styles["diet-chip"]}>{props.children}</div>
   )
 }

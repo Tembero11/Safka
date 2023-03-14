@@ -1,8 +1,7 @@
-.weekContainer {
+.week-container {
   display: inline-flex;
   justify-content: center;
   align-items: stretch;
-  /* flex: 1 1 0; */
   flex-wrap: wrap;
   gap: 50px;
   width: calc(100% - 60px);

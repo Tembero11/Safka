@@ -8,11 +8,7 @@
   height: 450px;
 }
 
-.today > .box {
-  border-color: var(--brand-primary);
-}
-
-.dayName {
+.day-name {
   color: var(--ui-header-color);
   font-size: x-large;
   font-weight: bold;
@@ -36,39 +32,47 @@
   height: 80%;
   border: 10px solid transparent;
   border-radius: 25px;
-
   background: var(--ui-day-box-color);
+
   /* box-shadow: 17px 17px 32px #d9d9d9, -17px -17px 32px #ffffff; */
   box-shadow: 17px 17px 32px #00000025, -17px -17px 32px #00000009;
 }
+
+.today > .box {
+  border-color: var(--brand-primary);
+}
+
 
 .date {
   color: var(--ui-text-not-important);
   font-weight: 500;
 }
 
-.menuList {
+.menu-list {
   display: flex;
-  /* justify-content: center; */
   flex-direction: column;
   gap: 1em;
-  /* text-align: center; */
   width: calc(100% - 20px);
   list-style-type: none;
   padding: 0;
 }
 
-.menuListItem {
+.menu-list-item {
   overflow-wrap: normal;
+}
+
+.food-diets {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: .5em;
 }
 
 .diet {
   position: relative;
+  display: inline-block;
   background: var(--brand-primary);
-  margin-left: .5em;
   border-radius: 10px;
-
-  padding: 1px 4px 1px 4px;
+  padding: 1px 4px;
   font-size: small;
   font-weight: bold;
   color: white;
@@ -76,12 +80,8 @@
   cursor: pointer;
 }
 
-.diet:hover .dietTooltip {
-  transform: translateX(-50%) scale(1);
-  transition: transform 200ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
 
-.dietTooltip {
+.diet-tooltip {
   position: absolute;
   top: -40px;
   left: 50%;
@@ -90,10 +90,14 @@
   border-radius: 10px;
   background: var(--ui-tooltip-bg);
   user-select: none;
-
-  box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.075);
-
+  /* stylelint-disable-next-line color-function-notation */
+  box-shadow: 1px 1px 10px rgba(0, 0, 0, 7.5%);
   transition: transform 100ms linear;
+}
+
+.diet:hover .diet-tooltip {
+  transform: translateX(-50%) scale(1);
+  transition: transform 200ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 @media (prefers-color-scheme: dark) {

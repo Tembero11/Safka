@@ -122,7 +122,8 @@ export default class Webpage {
     const validDietLetters = ["L", "M", "G"];
     const dietLetterRegex = new RegExp(`[^${validDietLetters.join("")}]`, "g");
     const dietRegex = new RegExp(`[^a-zA-ZåäöÅÄÖ]+(${validDietLetters.join("|")})[^a-zåäö]+`, "g");
-    const name = foodName + " ";
+    // Make nbsp; chars a space
+    const name = foodName.replaceAll(/\s/g, " ") + " ";
     
     const matches: IndexRange[] = [];
     const matchedDiets = [];

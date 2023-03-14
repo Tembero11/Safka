@@ -6,7 +6,7 @@
     position: fixed;
     bottom: 0;
     left: 0;
-    padding: 1% 1% 1% 1%;
+    padding: 1%;
     margin-left: 1%;
     margin-bottom: 1%;
     border: 7px solid var(--brand-primary);
@@ -57,7 +57,7 @@
     gap: 10px;
 }
 
-.consentBtn {
+.consent-btn {
   color: white;
   background: var(--brand-primary);
   padding: 15px;
@@ -65,14 +65,11 @@
   border-radius: 20px;
   font-weight: bold;
   cursor: pointer;
-
   font-family: var(--ui-font-family);
-
   width: 120px;
-
   transition: transform 120ms;
 }
 
-.consentBtn:hover {
+.consent-btn:hover {
   transform: scale(1.05);
 }

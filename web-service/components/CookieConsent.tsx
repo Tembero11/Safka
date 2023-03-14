@@ -21,15 +21,15 @@ export default function CookieConsent(props: IProps) {
         <div className={styles.desc}>
           <p className={styles.desc}>Käytämme keksejä käyttökokemuksesi parantamiseksi ja analytiikan keräämiseen.</p>
           <p className={styles.desc}>Käyttämällä keksejä annat meille mahdollisuuden parantaa sivustoamme.</p>
-          <p>Painamalla "Hyväksyn" annat Safka Onlinelle oikeuden säilyttää tietoja sessioistasi.</p>
+          <p>Painamalla &quot;Hyväksyn&quot; annat Safka Onlinelle oikeuden säilyttää tietoja sessioistasi.</p>
         </div>
         
         <div className={styles.buttons}>
-          <button className={styles.consentBtn} onClick={() => onConsent()}>
+          <button className={styles["consent-btn"]} onClick={() => onConsent()}>
           Hyväksyn
           </button>
 
-          <button className={styles.consentBtn} style={{backgroundColor: "var(--ui-tooltip-bg)"}}>
+          <button className={styles["consent-btn"]} style={{backgroundColor: "var(--ui-tooltip-bg)"}}>
             Ei kiitos!
           </button>
         </div>

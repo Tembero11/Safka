@@ -11,8 +11,8 @@ dotenv.config();
 
 const DISABLE_POLL = process.env.DISABLE_POLL == "true";
 const DISABLE_DB = process.env.DISABLE_DB == "true";
-const DB_URL = process.env.DB_URL || "mongodb://127.0.0.1:27017";
-const DB_NAME = process.env.DB_NAME || "SafkaArchiverDB";
+export const DB_URL = process.env.DB_URL || "mongodb://127.0.0.1:27017";
+export const DB_NAME = process.env.DB_NAME || "SafkaArchiverDB";
 const API_PREFIX = process.env.API_PREFIX || "/api";
 export const PORT = process.env.PORT || 5000;
 

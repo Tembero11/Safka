@@ -41,14 +41,16 @@ type WeekMenuResponse = WeekMenu & DefaultApiResponse;
 
 
 export default async function getWeekMenu() {
-  const resp = await fetch(`https://api.safka.online/v1/menu/`, {
+  const url = process.env.API_URL || "https://api.safka.online/v1/menu/";
+  console.log(url)
+  const resp = await fetch(url, {
     method: "get"
   });
 
   const body = await resp.json() as DefaultApiResponse;
 
   if (resp.ok && body.ok) {
-      return body as WeekMenuResponse;
+    return body as WeekMenuResponse;
   }
   throw new Error("Could not load WeekMenu")
 }

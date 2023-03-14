@@ -26,7 +26,7 @@ const migrate = async () => {
 
     const meals: any[] = [];
 
-    doc.foods.forEach((_: any, index: number) => {
+    doc.foods.forEach((_: null, index: number) => {
       const names = [doc.foods[index].name];
       const diets =
                 [{ isLactoryFree: doc.foods[index].isLactoseFree },
@@ -38,8 +38,6 @@ const migrate = async () => {
     });
     collection.updateOne({_id: doc._id}, { $set: { meals: meals }, $unset: { foods: ""}});
   });
-
-  await collection.find({}).forEach(doc => console.log(doc));
 };
 
 migrate();

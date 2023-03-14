@@ -1,5 +1,6 @@
 import { Collection, Db, MongoClient } from "mongodb";
 import { DB_NAME, DB_URL } from "..";
+import { Food } from "../types";
 
 const connect = async (dbUrl: string, dbName: string) => {
     console.log("-- MIGRATION SCRIPT --")
@@ -20,9 +21,11 @@ const migrate = async () => {
     const collection: Collection = db.collection("foods");
 
     await collection.find({}).forEach((doc) => {
-        doc.foods.forEach((element: any, index: any) => {
+        doc.foods.forEach((element: Food[], index: number) => {
             const names = [doc.foods[index].name]
+            const diets = [doc.foods[index].isLactoseFree, doc.foods[index].isDairyFree, doc.foods[index].isGlutenFree]
             console.log(names)
+            console.log(diets)
         });
     })
 }

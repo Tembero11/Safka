@@ -5,6 +5,7 @@ import styles from "./css/Week.module.css";
 import DayBox from "./DayBox";
 
 export default function Week(props: { menu: WeekMenu | null }) {
+  console.log(props)
   if (!props.menu) {
     return (
       <p>There was an internal server error when trying load the menu. This problem is probably temporary and will be fixed soon!</p>

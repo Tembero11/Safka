@@ -29,17 +29,27 @@ export default function DayBox(props: IProps) {
         <p className={styles.date}>{date}</p>
         <ul className={styles.menuList}>
           {
-            props.menu?.menu.map(food => {
+            props.menu?.menu.map((meal, index) => {
               return (
-                <Fragment key={food.name}>
-                  <li className={styles.menuListItem}>
-                    {food.name}
-                    {food.isLactoseFree ? <Diet longName="Laktoositon">L</Diet> : <></>}
-                    {food.isDairyFree ? <Diet longName="Maidoton">M</Diet> : <></>}
-                    {food.isGlutenFree ? <Diet longName="Gluteeniton">G</Diet> : <></>}
+                <Fragment key={index}>
+                  <li key={index} className={styles.menuListItem}>
+                    {
+                      meal.names.map((name, index) => {
+                        const diets = meal.diets[index];
+      
+                        return (
+                          <>
+                            {name}
+                            {diets.isLactoseFree ? <Diet longName="Laktoositon">L</Diet> : <></>}
+                            {diets.isDairyFree ? <Diet longName="Maidoton">M</Diet> : <></>}
+                            {diets.isGlutenFree ? <Diet longName="Gluteeniton">G</Diet> : <></>}
+                          </>
+                        );
+                      })
+                    }
                   </li>
                 </Fragment>
-              )
+              );
             })
           }
         </ul>

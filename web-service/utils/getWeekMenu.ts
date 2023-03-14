@@ -1,18 +1,19 @@
-export interface Food {
-  name: string;
+export interface DietaryRestrictions {
   isLactoseFree: boolean;
   isDairyFree: boolean;
   isGlutenFree: boolean;
 }
-
-
+export interface Meal {
+  names: string[];
+  diets: DietaryRestrictions[];
+}
 
 export interface DayMenu {
   // If the day has no menu the hash will be null
   hash: string | null;
   dayId: Weekday;
-  date: string;
-  menu: Food[];
+  date: Date;
+  menu: Meal[];
 }
 
 export enum Weekday {

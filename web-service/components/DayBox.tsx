@@ -33,10 +33,12 @@ export default function DayBox(props: IProps) {
               return (
                 <Fragment key={food.name}>
                   <li className={styles.menuListItem}>
-                    {food.name}
-                    {food.isLactoseFree ? <Diet longName="Laktoositon">L</Diet> : <></>}
-                    {food.isDairyFree ? <Diet longName="Maidoton">M</Diet> : <></>}
-                    {food.isGlutenFree ? <Diet longName="Gluteeniton">G</Diet> : <></>}
+                    <span style={{marginRight: ".5em"}}>{food.name}</span>
+                    <div className={styles["food-diets"]}>
+                      {food.isLactoseFree ? <Diet longName="Laktoositon">L</Diet> : <></>}
+                      {food.isDairyFree ? <Diet longName="Maidoton">M</Diet> : <></>}
+                      {food.isGlutenFree ? <Diet longName="Gluteeniton">G</Diet> : <></>}
+                    </div>
                   </li>
                 </Fragment>
               )

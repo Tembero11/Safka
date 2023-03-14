@@ -8,9 +8,14 @@ stop() {
   [ "$1" = "dev" ] && docker-compose -f docker-compose.dev.yml down || docker-compose -f docker-compose.yml down
 }
 
+restart() {
+  stop "$1" && run "$1"
+}
+
 main() {
   [ "$1" = "run" ] && run "$2" 
   [ "$1" = "stop" ] && stop "$2" 
+  [ "$1" = "restart" ] && restart "$2" 
 }
 
 main "$1" "$2"; exit

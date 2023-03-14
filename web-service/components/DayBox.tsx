@@ -23,16 +23,16 @@ export default function DayBox(props: IProps) {
 
   return (
     <div className={styles.container + " " + (props.isToday ? styles.today : "")}>
-      <h2 className={styles.dayName}>{props.dayName}</h2>
+      <h2 className={styles["day-name"]}>{props.dayName}</h2>
       <div className={styles.break}></div>
       <div className={styles.box}>
         <p className={styles.date}>{date}</p>
-        <ul className={styles.menuList}>
+        <ul className={styles["menu-list"]}>
           {
             props.menu?.menu.map(food => {
               return (
                 <Fragment key={food.name}>
-                  <li className={styles.menuListItem}>
+                  <li className={styles["menu-list-item"]}>
                     <span style={{marginRight: ".5em"}}>{food.name}</span>
                     <div className={styles["food-diets"]}>
                       {food.isLactoseFree ? <Diet longName="Laktoositon">L</Diet> : <></>}
@@ -57,7 +57,7 @@ export function Diet(props: { children: string, longName?: string }) {
   return (
     <span className={styles.diet} style={{cursor: props.longName ? "pointer" : "default"}}>
       {props.children}
-      {props.longName ? <div className={styles.dietTooltip}>{props.longName}</div> : <></>}
+      {props.longName ? <div className={styles["diet-tooltip"]}>{props.longName}</div> : <></>}
     </span>
   )
 }

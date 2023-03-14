@@ -22,6 +22,7 @@
   height: 300px;
   padding-bottom: 20px;
 }
+
 .link {
   text-decoration: none;
   font-weight: 600;
@@ -31,18 +32,19 @@
   border-radius: 10px;
   transition: 70ms;
 }
+
 .link:hover {
   background: var(--brand-primary-dark);
 }
 
-.footerLinks {
+.footer-links {
   display: flex;
   gap: 15px;
   list-style-type: none;
-  padding: 0px;
+  padding: 0;
 }
 
-.footerHeader {
+.footer-header {
   color: white;
 }
 
@@ -57,18 +59,20 @@
   width: 100vw;
   height: 130px;
 }
+
 .logo {
-  font-family: 'Montserrat', sans-serif;
+  font-family: Montserrat, sans-serif;
   z-index: 10000;
   color: var(--brand-primary);
   margin-left: 20px;
   user-select: none;
 }
-.logoLink {
+
+.logo-link {
   text-decoration: none;
 }
 
-.settingsBtn {
+.settings-btn {
   position: relative;
   width: 60px;
   height: 60px;
@@ -81,8 +85,9 @@
   font-size: xx-large;
   cursor: pointer;
 }
-.settingsBtn::after {
-  content: '';
+
+.settings-btn::after {
+  content: "";
   position: absolute;
   top: 50%;
   left: 50%;
@@ -91,15 +96,17 @@
   transform: translate(-50%, -50%) scale(0);
   transition: transform 200ms;
   border-radius: 100%;
-  background: rgba(0, 0, 0, 0.137);
+  /* stylelint-disable-next-line color-function-notation */
+  background: rgba(0, 0, 0, 13.7%);
   z-index: -1;
 }
-.settingsBtn:hover::after {
+
+.settings-btn:hover::after {
   transform: translate(-50%, -50%) scale(1);
 }
 
 /* Preferences */
-.preferencesContainer {
+.preferences-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -109,55 +116,42 @@
   width: 100vw;
   height: 100vh;
   background: #0000004e;
-
   z-index: 99999;
   transition: opacity 200ms;
 }
-
 
 .preferences {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   transition: transform 200ms;
-
   width: 80%;
   height: 65%;
-
   padding: 30px;
-
   background: var(--ui-page-background);
-
   border-radius: 25px;
-
-  box-shadow: 1px 1px 25px rgba(0, 0, 0, 0.05);
+  box-shadow: 1px 1px 25px rgba(0 0 0 5%);
 }
 
 .preferences h1 {
   margin: 0;
 }
 
-.preferencesContent {
+.preferences-content {
   overflow-x: hidden;
   overflow-y: auto;
 }
 
-.preferencesBottomBar {
+.preferences-bottom-bar {
   display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
+  flex-flow: row nowrap;
   justify-content: end;
   align-items: baseline;
   gap: 10px;
-
   padding-top: 10px;
 }
-.preferencesBottomBtn:first-child {
-  background: var(--ui-tooltip-bg);
-  color: white;
-}
 
-.preferencesBottomBtn {
+.preferences-bottom-btn {
   color: white;
   background: var(--brand-primary);
   padding: 15px;
@@ -165,24 +159,29 @@
   border-radius: 20px;
   font-weight: bold;
   cursor: pointer;
-
   font-family: var(--ui-font-family);
-
   width: 120px;
-
   transition: transform 120ms;
 }
-.preferencesSubmit:hover {
+
+.preferences-bottom-btn:first-child {
+  background: var(--ui-tooltip-bg);
+  color: white;
+}
+
+
+
+.preferences-submit:hover {
   transform: scale(1.05);
 }
 
-.dietChips {
+.diet-chips {
   display: flex;
   flex-wrap: wrap;
   gap: 15px;
 }
 
-.dietChip {
+.diet-chip {
   background: var(--brand-primary);
   color: white;
   text-align: center;
@@ -194,7 +193,7 @@
   user-select: none;
 }
 
-.themeSelectBlock {
+.theme-select-block {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -206,37 +205,35 @@
   border-radius: 10px;
   cursor: pointer;
   transition: background-color 120ms;
-  
-  padding: 5px 20px 5px 20px;
+  padding: 5px 20px;
 }
 
-.themeSelectBlock:hover {
+.theme-select-block:hover {
   background-color: var(--ui-slight-highlight-hover);
 }
 
-.defaultTheme {
+.default-theme {
   color: var(--ui-text-not-important);
 }
 
-.themeSelect {
+.theme-select {
   display: flex;
   gap: 10px;
   flex-direction: column;
 }
 
-.themeSelectBlock input[type=radio] {
-  -webkit-appearance: none;
+.theme-select-block input[type="radio"] {
   appearance: none;
   background-color: white;
   margin: 0;
   border: 4px solid transparent;
-
   width: 15px;
   height: 15px;
   border-radius: 100%;
   cursor: pointer;
 }
-.themeSelectBlock input[type=radio]:checked {
+
+.theme-select-block input[type="radio"]:checked {
   border-color: var(--brand-primary);
 }
 
@@ -248,12 +245,14 @@
     height: 100%;
     padding: 20px;
   }
-  .themeSelectBlock {
+
+  .theme-select-block {
     padding-left: 10px;
     padding-right: 10px;
     width: calc(100% - 20px);
   }
 }
+
 @media screen and (min-width: 999px) {
   .preferences {
     width: 55%;

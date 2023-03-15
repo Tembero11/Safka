@@ -1,5 +1,6 @@
 import type { AppProps } from 'next/app'
-import '../styles/globals.scss'
+import '../styles/globals.scss';
+import '../styles/themes.scss';
 import Layout from '../components/Layout'
 import Script from 'next/script'
 import * as gtag from "../utils/gtag"

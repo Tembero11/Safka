@@ -1,0 +1,21 @@
+@use "sass:map";
+
+@mixin themeable($theme-name, $map) {
+  .#{$theme-name} {
+    @each $section, $data in $map {
+      @if $section == palette {
+        @debug $section;
+        @debug $data;
+
+        background: map.get($map: $data, $key: $section);
+      }
+    } 
+  }
+}
+
+
+@include themeable(theme-light, (
+  "palette": (
+    "background": blue
+  )
+))

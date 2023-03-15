@@ -12,7 +12,7 @@ export default function Document() {
         <meta property="og:description" content="What's on the menu today?" />
         {/* <meta property="og:image" content="" /> */}
       </Head>
-      <body>
+      <body className='theme-red'>
         <Main />
         <NextScript />
       </body>

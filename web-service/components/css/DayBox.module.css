@@ -68,7 +68,6 @@
 }
 
 .diet {
-  display: inline-block;
   position: relative;
   display: inline-block;
   background: var(--brand-primary);

@@ -39,10 +39,12 @@ export default function DayBox(props: IProps) {
       
                         return (
                           <>
-                            <span>{name}</span>
-                            {diets.isLactoseFree ? <Diet longName="Laktoositon">L</Diet> : <></>}
-                            {diets.isDairyFree ? <Diet longName="Maidoton">M</Diet> : <></>}
-                            {diets.isGlutenFree ? <Diet longName="Gluteeniton">G</Diet> : <></>}
+                            <span style={{marginRight: ".5em"}}>{name}</span>
+                            <div className={styles["food-diets"]}>
+                              {diets.isLactoseFree ? <Diet longName="Laktoositon">L</Diet> : <></>}
+                              {diets.isDairyFree ? <Diet longName="Maidoton">M</Diet> : <></>}
+                              {diets.isGlutenFree ? <Diet longName="Gluteeniton">G</Diet> : <></>}
+                            </div>
                           </>
                         );
                       })

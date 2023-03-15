@@ -18,5 +18,5 @@ export interface DatabaseMenu {
     week: DatabaseWeek;
     date: Date;
     dayId: Weekday;
-    foods: Meal[];
+    meals: Meal[];
 }

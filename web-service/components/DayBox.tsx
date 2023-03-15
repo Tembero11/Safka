@@ -29,19 +29,27 @@ export default function DayBox(props: IProps) {
         <p className={styles.date}>{date}</p>
         <ul className={styles["menu-list"]}>
           {
-            props.menu?.menu.map(food => {
+            props.menu?.menu.map((meal, index) => {
               return (
-                <Fragment key={food.name}>
-                  <li className={styles["menu-list-item"]}>
-                    <span style={{marginRight: ".5em"}}>{food.name}</span>
-                    <div className={styles["food-diets"]}>
-                      {food.isLactoseFree ? <Diet longName="Laktoositon">L</Diet> : <></>}
-                      {food.isDairyFree ? <Diet longName="Maidoton">M</Diet> : <></>}
-                      {food.isGlutenFree ? <Diet longName="Gluteeniton">G</Diet> : <></>}
-                    </div>
+                <Fragment key={index}>
+                  <li key={index} className={styles.menuListItem}>
+                    {
+                      meal.names.map((name, index) => {
+                        const diets = meal.diets[index];
+      
+                        return (
+                          <>
+                            <span>{name}</span>
+                            {diets.isLactoseFree ? <Diet longName="Laktoositon">L</Diet> : <></>}
+                            {diets.isDairyFree ? <Diet longName="Maidoton">M</Diet> : <></>}
+                            {diets.isGlutenFree ? <Diet longName="Gluteeniton">G</Diet> : <></>}
+                          </>
+                        );
+                      })
+                    }
                   </li>
                 </Fragment>
-              )
+              );
             })
           }
         </ul>
@@ -60,4 +68,3 @@ export function Diet(props: { children: string, longName?: string }) {
       {props.longName ? <div className={styles["diet-tooltip"]}>{props.longName}</div> : <></>}
     </span>
   )
-}

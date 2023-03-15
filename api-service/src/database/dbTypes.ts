@@ -1,5 +1,5 @@
 import { ObjectId } from "mongodb";
-import { Food, Weekday } from "../types";
+import { Meal, Weekday } from "../types";
 
 export interface DatabaseOptions {
     dbUrl: string
@@ -18,5 +18,5 @@ export interface DatabaseMenu {
     week: DatabaseWeek;
     date: Date;
     dayId: Weekday;
-    foods: Food[];
+    foods: Meal[];
 }

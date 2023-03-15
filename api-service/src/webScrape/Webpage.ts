@@ -2,8 +2,8 @@ import parse, { HTMLElement } from "node-html-parser";
 import assert from "node:assert";
 import crypto from "crypto";
 import { ElementUndefinedError } from "../errors";
-import { DayMenu, Food, WeekMenu } from "../types";
-import { addDaysToDate, getDateOfISOWeek, isValidDateString } from "../utils";
+import { DayMenu, DietaryRestrictions, Meal, WeekMenu } from "../types";
+import { addDaysToDate, getDateOfISOWeek, IndexRange, isValidDateString, splitByIndexRange } from "../utils";
 
 export default class Webpage {
   readonly url;
@@ -56,12 +56,12 @@ export default class Webpage {
       assert(foodsHTML, new ElementUndefinedError("foodsHTML"));
 
       const ogFoods: string[] = [];
-      const processedFoods: Food[] = [];
+      const processedFoods: Meal[] = [];
 
       foodsHTML.getElementsByTagName("p").forEach(element => {
         if (element.innerText.trim()) {
           ogFoods.push(element.innerText);
-          processedFoods.push(this.getDietsAndName(element.innerText));
+          processedFoods.push(this.mealFromUnparsedFoodName(element.innerText));
         }
       });
       // Add all the foods to the day object
@@ -118,44 +118,50 @@ export default class Webpage {
      * @param foodName Unparsed food name
      * @returns name and diets of the food
      */
-  private getDietsAndName(foodName: string) {
-    // The default state for diets
+  private mealFromUnparsedFoodName(foodName: string): Meal {
+    const validDietLetters = ["L", "M", "G"];
+    const dietLetterRegex = new RegExp(`[^${validDietLetters.join("")}]`, "g");
+    const dietRegex = new RegExp(`[^a-zA-ZåäöÅÄÖ]+(${validDietLetters.join("|")})[^a-zåäö]+`, "g");
+    // Make nbsp; chars a space
+    const name = foodName.replaceAll(/\s/g, " ") + " ";
+    
+    const matches: IndexRange[] = [];
+    const matchedDiets = [];
+    let currentMatch;
+    while (null != (currentMatch = dietRegex.exec(name))) {
+      const originalText = currentMatch[0];
+      // Remove the last character
+      // Regex might match the starting of a new word that starts with a capital letter
+      const dietLetters = originalText.substring(0, originalText.length - 1).replaceAll(dietLetterRegex, "");
+      
+      let matchLen = -1;
+      for (const matchStr of currentMatch) {
+        if (matchLen < matchStr.length) {
+          matchLen = matchStr.length;
+        }
+      }
+
+      const matchStart = currentMatch.index;
+      const matchEnd = matchStart + matchLen - 1;
+      matchedDiets.push(this.dietaryRestrictionsFromString(dietLetters));
+      matches.push({ start: matchStart, end: matchEnd});
+    }
+
+    const names = splitByIndexRange(name, matches);
+
     const result = {
+      names: names.map(name => this.formatFoodName(name)),
+      diets: matchedDiets
+    };
+    return result;
+  }
+
+  private dietaryRestrictionsFromString(dietString: string): DietaryRestrictions {
+    const result: DietaryRestrictions = {
       isLactoseFree: false,
       isDairyFree: false,
-      isGlutenFree: false,
+      isGlutenFree: false
     };
-
-    // Change all empty characters into a space and remove spaces from the start and end of the string
-    // Also fix typos with slash not having a space infront
-    // This might in a rare condition where a diet character is infront of a slash fix the misinterpretation
-    const name = foodName.replaceAll(/\s/g, " ").split("/").join(" / ").trim();
-
-    // This regex finds any of the L, M, G characters that have a lower case nonalphabetic character after them
-    const dietRegex = /(L|M|G)[^a-zåäö]/g;
-
-    // Also add one space to the end of the string
-    // A hacky way for the regex to handle the end of the string
-    const matches = (name + " ").match(dietRegex);
-
-    // Remove all characters that are considered not allowed
-    const notAllowedCharacters = /[^a-zA-ZåäöÅÄÖ/\- ]+/g;
-    let processedName = name
-      .replaceAll(dietRegex, "")
-      .replaceAll(notAllowedCharacters, "")
-    // Replace multiple whitespaces with only one
-      .replaceAll(/  +/g, " ").trim();
-
-    // Capitalize the first letter
-    processedName = processedName.charAt(0).toLocaleUpperCase() + processedName.substring(1);
-
-    if (!matches) return {
-      name: processedName,
-      ...result
-    };
-
-    // String might contain other chars as well
-    const dietString = matches.join("");
 
     for (const possibleDiet of dietString) {
       switch (possibleDiet) {
@@ -172,10 +178,22 @@ export default class Webpage {
         break;
       }
     }
+    return result;
+  }
 
-    return {
-      name: processedName,
-      ...result
-    };
+  private formatFoodName(foodName: string): string {
+    const notAllowedCharacters = /[^a-zA-ZåäöÅÄÖ/\- ]+/g;
+
+    let result = foodName.replaceAll(notAllowedCharacters, "");
+
+    // Capitalize the first letter
+    result = result.charAt(0).toLocaleUpperCase() + result.substring(1);
+
+    // Remove multiple spaces
+    result = result.replaceAll(/  +/g, " ");
+    // Remove leading & trailing spaces
+    result = result.trim();
+
+    return result;
   }
 }

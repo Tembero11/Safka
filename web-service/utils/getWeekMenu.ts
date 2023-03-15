@@ -1,18 +1,19 @@
-export interface Food {
-  name: string;
+export interface DietaryRestrictions {
   isLactoseFree: boolean;
   isDairyFree: boolean;
   isGlutenFree: boolean;
 }
-
-
+export interface Meal {
+  names: string[];
+  diets: DietaryRestrictions[];
+}
 
 export interface DayMenu {
   // If the day has no menu the hash will be null
   hash: string | null;
   dayId: Weekday;
-  date: string;
-  menu: Food[];
+  date: Date;
+  menu: Meal[];
 }
 
 export enum Weekday {
@@ -41,14 +42,16 @@ type WeekMenuResponse = WeekMenu & DefaultApiResponse;
 
 
 export default async function getWeekMenu() {
-  const resp = await fetch(`https://api.safka.online/v1/menu/`, {
+  const url = process.env.API_URL || "https://api.safka.online/v1/menu/";
+  console.log(url)
+  const resp = await fetch(url, {
     method: "get"
   });
 
   const body = await resp.json() as DefaultApiResponse;
 
   if (resp.ok && body.ok) {
-      return body as WeekMenuResponse;
+    return body as WeekMenuResponse;
   }
   throw new Error("Could not load WeekMenu")
 }

@@ -1,8 +1,11 @@
-export interface Food {
-    name: string;
+export interface DietaryRestrictions {
     isLactoseFree: boolean;
     isDairyFree: boolean;
     isGlutenFree: boolean;
+}
+export interface Meal {
+    names: string[];
+    diets: DietaryRestrictions[];
 }
 
 export interface DayMenu {
@@ -10,7 +13,7 @@ export interface DayMenu {
     hash: string | null;
     dayId: Weekday;
     date: Date;
-    menu: Food[];
+    menu: Meal[];
 }
 
 export enum Weekday {

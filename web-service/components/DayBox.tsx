@@ -39,7 +39,7 @@ export default function DayBox(props: IProps) {
       
                         return (
                           <>
-                            {name}
+                            <span>{name}</span>
                             {diets.isLactoseFree ? <Diet longName="Laktoositon">L</Diet> : <></>}
                             {diets.isDairyFree ? <Diet longName="Maidoton">M</Diet> : <></>}
                             {diets.isGlutenFree ? <Diet longName="Gluteeniton">G</Diet> : <></>}

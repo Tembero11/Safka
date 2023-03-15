@@ -68,3 +68,4 @@ export function Diet(props: { children: string, longName?: string }) {
       {props.longName ? <div className={styles["diet-tooltip"]}>{props.longName}</div> : <></>}
     </span>
   )
+}

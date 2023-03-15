@@ -65,7 +65,7 @@ export class Archiver extends Database {
         const weekData: DatabaseWeek = { weekNumber: (this.weekMenu as WeekMenu).weekNumber, year: new Date().getUTCFullYear() };
 
         // Construct full object which is then...
-        const full = { _id: new ObjectId(), version: 0, hash: dayMenu.hash, week: weekData, date: dayMenu.date, dayId: dayMenu.dayId, foods: dayMenu.menu };
+        const full = { _id: new ObjectId(), version: 0, hash: dayMenu.hash, week: weekData, date: dayMenu.date, dayId: dayMenu.dayId, meals: dayMenu.menu };
         // pushed into the array
         daysMenus.push(full);
       });
@@ -122,5 +122,3 @@ export class Archiver extends Database {
     return null;
   }
 }
-
-//         const xd: unknown = await this._db.collection("foods").findOne({"dayMenu.menu": {$elemMatch: {"name": "Lohimurekepihvit"}}});

@@ -196,3 +196,4 @@ export default class Webpage {
 
     return result;
   }
+}

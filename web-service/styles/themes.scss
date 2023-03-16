@@ -1,21 +1,54 @@
-@use "sass:map";
+/* stylelint-disable scss/function-no-unknown */
+$palette: (
+  "light": (
 
-@mixin themeable($theme-name, $map) {
-  .#{$theme-name} {
-    @each $section, $data in $map {
-      @if $section == palette {
-        @debug $section;
-        @debug $data;
+  )
+  "dark": (
 
-        background: map.get($map: $data, $key: $section);
-      }
-    } 
+  )
+);
+
+
+@function gen-no-theme-selector() {
+  $str: ":root";
+
+  @each theme-name in $palette {
+    $str: "#{$str}:not([data-theme=#{theme-name}])";
+  }
+
+  @return $str;
+}
+
+$no-theme-selector: gen-no-theme-selector();
+
+@debug $no-theme-selector;
+
+@mixin light() {
+  @media (prefers-color-scheme: light) {
+    @at-root #{selector-nest(":root:not([data-theme=light]):not([data-theme=dark])", &)} {
+      @content;
+    }
+  }
+
+  @at-root #{selector-nest(":root[data-theme=light]", &)} {
+    @content;
   }
 }
 
+@mixin dark() {
+  @media (prefers-color-scheme: dark) {
+    @at-root #{selector-nest(":root:not([data-theme=light]):not([data-theme=dark])", &)} {
+      @content;
+    }
+  }
 
-@include themeable(theme-light, (
-  "palette": (
-    "background": blue
-  )
-))
+  @at-root #{selector-nest(":root[data-theme=dark]", &)} {
+    @content;
+  }
+}
+
+body {
+  @include dark {
+    background: black;
+  }
+}

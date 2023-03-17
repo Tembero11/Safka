@@ -1,4 +1,6 @@
 /* stylelint-disable scss/function-no-unknown */
+
+$app-root-selector: "#theme";
 $palette: (
   "light": (
 
@@ -10,30 +12,24 @@ $palette: (
 
 @mixin light() {
   @media (prefers-color-scheme: light) {
-    @at-root #{selector-nest(":root:not([data-theme])", &)} {
+    @at-root #{selector-nest("#{$app-root-selector}:not([data-theme])", &)} {
       @content;
     }
   }
 
-  @at-root #{selector-nest(":root[data-theme=light]", &)} {
+  @at-root #{selector-nest("#{$app-root-selector}[data-theme=light]", &)} {
     @content;
   }
 }
 
 @mixin dark() {
   @media (prefers-color-scheme: dark) {
-    @at-root #{selector-nest(":root:not([data-theme])", &)} {
+    @at-root #{selector-nest("#{$app-root-selector}:not([data-theme])", &)} {
       @content;
     }
   }
 
-  @at-root #{selector-nest(":root[data-theme=dark]", &)} {
+  @at-root #{selector-nest("#{$app-root-selector}[data-theme=dark]", &)} {
     @content;
-  }
-}
-
-body {
-  @include dark {
-    background: black;
   }
 }

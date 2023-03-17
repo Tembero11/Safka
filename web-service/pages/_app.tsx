@@ -1,4 +1,4 @@
-import type { AppProps } from 'next/app'
+import type { AppContext, AppProps } from 'next/app'
 import {default as NextApp} from "next/app";
 import '../styles/globals.scss';
 import '../styles/themes.scss';
@@ -10,13 +10,14 @@ import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import { getCookie } from 'cookies-next';
 
-interface IProps {
-  theme: "os" | "light" | "dark"
+interface IProps extends AppProps {
+  theme?: "light" | "dark"
 }
 
 const isProd = isProduction()
 
-export default function App({ Component, pageProps }: AppProps) {
+export default function App({ Component, pageProps, theme }: IProps) {
+  console.log(theme);
   const router = useRouter();
   useEffect(() => {
     if (!isProd) return
@@ -50,29 +51,30 @@ page_path: window.location.pathname,
           }}
         /></>) : null }
 
-      <Layout>
-        <Component {...pageProps} />
-      </Layout>
+      <div id='theme' data-theme={theme}>
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+      </div>
     </>
   )
 }
 
 
-export const getInitialProps: GetInitialProps<IProps> = async({ req, res }) => {
-  const theme = getCookie("user-theme", { req, res })?.toString() || "os";
-  NextApp.getInitialProps(appContext)
-
-  if (
-    theme == "os" ||
-    theme == "dark" ||
-    theme == "light"
-  ) {
-    return {
-      props: { theme }
-    }
+App.getInitialProps = async(context: AppContext) => {
+  const initialProps = await NextApp.getInitialProps(context);
+  const { req, res } = context.ctx;
+  const themeCookie = getCookie("user-theme", { req, res });
+  
+  let theme;
+  if (themeCookie == "dark" || themeCookie == "light") {
+    theme = themeCookie
+  }else {
+    theme = null;
   }
 
-  return { 
-    props: { theme: "os" }
+  return {
+    ...initialProps,
+    theme
   }
 }

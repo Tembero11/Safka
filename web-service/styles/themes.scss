@@ -2,30 +2,15 @@
 $palette: (
   "light": (
 
-  )
+  ),
   "dark": (
 
   )
 );
 
-
-@function gen-no-theme-selector() {
-  $str: ":root";
-
-  @each theme-name in $palette {
-    $str: "#{$str}:not([data-theme=#{theme-name}])";
-  }
-
-  @return $str;
-}
-
-$no-theme-selector: gen-no-theme-selector();
-
-@debug $no-theme-selector;
-
 @mixin light() {
   @media (prefers-color-scheme: light) {
-    @at-root #{selector-nest(":root:not([data-theme=light]):not([data-theme=dark])", &)} {
+    @at-root #{selector-nest(":root:not([data-theme])", &)} {
       @content;
     }
   }
@@ -37,7 +22,7 @@ $no-theme-selector: gen-no-theme-selector();
 
 @mixin dark() {
   @media (prefers-color-scheme: dark) {
-    @at-root #{selector-nest(":root:not([data-theme=light]):not([data-theme=dark])", &)} {
+    @at-root #{selector-nest(":root:not([data-theme])", &)} {
       @content;
     }
   }

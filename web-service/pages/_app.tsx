@@ -1,4 +1,5 @@
 import type { AppProps } from 'next/app'
+import {default as NextApp} from "next/app";
 import '../styles/globals.scss';
 import '../styles/themes.scss';
 import Layout from '../components/Layout'
@@ -7,6 +8,11 @@ import * as gtag from "../utils/gtag"
 import { isProduction } from '../utils/common'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
+import { getCookie } from 'cookies-next';
+
+interface IProps {
+  theme: "os" | "light" | "dark"
+}
 
 const isProd = isProduction()
 
@@ -49,4 +55,24 @@ page_path: window.location.pathname,
       </Layout>
     </>
   )
+}
+
+
+export const getInitialProps: GetInitialProps<IProps> = async({ req, res }) => {
+  const theme = getCookie("user-theme", { req, res })?.toString() || "os";
+  NextApp.getInitialProps(appContext)
+
+  if (
+    theme == "os" ||
+    theme == "dark" ||
+    theme == "light"
+  ) {
+    return {
+      props: { theme }
+    }
+  }
+
+  return { 
+    props: { theme: "os" }
+  }
 }

@@ -1,12 +1,39 @@
+@use "sass:map";
+
+/* stylelint-disable property-no-unknown */
 /* stylelint-disable scss/function-no-unknown */
 
 $app-root-selector: "#theme";
 $palette: (
   "light": (
-
+    "primary": #ff3535,
+    "primary-variant": #ca2e2e,
+    "on-primary": white,
+    "background": white,
+    "on-background-slight": #8f8f8f,
+    "on-background": black,
+    "on-background-header": #262c30,
+    "surface": white,
+    "on-surface": black,
+    "on-surface-header": #262c30,
+    "text-selection-foreground": white,
+    "text-selection-background": #ff6767,
+    "tooltip-background": #4a4a4a
   ),
   "dark": (
-
+    "primary": #ff3535,
+    "primary-variant": #ca2e2e,
+    "on-primary": white,
+    "background": white,
+    "on-background-slight": #8f8f8f,
+    "on-background": black,
+    "on-background-header": #262c30,
+    "surface": white,
+    "on-surface": black,
+    "on-surface-header": #262c30,
+    "text-selection-foreground": white,
+    "text-selection-background": #ff6767,
+    "tooltip-background": #4a4a4a
   )
 );
 
@@ -32,4 +59,18 @@ $palette: (
   @at-root #{selector-nest("#{$app-root-selector}[data-theme=dark]", &)} {
     @content;
   }
+}
+
+@mixin get-properties-from-theme($theme) {
+  @each $key, $value in map.get($palette, $theme) {
+    --#{$key}: #{$value};
+  }
+}
+
+@include dark {
+  @include get-properties-from-theme(dark)
+}
+
+@include light {
+  @include get-properties-from-theme(light)
 }

@@ -8,7 +8,7 @@
     "dev": "cross-env NODE_ENV=development ts-node src/index.ts",
     "build": "tsc -p .",
     "clean": "del-cli ./dist --force",
-    "migrate": "ts-node src/database/migration.ts",
+    "migrate": "ts-node scripts/migration.ts",
     "lint": "eslint . --ext .ts"
   },
   "contributors": [

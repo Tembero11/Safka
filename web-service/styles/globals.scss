@@ -5,7 +5,8 @@
 :root {
   /* Brand Colors */
   --brand-primary: #ff3535;
-  --brand-primary-dark: #ca2e2e;
+  
+  // --brand-primary-dark: #ca2e2e;
 
   /* UI colors */
   --ui-text-not-important: #8f8f8f;
@@ -84,6 +85,6 @@ body {
   gap: 20px;
   flex-wrap: wrap;
   margin-bottom: 30px;
-  color: var(--primary);
+  color: var(--ui-text-not-important);
   font-weight: bold;
 }

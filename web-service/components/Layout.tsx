@@ -1,36 +1,35 @@
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import { Theme, UserPreferences } from "../common/UserPreferences";
 import styles from "./css/Layout.module.css";
-import ThemeProvider from "./ThemeProvider";
+import ThemeProvider, { useTheme } from "./ThemeProvider";
 
 export default function Layout(props: { children: React.ReactNode }) {
   const [isSettingsOpen, setSettingsOpen] = useState(false);
   const [isSettingsDisplay, setSettingsDisplay] = useState(false);
 
-  // Contains the currently selected theme
-  const [selectedTheme, setSelectedTheme] = useState(Theme.Default);
+  const themeContext = useTheme();
+  const currentAppTheme = themeContext.theme;
+  const setCurrentAppTheme = themeContext.setTheme;
 
-  // Contains the current app theme
-  const [currentAppTheme, setCurrentAppTheme] = useState(Theme.Default);
-  const [currentOsTheme, setCurrentOsTheme] = useState(Theme.Light);
+  // Contains the currently selected theme
+  const [selectedTheme, setSelectedTheme] = useState(currentAppTheme);
 
   useEffect(() => {
-    const preferences = new UserPreferences();
-    const theme = preferences.getTheme();
-    setSelectedTheme(theme);
-    setCurrentAppTheme(theme);
+    // const preferences = new UserPreferences();
+    // const theme = preferences.getTheme();
+    // setSelectedTheme(theme);
+    // setCurrentAppTheme(theme);
 
     // Check the os color scheme
-    const { matches } = window.matchMedia("(prefers-color-scheme: dark)");
-    const osTheme = matches ? Theme.Dark : Theme.Light;
-    setCurrentOsTheme(osTheme);
+    // const { matches } = window.matchMedia("(prefers-color-scheme: dark)");
+    // const osTheme = matches ? Theme.Dark : Theme.Light;
+    // setCurrentOsTheme(osTheme);
 
     // Listen for changes
-    window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", event => {
-      const osTheme = event.matches ? Theme.Dark : Theme.Light;
-      setCurrentOsTheme(osTheme);
-    });
+    // window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", event => {
+    //   const osTheme = event.matches ? Theme.Dark : Theme.Light;
+    //   setCurrentOsTheme(osTheme);
+    // });
   }, []);
 
   const SETTINGS_ANIMATION_LENGTH = 200;
@@ -50,15 +49,15 @@ export default function Layout(props: { children: React.ReactNode }) {
   }
 
   function onThemeChanged(e: React.ChangeEvent<HTMLInputElement>) {
-    setSelectedTheme(e.target.value as Theme);
+    setSelectedTheme(e.target.value);
   }
 
   function onSettingsSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const preferences = new UserPreferences();
+    // const preferences = new UserPreferences();
 
     // Save theme theme to localStorage
-    preferences.setTheme(selectedTheme);
+    // preferences.setTheme(selectedTheme);
 
     // Update the app to the new theme
     setCurrentAppTheme(selectedTheme);
@@ -67,14 +66,14 @@ export default function Layout(props: { children: React.ReactNode }) {
   }
   function onSettingsCancel() {
     // Reset all settings here to the original state
-    setSelectedTheme(currentAppTheme);
+    // setSelectedTheme(currentAppTheme);
 
     changeSettingsState(false);
   }
 
   return (
     <>
-      <ThemeProvider key={currentAppTheme} theme={currentAppTheme} />
+      {/* <ThemeProvider key={currentAppTheme} theme={currentAppTheme} /> */}
       <div className={styles.container}>
         <div className={styles.navbar}>
           <Link href="/" className={styles["logo-link"]}><h1 className={styles.logo}>Safka.<br />Online</h1></Link>
@@ -100,16 +99,16 @@ export default function Layout(props: { children: React.ReactNode }) {
             <h2>Teemat</h2>
             <div className={styles["theme-select"]}>
               <label className={styles["theme-select-block"]}>
-                <span>Järjestelmän Oletus <span className={styles["default-theme"]}>({currentOsTheme == Theme.Light ? "Vaalea" : "Tumma"})</span></span>
-                <input type="radio" value={Theme.Default} checked={selectedTheme == Theme.Default} onChange={onThemeChanged} />
+                {/* <span>Järjestelmän Oletus <span className={styles["default-theme"]}>({currentOsTheme == Theme.Light ? "Vaalea" : "Tumma"})</span></span> */}
+                <input type="radio" value={"os"} checked={selectedTheme == "os"} onChange={onThemeChanged} />
               </label>
               <label className={styles["theme-select-block"]}>
                 Vaalea Teema
-                <input type="radio" value={Theme.Light} checked={selectedTheme == Theme.Light} onChange={onThemeChanged} />
+                <input type="radio" value={"light"} checked={selectedTheme == "light"} onChange={onThemeChanged} />
               </label>
               <label className={styles["theme-select-block"]}>
                 Tumma Teema
-                <input type="radio" value={Theme.Dark} checked={selectedTheme == Theme.Dark} onChange={onThemeChanged} />
+                <input type="radio" value={"dark"} checked={selectedTheme == "dark"} onChange={onThemeChanged} />
               </label>
             </div>
             {/* <h2>Erityisruokavaliot</h2>

@@ -8,16 +8,12 @@ import * as gtag from "../utils/gtag"
 import { isProduction } from '../utils/common'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
-import { getCookie } from 'cookies-next';
+import ThemeProvider from '../components/ThemeProvider';
 
-interface IProps extends AppProps {
-  theme?: "light" | "dark"
-}
 
 const isProd = isProduction()
 
-export default function App({ Component, pageProps, theme }: IProps) {
-  console.log(theme);
+export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
   useEffect(() => {
     if (!isProd) return
@@ -51,30 +47,11 @@ page_path: window.location.pathname,
           }}
         /></>) : null }
 
-      <div id='theme' data-theme={theme}>
+      <ThemeProvider>
         <Layout>
           <Component {...pageProps} />
         </Layout>
-      </div>
+      </ThemeProvider>
     </>
   )
-}
-
-
-App.getInitialProps = async(context: AppContext) => {
-  const initialProps = await NextApp.getInitialProps(context);
-  const { req, res } = context.ctx;
-  const themeCookie = getCookie("user-theme", { req, res });
-  
-  let theme;
-  if (themeCookie == "dark" || themeCookie == "light") {
-    theme = themeCookie
-  }else {
-    theme = null;
-  }
-
-  return {
-    ...initialProps,
-    theme
-  }
 }

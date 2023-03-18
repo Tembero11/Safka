@@ -39,12 +39,12 @@
 }
 
 .today > .box {
-  border-color: var(--brand-primary);
+  border-color: var(--brand);
 }
 
 
 .date {
-  color: var(--ui-text-not-important);
+  color: var(--on-background-slight);
   font-weight: 500;
 }
 
@@ -70,7 +70,7 @@
 .diet {
   position: relative;
   display: inline-block;
-  background: var(--brand-primary);
+  background: var(--primary);
   border-radius: 10px;
   padding: 1px 4px;
   font-size: small;
@@ -88,7 +88,7 @@
   transform: translateX(-50%) scale(0);
   padding: 10px;
   border-radius: 10px;
-  background: var(--ui-tooltip-bg);
+  background: var(--tooltip-background);
   user-select: none;
   /* stylelint-disable-next-line color-function-notation */
   box-shadow: 1px 1px 10px rgba(0, 0, 0, 7.5%);
@@ -100,8 +100,9 @@
   transition: transform 200ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
+/* 
 @media (prefers-color-scheme: dark) {
   .today .box {
     box-shadow: 1px 1px 30px var(--ui-today-box-glow);
   }
-}
+} */

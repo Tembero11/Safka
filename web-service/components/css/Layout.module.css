@@ -17,7 +17,10 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  background: linear-gradient(var(--ui-footer-color), var(--ui-footer-second-color));
+
+  /* background: linear-gradient(var(--ui-footer-color), var(--ui-footer-second-color)); */
+
+  background: var(--primary);
   width: 100vw;
   height: 300px;
   padding-bottom: 20px;
@@ -34,7 +37,7 @@
 }
 
 .link:hover {
-  background: var(--brand-primary-dark);
+  background: var(--primary-variant);
 }
 
 .footer-links {
@@ -63,7 +66,7 @@
 .logo {
   font-family: Montserrat, sans-serif;
   z-index: 10000;
-  color: var(--brand-primary);
+  color: var(--primary);
   margin-left: 20px;
   user-select: none;
 }
@@ -81,7 +84,7 @@
   outline: none;
   background: none;
   border: none;
-  color: var(--ui-text-regular-color);
+  color: var(--on-background);
   font-size: xx-large;
   cursor: pointer;
 }
@@ -128,7 +131,7 @@
   width: 80%;
   height: 65%;
   padding: 30px;
-  background: var(--ui-page-background);
+  background: var(--background);
   border-radius: 25px;
   box-shadow: 1px 1px 25px rgba(0 0 0 5%);
 }
@@ -153,7 +156,7 @@
 
 .preferences-bottom-btn {
   color: white;
-  background: var(--brand-primary);
+  background: var(--primary);
   padding: 15px;
   border: none;
   border-radius: 20px;
@@ -165,7 +168,8 @@
 }
 
 .preferences-bottom-btn:first-child {
-  background: var(--ui-tooltip-bg);
+  /* Temp */
+  background: var(--tooltip-background);
   color: white;
 }
 
@@ -199,7 +203,8 @@
   align-items: center;
   width: 290px;
   height: 40px;
-  background-color: var(--ui-slight-highlight);
+  background-color: var(--surface);
+  color: var(--on-surface);
   font-weight: bold;
   user-select: none;
   border-radius: 10px;
@@ -209,11 +214,12 @@
 }
 
 .theme-select-block:hover {
+  /* TODO: add sass color function */
   background-color: var(--ui-slight-highlight-hover);
 }
 
 .default-theme {
-  color: var(--ui-text-not-important);
+  color: var(--on-background-slight);
 }
 
 .theme-select {
@@ -234,7 +240,7 @@
 }
 
 .theme-select-block input[type="radio"]:checked {
-  border-color: var(--brand-primary);
+  border-color: var(--primary);
 }
 
 @media screen and (max-width: 700px) {

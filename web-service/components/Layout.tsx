@@ -1,6 +1,6 @@
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import styles from "./css/Layout.module.css";
+import styles from "./css/Layout.module.scss";
 import { OsPreferredTheme, useTheme } from "./ThemeProvider";
 
 export default function Layout(props: { children: React.ReactNode }) {

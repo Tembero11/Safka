@@ -1,3 +1,5 @@
+@use "sass:color";
+
 .container {
   display: flex;
   flex-direction: column;
@@ -133,7 +135,7 @@
   padding: 30px;
   background: var(--background);
   border-radius: 25px;
-  box-shadow: 1px 1px 25px rgba(0 0 0 5%);
+  box-shadow: 1px 1px 25px color.change($color: black, $alpha: 0.05);
 }
 
 .preferences h1 {

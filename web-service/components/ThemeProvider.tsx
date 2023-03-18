@@ -1,8 +1,19 @@
 import React, { useContext, useEffect, useState } from "react";
 
+export enum OsPreferredTheme {
+  Light = "light",
+  Dark = "dark"
+}
+
+interface IThemeContext {
+  theme: string;
+  setTheme: (themeName: string) => void;
+  osPreferredTheme: OsPreferredTheme
+}
+
 export const ThemeContext = React.createContext({});
 
-export const useTheme = () => useContext(ThemeContext) as {theme: string, setTheme: (themeName: string) => void};
+export const useTheme = () => useContext(ThemeContext) as IThemeContext;
 
 interface IProps {
     children?: React.ReactNode
@@ -10,8 +21,19 @@ interface IProps {
 
 export default function ThemeProvider({ children }: IProps) {
   const [theme, setTheme] = useState<string | null>(null);
+  const [osPreferredTheme, setOsPreferredTheme] = useState(OsPreferredTheme.Light);
 
   useEffect(() => {
+    const { matches } = window.matchMedia("(prefers-color-scheme: dark)");
+    const osTheme = matches ? OsPreferredTheme.Dark : OsPreferredTheme.Light;
+    setOsPreferredTheme(osTheme);
+
+    // Listen for changes
+    window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", event => {
+      const osTheme = event.matches ? OsPreferredTheme.Dark : OsPreferredTheme.Light;
+      setOsPreferredTheme(osTheme);
+    });
+
     let theme = localStorage.getItem("user-theme");
     if (!(theme == "dark" || theme == "light")) {
       theme = null;
@@ -28,6 +50,7 @@ export default function ThemeProvider({ children }: IProps) {
 
   const value = {
     theme,
+    osPreferredTheme,
     setTheme: (themeName: string) => setTheme(themeName)
   }
     

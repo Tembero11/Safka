@@ -1,7 +1,7 @@
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import styles from "./css/Layout.module.css";
-import ThemeProvider, { useTheme } from "./ThemeProvider";
+import { OsPreferredTheme, useTheme } from "./ThemeProvider";
 
 export default function Layout(props: { children: React.ReactNode }) {
   const [isSettingsOpen, setSettingsOpen] = useState(false);
@@ -10,27 +10,16 @@ export default function Layout(props: { children: React.ReactNode }) {
   const themeContext = useTheme();
   const currentAppTheme = themeContext.theme;
   const setCurrentAppTheme = themeContext.setTheme;
+  const osPreferredTheme = themeContext.osPreferredTheme;
 
   // Contains the currently selected theme
   const [selectedTheme, setSelectedTheme] = useState(currentAppTheme);
 
+  // currentAppTheme is originally null
+  // Set the selected theme to currentAppTheme when the value is loaded
   useEffect(() => {
-    // const preferences = new UserPreferences();
-    // const theme = preferences.getTheme();
-    // setSelectedTheme(theme);
-    // setCurrentAppTheme(theme);
-
-    // Check the os color scheme
-    // const { matches } = window.matchMedia("(prefers-color-scheme: dark)");
-    // const osTheme = matches ? Theme.Dark : Theme.Light;
-    // setCurrentOsTheme(osTheme);
-
-    // Listen for changes
-    // window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", event => {
-    //   const osTheme = event.matches ? Theme.Dark : Theme.Light;
-    //   setCurrentOsTheme(osTheme);
-    // });
-  }, []);
+    setSelectedTheme(currentAppTheme);
+  }, [currentAppTheme]);
 
   const SETTINGS_ANIMATION_LENGTH = 200;
 
@@ -99,7 +88,7 @@ export default function Layout(props: { children: React.ReactNode }) {
             <h2>Teemat</h2>
             <div className={styles["theme-select"]}>
               <label className={styles["theme-select-block"]}>
-                {/* <span>Järjestelmän Oletus <span className={styles["default-theme"]}>({currentOsTheme == Theme.Light ? "Vaalea" : "Tumma"})</span></span> */}
+                <span>Järjestelmän Oletus <span className={styles["default-theme"]}>({osPreferredTheme == OsPreferredTheme.Light ? "Vaalea" : "Tumma"})</span></span>
                 <input type="radio" value={"os"} checked={selectedTheme == "os"} onChange={onThemeChanged} />
               </label>
               <label className={styles["theme-select-block"]}>

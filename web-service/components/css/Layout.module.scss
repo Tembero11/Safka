@@ -1,7 +1,6 @@
 @use "sass:color";
 @use "sass:map";
-
-// @use "../../styles/theme-setup.scss";
+@use "../../styles/themes.scss";
 @use "../../styles/theme-mixins.scss";
 
 .container {
@@ -28,9 +27,12 @@
 
   background: var(--primary);
 
-  // @include theme-mixins.dark {
-  //   background: linear-gradient(transparent, map.get(themes.$themes, "dark", "primary"));
-  // }
+  @include theme-mixins.dark {
+    $page-background: map.get(themes.$themes, "dark", "background");
+    $footer-background: color.adjust(map.get(themes.$themes, "dark", "primary-variant"), $alpha: -0.6);
+
+    background: linear-gradient($page-background, $footer-background);
+  }
 
   width: 100vw;
   height: 300px;

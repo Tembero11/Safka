@@ -28,7 +28,7 @@ $themes: (
     "primary": #ff3535,
     "primary-variant": #ca2e2e,
     "on-primary": white,
-    "background": #211c1f,
+    "background": #1b1619,
     "on-background-slight": #f4f4f4,
     "on-background": white,
     "on-background-header": white,
@@ -40,6 +40,3 @@ $themes: (
     "tooltip-background": #4a4a4a
   )
 );
-
-
-@include theme-setup.themes($themes);

@@ -1,5 +1,7 @@
 
 /* stylelint-disable import-notation */
+@use "./theme-setup";
+@use "./themes";
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0");
 
@@ -89,3 +91,5 @@ body {
   color: var(--on-background-slight);
   font-weight: bold;
 }
+
+@include theme-setup.themes(themes.$themes);

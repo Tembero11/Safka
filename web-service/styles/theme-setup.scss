@@ -1,7 +1,5 @@
 @use "sass:map";
 
-$app-root-selector: ":root";
-
 @mixin get-properties-from-theme($theme, $themes) {
   @each $key, $value in map.get($themes, $theme) {
     @if $key != "meta" {
@@ -17,13 +15,13 @@ $app-root-selector: ":root";
 
     @if $mode {
       @media (prefers-color-scheme: $mode) {
-        #{$app-root-selector} {
+        :root {
           @include get-properties-from-theme($theme-name, $themes);
         }
       }
     }
   
-    @at-root #{$app-root-selector}[data-theme=#{$theme-name}] {
+    @at-root :root[data-theme=#{$theme-name}] {
       @include get-properties-from-theme($theme-name, $themes);
     }
   }

@@ -136,7 +136,7 @@ function Footer() {
     <footer className={styles.footer}>
       <h3 className={styles["footer-header"]}>Resources</h3>
       <ul className={styles["footer-links"]}>
-        <li><FooterLink href="https://api.safka.online/v1/menu">API</FooterLink></li>
+        <li><FooterLink href={process.env.API_URL || "https://api.safka.online/v1/menu"}>API</FooterLink></li>
         <li><FooterLink href="https://www.turkuai.fi/turun-ammatti-instituutti/opiskelijalle/ruokailu-ja-ruokalistat/ruokalista-juhannuskukkula-topseli">Data Source</FooterLink></li>
 
       </ul>

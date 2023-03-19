@@ -1,4 +1,8 @@
 @use "sass:color";
+@use "sass:map";
+
+// @use "../../styles/theme-setup.scss";
+@use "../../styles/theme-mixins.scss";
 
 .container {
   display: flex;
@@ -23,6 +27,11 @@
   /* background: linear-gradient(var(--ui-footer-color), var(--ui-footer-second-color)); */
 
   background: var(--primary);
+
+  // @include theme-mixins.dark {
+  //   background: linear-gradient(transparent, map.get(themes.$themes, "dark", "primary"));
+  // }
+
   width: 100vw;
   height: 300px;
   padding-bottom: 20px;

@@ -281,6 +281,10 @@
   border: 4px solid var(--primary);
 }
 
+.theme-select-block:hover .theme-select-preview {
+  border: 4px solid var(--primary);
+}
+
 .theme-select-block:hover {
   background-color: var(--surface-variant);
 }

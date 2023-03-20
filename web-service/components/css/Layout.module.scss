@@ -232,34 +232,56 @@
 
 .theme-select-block input[type="radio"] {
   position: absolute;
-  top: 0;
-  right: 0;
+  bottom: 5px;
+  right: 5px;
   appearance: none;
-  background-color: white;
+  background-color: var(--primary);
   margin: 0;
-  border: 4px solid transparent;
-  width: 20px;
-  height: 20px;
+  border: none;
+  width: 30px;
+  height: 30px;
   border-radius: 100%;
   cursor: pointer;
+
+  $shadow-color: #00000036;
+
+  box-shadow: 3px 4px 10px $shadow-color, -1px -1px 5px $shadow-color;
+  transition: transform 200ms;
+  transform: scale(1);
+}
+
+.theme-select-block input[type="radio"]::after {
+  content: "check";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 18px;
+  user-select: none;
+  color: var(--on-primary);
 }
 
 .theme-select-block input[type="radio"]:not(:checked) {
-  display: none;
+  transform: scale(0);
 }
 
-
 .theme-select-preview {
+  position: relative;
   width: 100%;
   height: 128px;
-  border: 2px solid var(--brand-primary);
   border-radius: 10px;
   box-sizing: border-box;
   background-size: cover;
+  overflow: hidden;
+  border: 0 solid var(--primary);
+  transition: border 50ms;
+}
+
+.theme-select-block-checked .theme-select-preview {
+  border: 4px solid var(--primary);
 }
 
 .theme-select-block:hover {
-  /* TODO: add sass color function */
   background-color: var(--surface-variant);
 }
 

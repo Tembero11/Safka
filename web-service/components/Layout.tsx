@@ -91,20 +91,24 @@ export default function Layout(props: { children: React.ReactNode }) {
             <h1>Käyttäjän Asetukset</h1>
             <h2>Teemat</h2>
             <div className={styles["theme-select"]}>
-              <label className={styles["theme-select-block"]}>
-                <div className={styles["theme-select-preview"]} style={{backgroundImage: `url(${uiSystemPreferenceImage.src})`}}></div>
+              <label className={`${styles["theme-select-block"]} ${selectedTheme == "os" ? styles["theme-select-block-checked"] : ""}`}>
+                <div className={styles["theme-select-preview"]} style={{backgroundImage: `url(${uiSystemPreferenceImage.src})`}}>
+                  <input type="radio" value={"os"} checked={selectedTheme == "os"} onChange={onThemeChanged} className="material-symbols-outlined" />
+                </div>
                 <span>Järjestelmän Oletus <span className={styles["default-theme"]}>({osPreferredTheme == OsPreferredTheme.Light ? "Vaalea" : "Tumma"})</span></span>
-                <input type="radio" value={"os"} checked={selectedTheme == "os"} onChange={onThemeChanged} />
+                
               </label>
-              <label className={styles["theme-select-block"]}>
-                <div className={styles["theme-select-preview"]} style={{backgroundImage: `url(${uiLightImage.src})`}}></div>
+              <label className={`${styles["theme-select-block"]} ${selectedTheme == "light" ? styles["theme-select-block-checked"] : ""}`}>
+                <div className={styles["theme-select-preview"]} style={{backgroundImage: `url(${uiLightImage.src})`}}>
+                  <input type="radio" value={"light"} checked={selectedTheme == "light"} onChange={onThemeChanged} className="material-symbols-outlined" />
+                </div>
                 <span>Vaalea Teema</span>
-                <input type="radio" value={"light"} checked={selectedTheme == "light"} onChange={onThemeChanged} />
               </label>
-              <label className={styles["theme-select-block"]}>
-                <div className={styles["theme-select-preview"]} style={{backgroundImage: `url(${uiDarkImage.src})`}}></div>
+              <label className={`${styles["theme-select-block"]} ${selectedTheme == "dark" ? styles["theme-select-block-checked"] : ""}`}>
+                <div className={styles["theme-select-preview"]} style={{backgroundImage: `url(${uiDarkImage.src})`}}>
+                  <input type="radio" value={"dark"} checked={selectedTheme == "dark"} onChange={onThemeChanged} className="material-symbols-outlined" />
+                </div>
                 <span>Tumma Teema</span>
-                <input type="radio" value={"dark"} checked={selectedTheme == "dark"} onChange={onThemeChanged} />
               </label>
             </div>
             {/* <h2>Erityisruokavaliot</h2>

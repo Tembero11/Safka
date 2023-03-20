@@ -2,9 +2,6 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import styles from "./css/Layout.module.scss";
 import { OsPreferredTheme, useTheme } from "./ThemeProvider";
-import { Theme, UserPreferences } from "../common/UserPreferences";
-import styles from "./css/Layout.module.css";
-import ThemeProvider from "./ThemeProvider";
 
 import uiLightImage from "../public/assets/ui_light.svg";
 import uiDarkImage from "../public/assets/ui_dark.svg";

@@ -9,7 +9,7 @@
 }
 
 .day-name {
-  color: var(--ui-header-color);
+  color: var(--on-background-header);
   font-size: x-large;
   font-weight: bold;
   letter-spacing: 1px;
@@ -19,7 +19,7 @@
 .break {
   width: 60%;
   height: 1px;
-  background: var(--ui-divider-color);
+  background: var(--surface-variant);
 }
 
 .box {
@@ -32,14 +32,14 @@
   height: 80%;
   border: 10px solid transparent;
   border-radius: 25px;
-  background: var(--ui-day-box-color);
+  background: var(--background);
 
   /* box-shadow: 17px 17px 32px #d9d9d9, -17px -17px 32px #ffffff; */
   box-shadow: 17px 17px 32px #00000025, -17px -17px 32px #00000009;
 }
 
 .today > .box {
-  border-color: var(--brand);
+  border-color: var(--primary);
 }
 
 

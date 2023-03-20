@@ -2,6 +2,13 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import styles from "./css/Layout.module.scss";
 import { OsPreferredTheme, useTheme } from "./ThemeProvider";
+import { Theme, UserPreferences } from "../common/UserPreferences";
+import styles from "./css/Layout.module.css";
+import ThemeProvider from "./ThemeProvider";
+
+import uiLightImage from "../public/assets/ui_light.svg";
+import uiDarkImage from "../public/assets/ui_dark.svg";
+import uiSystemPreferenceImage from "../public/assets/ui_system_preference.svg";
 
 export default function Layout(props: { children: React.ReactNode }) {
   const [isSettingsOpen, setSettingsOpen] = useState(false);
@@ -88,15 +95,18 @@ export default function Layout(props: { children: React.ReactNode }) {
             <h2>Teemat</h2>
             <div className={styles["theme-select"]}>
               <label className={styles["theme-select-block"]}>
+                <div className={styles["theme-select-preview"]} style={{backgroundImage: `url(${uiSystemPreferenceImage.src})`}}></div>
                 <span>Järjestelmän Oletus <span className={styles["default-theme"]}>({osPreferredTheme == OsPreferredTheme.Light ? "Vaalea" : "Tumma"})</span></span>
                 <input type="radio" value={"os"} checked={selectedTheme == "os"} onChange={onThemeChanged} />
               </label>
               <label className={styles["theme-select-block"]}>
-                Vaalea Teema
+                <div className={styles["theme-select-preview"]} style={{backgroundImage: `url(${uiLightImage.src})`}}></div>
+                <span>Vaalea Teema</span>
                 <input type="radio" value={"light"} checked={selectedTheme == "light"} onChange={onThemeChanged} />
               </label>
               <label className={styles["theme-select-block"]}>
-                Tumma Teema
+                <div className={styles["theme-select-preview"]} style={{backgroundImage: `url(${uiDarkImage.src})`}}></div>
+                <span>Tumma Teema</span>
                 <input type="radio" value={"dark"} checked={selectedTheme == "dark"} onChange={onThemeChanged} />
               </label>
             </div>

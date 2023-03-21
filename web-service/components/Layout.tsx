@@ -88,14 +88,16 @@ export default function Layout(props: { children: React.ReactNode }) {
       }}>
         <form onSubmit={onSettingsSubmit} className={styles.preferences} style={{ transform: `scale(${isSettingsOpen ? 1 : 0})` }}>
           <div className={styles["preferences-content"]}>
-            <h1>Käyttäjän Asetukset</h1>
-            <h2>Teemat</h2>
+            <h2 style={{marginTop: 0}}>Käyttäjän Asetukset</h2>
+            <hr style={{width: "10em"}} />
+            <h3>Teema</h3>
+            <p className="on-background-slight-color">Mukauta käyttöliittymän ulkonäköä</p>
             <div className={styles["theme-select"]}>
               <label className={`${styles["theme-select-block"]} ${selectedTheme == "os" ? styles["theme-select-block-checked"] : ""}`}>
                 <div className={styles["theme-select-preview"]} style={{backgroundImage: `url(${uiSystemPreferenceImage.src})`}}>
                   <input type="radio" value={"os"} checked={selectedTheme == "os"} onChange={onThemeChanged} className="material-symbols-outlined" />
                 </div>
-                <span>Järjestelmän Oletus <span className={styles["default-theme"]}>({osPreferredTheme == OsPreferredTheme.Light ? "Vaalea" : "Tumma"})</span></span>
+                <span>Järjestelmän Oletus <strong className={styles["default-theme"]}>({osPreferredTheme == OsPreferredTheme.Light ? "Vaalea" : "Tumma"})</strong></span>
                 
               </label>
               <label className={`${styles["theme-select-block"]} ${selectedTheme == "light" ? styles["theme-select-block-checked"] : ""}`}>

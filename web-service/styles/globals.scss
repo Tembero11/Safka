@@ -53,6 +53,17 @@ body {
   height: 100vh;
 }
 
+h1, h2, h3, h4, h5, h6 {
+  font-weight: bold;
+  margin: 10px 0;
+  color: var(--on-background-header);
+}
+
+hr {
+  border: 1px solid var(--surface-variant);
+  margin: 15px 0;
+}
+
 ::selection {
   color: var(--text-selection-foreground);
   background: var(--text-selection-background);

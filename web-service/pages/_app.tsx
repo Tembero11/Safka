@@ -9,7 +9,7 @@ const isProd = isProduction()
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
-      { isProd && process.env.ANALYTICS_URL ? (<>
+      { isProd && process.env.NEXT_PUBLIC_ANALYTICS_URL ? (<>
         <Script id="goat-script"
           strategy="afterInteractive"
           dangerouslySetInnerHTML={{
@@ -22,8 +22,8 @@ path: location.pathname + location.search + location.hash,
 });
 `,}}
         />
-        <script data-goatcounter={process.env.ANALYTICS_URL}
-          async src={`//${process.env.ANALYTICS_URL}/count.js`}></script>
+        <script data-goatcounter={`${process.env.NEXT_PUBLIC_ANALYTICS_URL}/count`}
+          async src={`//gc.zgo.at/count.js`}></script>
       </>) : null }
 
       <Layout>

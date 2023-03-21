@@ -4,6 +4,13 @@
   @each $key, $value in map.get($themes, $theme) {
     @if $key != "meta" {
       --#{$key}: #{$value};
+
+      .#{$key}-color {
+        color: #{$value};
+      }
+      .#{$key}-background {
+        background: #{$value};
+      }
     }
   }
 }

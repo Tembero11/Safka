@@ -1,3 +1,5 @@
+@use "../../styles/theme-mixins.scss";
+
 .container {
   display: flex;
   flex-direction: column;
@@ -33,6 +35,10 @@
   border: 10px solid transparent;
   border-radius: 25px;
   background: var(--background);
+
+  @include theme-mixins.dark {
+    background: var(--surface);
+  }
 
   /* box-shadow: 17px 17px 32px #d9d9d9, -17px -17px 32px #ffffff; */
   box-shadow: 17px 17px 32px #00000025, -17px -17px 32px #00000009;

@@ -32,7 +32,7 @@
 .err-digit {
   display: inline-block;
   position: relative;
-  animation-name: errDigit;
+  animation-name: err-digit-animation;
   animation-iteration-count: infinite;
   animation-play-state: running;
   animation-duration: 2s;
@@ -40,7 +40,7 @@
   transform: translateY(5px);
 }
 
-@keyframes err-digit {
+@keyframes err-digit-animation {
   0% {
     transform: translateY(5px);
   }

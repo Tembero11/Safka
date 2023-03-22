@@ -25,7 +25,7 @@ const Home: NextPage<{ menu: WeekMenu | null }> = ({menu}) => {
 
 export const getServerSideProps: GetServerSideProps = async () => {
   const menu = await getWeekMenu();
-
+  
   return {
     props: {
       menu: menu || null

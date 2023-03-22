@@ -1,0 +1,35 @@
+@use "sass:map";
+
+@mixin get-properties-from-theme($theme, $themes) {
+  @each $key, $value in map.get($themes, $theme) {
+    @if $key != "meta" {
+      --#{$key}: #{$value};
+
+      .#{$key}-color {
+        color: #{$value};
+      }
+      .#{$key}-background {
+        background: #{$value};
+      }
+    }
+  }
+}
+
+
+@mixin themes($themes) {
+  @each $theme-name, $theme-content in $themes {
+    $mode: map.get($theme-content, "meta", "mode");
+
+    @if $mode {
+      @media (prefers-color-scheme: $mode) {
+        :root {
+          @include get-properties-from-theme($theme-name, $themes);
+        }
+      }
+    }
+  
+    @at-root :root[data-theme=#{$theme-name}] {
+      @include get-properties-from-theme($theme-name, $themes);
+    }
+  }
+}

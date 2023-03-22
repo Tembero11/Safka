@@ -1,8 +1,11 @@
 import type { AppProps } from 'next/app'
-import '../styles/globals.scss'
+import '../styles/globals.scss';
+import '../styles/themes.scss';
 import Layout from '../components/Layout'
 import Script from 'next/script'
 import { isProduction } from '../utils/common'
+import ThemeProvider from '../components/ThemeProvider';
+
 
 const isProd = isProduction()
 
@@ -26,9 +29,11 @@ path: location.pathname + location.search + location.hash,
           async src={`//gc.zgo.at/count.js`}></script>
       </>) : null }
 
-      <Layout>
-        <Component {...pageProps} />
-      </Layout>
+      <ThemeProvider>
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+      </ThemeProvider>
     </>
   )
 }

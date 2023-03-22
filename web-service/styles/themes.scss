@@ -1,0 +1,44 @@
+@use "./theme-setup";
+
+$themes: (
+  "light": (
+    "meta": (
+      "mode": "light"
+    ),
+
+    "primary": #ff3535,
+    "primary-variant": #ca2e2e,
+    "on-primary": white,
+    "background": #f3f3f3,
+    "on-background-slight": #6E6E6E,
+    "on-background": black,
+    "on-background-header": #262c30,
+    "surface": #e9e9e9,
+    "surface-variant": #d4d4d4,
+    "on-surface": black,
+    "on-surface-header": #262c30,
+    "text-selection-foreground": white,
+    "text-selection-background": #ff6767,
+    "tooltip-background": #4a4a4a
+  ),
+  "dark": (
+    "meta": (
+      "mode": "dark"
+    ),
+
+    "primary": #fa3a3a,
+    "primary-variant": #ca2e2e,
+    "on-primary": white,
+    "background": #0e0f14,
+    "on-background-slight": #cfcfcf,
+    "on-background": white,
+    "on-background-header": white,
+    "surface": #251d22,
+    "surface-variant": #282426,
+    "on-surface": white,
+    "on-surface-header": white,
+    "text-selection-foreground": white,
+    "text-selection-background": #ff6767,
+    "tooltip-background": #4a4a4a
+  )
+);

@@ -1,3 +1,5 @@
+@use "../../styles/theme-mixins.scss";
+
 .container {
   display: flex;
   flex-direction: column;
@@ -9,7 +11,7 @@
 }
 
 .day-name {
-  color: var(--ui-header-color);
+  color: var(--on-background-header);
   font-size: x-large;
   font-weight: bold;
   letter-spacing: 1px;
@@ -19,7 +21,7 @@
 .break {
   width: 60%;
   height: 1px;
-  background: var(--ui-divider-color);
+  background: var(--surface-variant);
 }
 
 .box {
@@ -32,19 +34,28 @@
   height: 80%;
   border: 10px solid transparent;
   border-radius: 25px;
-  background: var(--ui-day-box-color);
+  background: var(--background);
+
+  @include theme-mixins.dark {
+    background: var(--surface);
+  }
 
   /* box-shadow: 17px 17px 32px #d9d9d9, -17px -17px 32px #ffffff; */
   box-shadow: 17px 17px 32px #00000025, -17px -17px 32px #00000009;
 }
 
 .today > .box {
-  border-color: var(--brand-primary);
+  border-color: var(--primary);
+  
+  @include theme-mixins.dark {
+    /* stylelint-disable-next-line color-function-notation */
+    box-shadow: 2px 2px 10px rgba(255, 0, 0, 40%);
+  }
 }
 
 
 .date {
-  color: var(--ui-text-not-important);
+  color: var(--on-background-slight);
   font-weight: 500;
 }
 
@@ -70,7 +81,7 @@
 .diet {
   position: relative;
   display: inline-block;
-  background: var(--brand-primary);
+  background: var(--primary);
   border-radius: 10px;
   padding: 1px 4px;
   font-size: small;
@@ -88,7 +99,7 @@
   transform: translateX(-50%) scale(0);
   padding: 10px;
   border-radius: 10px;
-  background: var(--ui-tooltip-bg);
+  background: var(--tooltip-background);
   user-select: none;
   /* stylelint-disable-next-line color-function-notation */
   box-shadow: 1px 1px 10px rgba(0, 0, 0, 7.5%);
@@ -100,8 +111,9 @@
   transition: transform 200ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
+/* 
 @media (prefers-color-scheme: dark) {
   .today .box {
     box-shadow: 1px 1px 30px var(--ui-today-box-glow);
   }
-}
+} */

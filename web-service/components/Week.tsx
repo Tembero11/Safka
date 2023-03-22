@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useState } from "react";
 import { countForwardFromDay, dayNamesFinnish, getCurrentDayIndex, getDayFromMonday, isSameDate } from "../utils/common";
 import getWeekMenu, { DayMenu, Weekday, WeekMenu } from "../utils/getWeekMenu";
-import styles from "./css/Week.module.css";
+import styles from "./css/Week.module.scss";
 import DayBox from "./DayBox";
 
 export default function Week(props: { menu: WeekMenu | null }) {

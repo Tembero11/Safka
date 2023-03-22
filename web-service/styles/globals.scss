@@ -99,9 +99,9 @@ hr {
   align-items: baseline;
   gap: 20px;
   flex-wrap: wrap;
-  margin-bottom: 30px;
   color: var(--on-background-slight);
   font-weight: bold;
+  margin: 20px 40px;
 }
 
 @include theme-setup.themes(themes.$themes);

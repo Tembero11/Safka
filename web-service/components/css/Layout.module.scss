@@ -229,10 +229,6 @@
   cursor: pointer;
   transition: background-color 120ms;
   padding: 10px;
-  
-  @include theme-mixins.light {
-    box-shadow: 3px 3px 7px #0001;
-  }
 
   @include theme-mixins.dark {
     box-shadow: 2px 2px 10px color.adjust($color: map.get(themes.$themes, "dark", "primary"), $alpha: -0.97);

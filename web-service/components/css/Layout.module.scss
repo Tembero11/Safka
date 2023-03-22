@@ -170,7 +170,7 @@
 }
 
 .preferences-bottom-btn {
-  color: white;
+  color: var(--on-primary);
   background: var(--primary);
   padding: 15px;
   border: none;
@@ -179,15 +179,21 @@
   cursor: pointer;
   font-family: var(--ui-font-family);
   width: 120px;
-  transition: transform 120ms;
+  transition: transform 120ms, background 200ms;
 }
 
 .preferences-bottom-btn:first-child {
-  /* Temp */
-  background: var(--tooltip-background);
-  color: white;
+  background: var(--surface);
+  color: var(--on-surface);
 }
 
+.preferences-bottom-btn:hover {
+  background: var(--primary-variant);
+}
+
+.preferences-bottom-btn:first-child:hover {
+  background: var(--surface-variant);
+}
 
 
 .preferences-submit:hover {

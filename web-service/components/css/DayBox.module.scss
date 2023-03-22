@@ -46,6 +46,11 @@
 
 .today > .box {
   border-color: var(--primary);
+  
+  @include theme-mixins.dark {
+    /* stylelint-disable-next-line color-function-notation */
+    box-shadow: 2px 2px 10px rgba(255, 0, 0, 40%);
+  }
 }
 
 

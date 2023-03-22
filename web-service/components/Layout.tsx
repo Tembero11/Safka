@@ -113,13 +113,17 @@ export default function Layout(props: { children: React.ReactNode }) {
                 <span>Tumma Teema</span>
               </label>
             </div>
-            {/* <h2>Erityisruokavaliot</h2>
-                <p>Näät vain ruuat joilla nämä erityisruokavaliot</p>
-                <div className={styles["diet-chips"]}>
-                  <DietChip>Laktoositon</DietChip>
-                  <DietChip>Gluteeniton</DietChip>
-                  <DietChip>Maidoton</DietChip>
-                </div> */}
+            {/* <hr style={{width: "10em"}} />
+            <h3>Tekniset Tiedot</h3>
+            <p className="on-background-slight-color">Ohjelmiston tekniset tiedot</p>
+            <p className="on-background-slight-color">{process.env.BUILD_ID}</p>
+            <h3>Erityisruokavaliot</h3>
+            <p className="on-background-slight-color">Näät vain ruuat joilla nämä erityisruokavaliot</p>
+            <div className={styles["diet-chips"]}>
+              <DietChip>Laktoositon</DietChip>
+              <DietChip>Gluteeniton</DietChip>
+              <DietChip>Maidoton</DietChip>
+            </div> */}
           </div>
           <div className={styles["preferences-bottom-bar"]}>
             <input className={styles["preferences-bottom-btn"]} onClick={onSettingsCancel} type="button" value="Peruuta" />

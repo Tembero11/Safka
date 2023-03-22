@@ -4,6 +4,7 @@
 @use "./themes";
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0");
+@import url("https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&display=swap");
 
 :root {
   // /* Brand Colors */
@@ -29,7 +30,7 @@
   // --ui-page-text-color: black;
 
   /* Fonts */
-  --ui-font-family: "Montserrat", sans-serif;
+  --ui-font-family: "Lexend", sans-serif;
 }
 
 @media (prefers-color-scheme: dark) {

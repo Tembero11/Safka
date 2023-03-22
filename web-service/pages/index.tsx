@@ -24,11 +24,16 @@ const Home: NextPage<{ menu: WeekMenu | null }> = ({menu}) => {
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const menu = await getWeekMenu();
+  let menu;
+  try {
+    menu = await getWeekMenu();
+  } catch (err) {
+    menu = null;
+  }
   
   return {
     props: {
-      menu: menu || null
+      menu: menu
     },
   };
 };

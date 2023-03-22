@@ -1,4 +1,5 @@
 import { Html, Head, Main, NextScript } from 'next/document'
+import Script from 'next/script'
 
 export default function Document() {
   return (
@@ -10,6 +11,12 @@ export default function Document() {
         <meta property="og:type" content="website" />
         <meta property="og:title" content="Safka Online" />
         <meta property="og:description" content="What's on the menu today?" />
+        <Script id="theme-script" strategy='beforeInteractive' dangerouslySetInnerHTML={{
+          __html: `
+          const theme = localStorage.getItem("user-theme") || "os";
+          document.documentElement.setAttribute("data-theme", theme);
+          `
+        }} />
         {/* <meta property="og:image" content="" /> */}
       </Head>
       <body>

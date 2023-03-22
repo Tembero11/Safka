@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useState } from "react";
 import { toLocaleDateString } from "../utils/common";
 import { DayMenu, Weekday } from "../utils/getWeekMenu";
-import styles from "./css/DayBox.module.css";
+import styles from "./css/DayBox.module.scss";
 
 interface IProps {
   dayName: string;

@@ -120,14 +120,19 @@ export default class Webpage {
      */
   private mealFromUnparsedFoodName(foodName: string): Meal {
     const validDietLetters = ["L", "M", "G"];
+
+    // Regex expressions for determining which are foods and diets
     const dietLetterRegex = new RegExp(`[^${validDietLetters.join("")}]`, "g");
     const dietRegex = new RegExp(`[^a-zA-ZåäöÅÄÖ]+(${validDietLetters.join("|")})[^a-zåäö]+`, "g");
+
     // Make nbsp; chars a space
     const name = foodName.replaceAll(/\s/g, " ") + " ";
     
     const matches: IndexRange[] = [];
     const matchedDiets = [];
     let currentMatch;
+
+    // Loop through every match
     while (null != (currentMatch = dietRegex.exec(name))) {
       const originalText = currentMatch[0];
       // Remove the last character
@@ -144,10 +149,11 @@ export default class Webpage {
       const matchStart = currentMatch.index;
       const matchEnd = matchStart + matchLen - 1;
       matchedDiets.push(this.dietaryRestrictionsFromString(dietLetters));
-      matches.push({ start: matchStart, end: matchEnd});
+      matches.push({ start: matchStart, end: matchEnd });
     }
 
-    const names = splitByIndexRange(name, matches);
+    // Use spread to avoid a food without diet getting cut off
+    const names = splitByIndexRange(name, [...matches, { start: name.length - 1, end: name.length - 1}]);
 
     const result = {
       names: names.map(name => this.formatFoodName(name)),

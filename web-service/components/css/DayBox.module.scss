@@ -1,4 +1,7 @@
+@use "sass:color";
+@use "sass:map";
 @use "../../styles/theme-mixins.scss";
+@use "../../styles/themes.scss";
 
 .container {
   display: flex;
@@ -112,30 +115,59 @@
   transition: transform 200ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-
-.vote-btn {
+.bottom-actions {
   $distance-from-border: 15px;
-  
+
   position: absolute;
   bottom: $distance-from-border;
-  color: var(--on-primary);
-  background-color: var(--primary);
+  display: flex;
+  justify-content: stretch;
   width: calc(100% - $distance-from-border * 2);
-  padding: 15px;
-  border-radius: 20px;
-  cursor: pointer;
-  user-select: none;
-  font-family: var(--ui-font-family);
-  font-size: medium;
-  border: none;
-  transition: transform 200ms;
-}
+  height: 50px;
+  gap: 10px;
 
-.vote-btn:hover {
-  transform: scale(0.95);
-}
+  button {
+    color: var(--on-primary);
+    background-color: var(--primary);
+    padding: 5px;
+    border: none;
+    cursor: pointer;
+    user-select: none;
+    font-size: 14px;
+    border-radius: 10px;
+    transition: box-shadow 200ms, transform 200ms;
+  }
+  
+  button:hover {
+    $shadow-color: transparent;
 
-.vote-btn:disabled {
-  background-color: var(--surface-variant);
-  color: var(--on-surface);
+    @include theme-mixins.dark {
+      $shadow-color: color.adjust(map.get(themes.$themes, "dark", "primary"), $alpha: -0.5);
+    }
+
+    @include theme-mixins.light {
+      $shadow-color: color.adjust(map.get(themes.$themes, "light", "primary"), $alpha: -0.5);
+    }
+
+    transform: translateY(-3px);
+    box-shadow: 1px 1px 5px $shadow-color;
+  }
+
+  .button:disabled {
+    background-color: var(--surface-variant);
+    color: var(--on-surface);
+  }
+
+  .rate-btn {
+    font-family: var(--ui-font-family);
+    flex: 2;
+  }
+
+  .favorite-btn {
+    flex: 1;
+    font-size: 16px;
+    border-radius: 50%;
+    max-width: 50px;
+    height: 50px;
+  }
 }

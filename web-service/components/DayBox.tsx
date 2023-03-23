@@ -58,10 +58,12 @@ export default function DayBox(props: IProps) {
         {
           props.menu ? <></> : <p style={{ textAlign: "center" }}>Ei saatavilla</p>
         }
-
-        {
-          props.isToday ? <button className={styles["vote-btn"]}>Arvostele!</button> : null
-        }
+        <div className={styles["bottom-actions"]} style={{justifyContent: !props.isToday ? "flex-end" : undefined}}>
+          {
+            props.isToday ? <button className={styles["rate-btn"]}>Arvostele!</button> : null
+          }
+          <button className={`material-symbols-outlined ${styles["favorite-btn"]}`}>favorite</button>
+        </div>
       </div>
     </div>
   )

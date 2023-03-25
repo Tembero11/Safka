@@ -152,8 +152,10 @@ export default class Webpage {
       matches.push({ start: matchStart, end: matchEnd });
     }
 
+    const names = splitByIndexRange(name, matches);
+
     // Use spread to avoid a food without diet getting cut off
-    const names = splitByIndexRange(name, [...matches, { start: name.length - 1, end: name.length - 1}]);
+    // const names = splitByIndexRange(name, [...matches, { start: name.length - 1, end: name.length - 1}]);
 
     const result = {
       names: names.map(name => this.formatFoodName(name)),

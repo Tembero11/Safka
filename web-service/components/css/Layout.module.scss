@@ -321,6 +321,15 @@
 }
 
 @media screen and (max-width: 700px) {
+  .preferences-container {
+    height: 100%;
+    /* stylelint-disable-next-line value-no-vendor-prefix */
+    height: -moz-available;
+    /* stylelint-disable-next-line value-no-vendor-prefix */
+    height: -webkit-fill-available;
+    height: fill-available;
+  }
+
   .preferences {
     box-sizing: border-box;
     border-radius: 0;

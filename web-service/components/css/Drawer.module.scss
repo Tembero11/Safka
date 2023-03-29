@@ -1,0 +1,36 @@
+.container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #0000004e;
+    z-index: 20000;
+    transition: 300ms opacity;
+    overflow: auto;
+    
+    .content {
+        position: absolute;
+        top: 100%;
+        width: 100%;
+        height: auto;
+        background: var(--background);
+        color: var(--on-background);
+        box-sizing: border-box;
+        min-height: 100vh;
+        border-radius: 20px 20px 0 0;
+        padding: 30px;
+
+        &::after {
+            content: "";
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            width: 40px;
+            height: 5px;
+            border-radius: 5px;
+            background-color: var(--on-background-slight);
+            transform: translateX(-50%);
+        }
+    }
+}

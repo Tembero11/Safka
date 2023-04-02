@@ -3,7 +3,7 @@ This endpoint returns the menu for the week. The response is a JSON object with 
 
 - hash (string): A unique identifier for the menu used for database storage.
 - days (array): An array containing the menus for each day of the week. Each item in the array is an object with the following fields:
-  - dayId (integer): The numerical identifier of the day (0-6)
+  - dayId (integer): The numerical identifier of the day (0-6 where 0 is monday)
   - date (string): The date of the menu in ISO 8601 format
   - menu (array): An array containing the menu items for the day. Each item is an object with the following fields:
     - names (array): An array of strings representing the names of the menu items.

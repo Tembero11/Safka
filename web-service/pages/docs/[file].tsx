@@ -11,7 +11,7 @@ interface IDocumentMetadata {
 }
 
 interface IDocumentData {
-  documentName: string,
+  name: string,
   metadata: IDocumentMetadata
   content: string
 }
@@ -29,25 +29,27 @@ function getAllDocuments() {
 
 async function getDocumentData(documentName: string): Promise<IDocumentData> {
   const fullPath = path.join(process.cwd(), `docs/${documentName}.md`);
-  console.log("pathi", fullPath)
   const fileContents = fs.readFileSync(fullPath, 'utf8');
 
   const metadata = matter(fileContents);
+
+  console.log(metadata.data)
 
   // Use remark to convert markdown into HTML string
   const content = await remark().use(html).process(metadata.content)
   const contentHtml = content.toString()
 
   return {
-    file: documentName,
+    name: documentName,
     content: contentHtml,
     metadata: metadata.data,
   } as IDocumentData;
 }
 
-export const Document: NextPage<IDocumentData> = ({ content }) => {
+export const Document: NextPage<IDocumentData> = ({ content, name }) => {
   return (
     <>
+      <h1>{name}</h1>
       <div dangerouslySetInnerHTML={{ __html: content }} />
     </>
   )
@@ -67,7 +69,9 @@ export async function getStaticProps({ params }: any) {
 
   return {
     props: {
-      content: documentData.content
+      name: documentData.name,
+      metadata: documentData.metadata,
+      content: documentData.content,
     }
   }
 }

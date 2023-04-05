@@ -19,6 +19,7 @@ export const PORT = process.env.PORT || 5000;
 if (DISABLE_POLL) {
   console.log("Menu polling is disabled. This can be changed in the root directory's .env file by setting the 'DISABLE_POLL=false'.");
 }
+
 if (DISABLE_DB) {
   console.log("Database is disabled. This can be changed in the root directory's .env file by setting the 'DISABLE_DB=false'.");
 }
@@ -47,5 +48,5 @@ export let currentMenu: WeekMenu;
   if (!DISABLE_POLL) poller.startPolling();
 
   // Start the http api server
-  startServer(Number(PORT), { apiBaseRoute: API_PREFIX });
+  startServer(Number(PORT), { apiBaseRoute: API_PREFIX, withDatabase: DISABLE_DB });
 })();

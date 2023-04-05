@@ -14,7 +14,6 @@ interface StartServerOptions {
 
 export function startServer(port: number, options?: StartServerOptions) {
   if (options?.withDatabase) {
-    console.log("ni")
     app.use(options?.apiBaseRoute || "/api", v3)
   } else {
     app.use(options?.apiBaseRoute || "/api", v2);

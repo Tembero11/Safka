@@ -2,8 +2,7 @@ import cors from "cors";
 import { Router } from "express";
 import { getDayFromWeek } from "../foodUtils";
 import { currentMenu } from "../index";
-import { Weekday } from "../types";
-import { query } from "../database/db";
+import { Weekday, WeekMenu } from "../types";
 import { db } from "../index";
 import { getCurrentDayIndex } from "../utils";
 import { apiResponse } from "./apiResponse";
@@ -12,9 +11,10 @@ const api = Router();
 api.use(cors());
 
 api.get("/v3/menu", async (req, res) => {
-  const data = await query(db, { query: { week: { weekNumber: currentMenu.weekNumber, year: new Date().getFullYear() } } });
+  const wholeWeek: any = [];
+  await db.collection("foods").find({ week: { weekNumber: currentMenu.weekNumber, year: new Date().getFullYear() } }).forEach(day => wholeWeek.push(day));
 
-  apiResponse(res, 200, { data });
+  apiResponse(res, 200, { wholeWeek });
 });
 
 api.get("/v3/menu/today", async (req, res) => {

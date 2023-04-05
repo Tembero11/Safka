@@ -1,7 +1,7 @@
 import cors from "cors";
 import express, { Router } from "express";
 import { getDayFromWeek } from "../foodUtils";
-import { archiver, currentMenu } from "../index";
+import { currentMenu } from "../index";
 import { Weekday } from "../types";
 import { getCurrentDayIndex } from "../utils";
 import { apiResponse } from "./apiResponse";
@@ -34,7 +34,7 @@ api.get("/v2/menu/:dayId", (req, res) => {
   }
 });
 
-api.get("*", function (req, res) {
+api.get("*", function(req, res) {
   apiResponse(res, 404);
 });
 

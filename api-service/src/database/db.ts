@@ -2,123 +2,68 @@ import { Collection, Db, MongoClient, ObjectId } from "mongodb";
 import { WeekMenu } from "../types";
 import { DatabaseMenu, DatabaseOptions, DatabaseWeek } from "./dbTypes";
 
-export class Database {
-  dbUrl: string;
-  dbName: string; 
-  _client?: MongoClient = undefined;
-  _db?: Db = undefined;
+export async function createClient(opts: DatabaseOptions): Promise<Db> {
+  console.log(`\nAttempting connection to "${opts.dbUrl}"...\nProgram will exit if connection does not succeed\n`);
+  try {
+    // Creating a client
+    const client = await MongoClient.connect(opts.dbUrl);
 
-  constructor(options: DatabaseOptions) {
-    this.dbUrl = options.dbUrl;
-    this.dbName = options.dbName;
+    // Everything worked out
+    console.log(`Connected successfully to server with database "${opts.dbName}"\n`);
+
+    // Return instance of a Database
+    return client.db(opts.dbName);
+  } catch (err) {
+    console.log(`Error happened. Shutting down. Logs: ${err}`);
+    process.exit(1); // Program should not continue if database *should* be live but it can't start
   }
-    
-  async newClient() {
-    // Don't do a new client if we already have a client
-    if (this.client !== undefined) return;
-
-    console.log(`\nAttempting connection to "${this.dbUrl}"...\nProgram will exit if connection does not succeed\n`);
-    try {
-      // Creating a client
-      const client = await MongoClient.connect(this.dbUrl);
-
-      console.log(`Connected successfully to server with database "${this.dbName}"\n`);
-
-      // Create a database object used to modify or read the database
-      this._db = client.db(this.dbName);
-      this._client = client;
-
-      return new Archiver({dbUrl: this.dbUrl, dbName: this.dbName}, this.database as Db); // Return a new archiver which holds crucial data in order to CRUD mongo
-    } catch (err) {
-      console.log(`Error happened. Shutting down. Logs: ${err}`);
-      process.exit(1);
-    }
-
-  }
-
-  get database() {
-    if (this._db !== undefined)  return this._db;
-  }
-
-  get client() {
-    return this._client;
-  }
-    
 }
 
-export class Archiver extends Database {
-  weekMenu?: WeekMenu;
-  _db?: Db = undefined;
+// Converts a WeekMenu to be suited for saving to a database
+export function convertMenu(weekMenu: WeekMenu): DatabaseMenu[] {
+  const daysMenus: DatabaseMenu[] = [];
+  weekMenu.days.forEach((dayMenu) => {
+    // New object with date data for the week
+    const weekData: DatabaseWeek = { weekNumber: (weekMenu as WeekMenu).weekNumber, year: new Date().getUTCFullYear() };
 
-  constructor(options: DatabaseOptions, db: Db) {
-    super(options);
-    this._db = db;
-        
-  }
+    // Construct full object which is then...
+    const full = { _id: new ObjectId(), version: 0, hash: dayMenu.hash, week: weekData, date: dayMenu.date, dayId: dayMenu.dayId, meals: dayMenu.menu };
+    // pushed into the array
+    daysMenus.push(full);
+  });
+  return daysMenus;
+}
 
-  // Converts a WeekMenu to be suited for saving to a database
-  private convertMenu(): DatabaseMenu[] {
-    const daysMenus: DatabaseMenu[] = [];
-    if (this.weekMenu !== undefined) {
-      this.weekMenu.days.forEach((dayMenu) => {
-        // New object with date data for the week
-        const weekData: DatabaseWeek = { weekNumber: (this.weekMenu as WeekMenu).weekNumber, year: new Date().getUTCFullYear() };
+export async function saveMenu(db: Db, convertedMenu: DatabaseMenu[]) {
+  const collection: Collection = db.collection("foods");
 
-        // Construct full object which is then...
-        const full = { _id: new ObjectId(), version: 0, hash: dayMenu.hash, week: weekData, date: dayMenu.date, dayId: dayMenu.dayId, meals: dayMenu.menu };
-        // pushed into the array
-        daysMenus.push(full);
-      });
-    }
-    if (daysMenus.length === 0) throw new Error("Archiver is never given a weekMenu.");
-    return daysMenus;
-  }
+  for (let i = 0; i < 7; i++) {
+    const isEntrySaved: boolean = await collection.findOne({ hash: convertedMenu[i].hash }) !== null;
+    const isDuplicate: boolean = await collection.findOne({ date: convertedMenu[i].date }) !== null;
+    const isWeekend: boolean = convertedMenu[i].hash === null;
 
-  async saveMenus() {
-    if (this._db !== undefined) {
-      // Menu conversation
-      let convertedMenu: DatabaseMenu[];
-      try {
-        convertedMenu = this.convertMenu();
-      } catch (err) {
-        console.error("Menu cannot be saved to database, no non-undefined menu was given to Archiver.");
-        return;
-      }
+    // Version updating; We want our frontend to take the most recent aka the least "problematic" version of the foods data.
+    // Sometimes they are updated during days because of typos or some other reason. This system basically tries to get around those typos and always
+    // give users the best service possible.
+    const oldVer = await collection.findOne({ date: convertedMenu[i].date, hash: !convertedMenu[i].hash });
+    // In case a match was found, just update the version to be itself + 1
+    if (oldVer !== null) await collection.updateOne({ date: convertedMenu[i].date }, { $set: { version: oldVer.version + 1 } });
 
-      const collection: Collection = this._db.collection("foods");
-
-      for (let i = 0; i < 6+1; i++) {
-        const isEntrySaved: boolean = await collection.findOne({ hash: convertedMenu[i].hash }) !== null;
-        const isDuplicate: boolean = await collection.findOne({ date: convertedMenu[i].date }) !== null;
-        const isWeekend: boolean = convertedMenu[i].hash === null;
-
-        // Version updating; We want our frontend to take the most recent aka the least "problematic" version of the foods data.
-        // Sometimes they are updated during days because of typos or some other reason. This system basically tries to get around those typos and always
-        // give users the best service possible.
-        const oldVer = await collection.findOne({ date: convertedMenu[i].date, hash: !convertedMenu[i].hash });
-        // In case a match was found, just update the version to be itself + 1
-        if (oldVer !== null) await collection.updateOne({ date: convertedMenu[i].date}, { $set: { version: oldVer.version + 1}});
-
-        // Workdays
-        if (!isEntrySaved && !isDuplicate && !isWeekend) {
-          await collection.insertOne(convertedMenu[i]);
-          // Weekends
-        } else if (isWeekend && !isDuplicate) {
-          await collection.insertOne(convertedMenu[i]);
-        }
-      }
-
+    // Workdays
+    if (!isEntrySaved && !isDuplicate && !isWeekend) {
+      await collection.insertOne(convertedMenu[i]);
+      // Weekends
+    } else if (isWeekend && !isDuplicate) {
+      await collection.insertOne(convertedMenu[i]);
     }
   }
+}
 
-  async query(term: unknown): Promise<DatabaseMenu | null>  {
-    if (this._db !== undefined) {
-      const collection: Collection = this._db.collection("foods");
-      const result = await collection.findOne({date: term});
-      if (result) {
-        return result as DatabaseMenu;
-      }
-    }
-    return null;
+export async function query(db: Db, term: unknown): Promise<DatabaseMenu | null> {
+  const collection: Collection = db.collection("foods");
+  const result = await collection.findOne({ date: term });
+  if (result) {
+    return result as DatabaseMenu;
   }
+  return null;
 }

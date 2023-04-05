@@ -13,7 +13,6 @@ export async function createClient(opts: DatabaseOptions): Promise<Db> {
 
     // Return instance of a Database
     return client.db(opts.dbName);
-
   } catch (err) {
     console.log(`Error happened. Shutting down. Logs: ${err}`);
     process.exit(1); // Program should not continue if database *should* be live but it can't start
@@ -23,17 +22,15 @@ export async function createClient(opts: DatabaseOptions): Promise<Db> {
 // Converts a WeekMenu to be suited for saving to a database
 export function convertMenu(weekMenu: WeekMenu): DatabaseMenu[] {
   const daysMenus: DatabaseMenu[] = [];
-  if (weekMenu !== undefined) {
-    weekMenu.days.forEach((dayMenu) => {
-      // New object with date data for the week
-      const weekData: DatabaseWeek = { weekNumber: (weekMenu as WeekMenu).weekNumber, year: new Date().getUTCFullYear() };
+  weekMenu.days.forEach((dayMenu) => {
+    // New object with date data for the week
+    const weekData: DatabaseWeek = { weekNumber: (weekMenu as WeekMenu).weekNumber, year: new Date().getUTCFullYear() };
 
-      // Construct full object which is then...
-      const full = { _id: new ObjectId(), version: 0, hash: dayMenu.hash, week: weekData, date: dayMenu.date, dayId: dayMenu.dayId, meals: dayMenu.menu };
-      // pushed into the array
-      daysMenus.push(full);
-    });
-  }
+    // Construct full object which is then...
+    const full = { _id: new ObjectId(), version: 0, hash: dayMenu.hash, week: weekData, date: dayMenu.date, dayId: dayMenu.dayId, meals: dayMenu.menu };
+    // pushed into the array
+    daysMenus.push(full);
+  });
   return daysMenus;
 }
 

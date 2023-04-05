@@ -58,12 +58,3 @@ export async function saveMenu(db: Db, convertedMenu: DatabaseMenu[]) {
     }
   }
 }
-
-export async function query(db: Db, term: unknown): Promise<DatabaseMenu | null> {
-  const collection: Collection = db.collection("foods");
-  const result = await collection.findOne({ date: term });
-  if (result) {
-    return result as DatabaseMenu;
-  }
-  return null;
-}

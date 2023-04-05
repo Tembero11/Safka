@@ -5,6 +5,7 @@ import { currentMenu } from "../index";
 import { Weekday } from "../types";
 import { getCurrentDayIndex } from "../utils";
 import { apiResponse } from "./apiResponse";
+import rateRouter from "./rateRouter"; 
 
 export const app = express();
 
@@ -45,5 +46,6 @@ interface StartServerOptions {
 
 export function startServer(port: number, options?: StartServerOptions) {
   app.use(options?.apiBaseRoute || "/api", api);
+  app.use("/internal", rateRouter);
   app.listen(port);
 }

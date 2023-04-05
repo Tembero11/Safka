@@ -1,13 +1,11 @@
 import express from "express";
 import { apiResponse } from "./apiResponse";
+import v2 from "./v2";
+import v3 from "./v3";
 
 export const app = express();
 
 app.disable("x-powered-by");
-
-api.get("*", function(req, res) {
-  apiResponse(res, 404);
-});
 
 interface StartServerOptions {
   apiBaseRoute?: string
@@ -15,6 +13,15 @@ interface StartServerOptions {
 }
 
 export function startServer(port: number, options?: StartServerOptions) {
-  app.use(options?.apiBaseRoute || "/api", api);
+  if (options?.withDatabase) {
+    app.use(`${options?.apiBaseRoute || "/api"}`, v3)
+  } else {
+    app.use(`${options?.apiBaseRoute || "/api"}`, v2);
+  }
+
+  app.get("*", function(req, res) {
+    apiResponse(res, 404);
+  });
+
   app.listen(port);
 }

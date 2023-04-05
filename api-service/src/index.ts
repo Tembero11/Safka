@@ -48,5 +48,5 @@ export let currentMenu: WeekMenu;
   if (!DISABLE_POLL) poller.startPolling();
 
   // Start the http api server
-  startServer(Number(PORT), { apiBaseRoute: API_PREFIX, withDatabase: DISABLE_DB });
+  startServer(Number(PORT), { apiBaseRoute: API_PREFIX, withDatabase: !DISABLE_DB });
 })();

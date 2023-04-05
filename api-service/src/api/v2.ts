@@ -6,7 +6,7 @@ import { Weekday } from "../types";
 import { getCurrentDayIndex } from "../utils";
 import { apiResponse } from "./apiResponse";
 
-export const api = Router();
+const api = Router();
 api.use(cors());
 
 api.get("/v2/menu", (req, res) => {
@@ -28,3 +28,5 @@ api.get("/v2/menu/:dayId", (req, res) => {
     apiResponse(res, 400, { msg: "Invalid dayId" });
   }
 });
+
+export default api;

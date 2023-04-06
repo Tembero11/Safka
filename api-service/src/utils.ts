@@ -8,23 +8,24 @@ export interface IndexRange {
 }
 
 export function splitByIndexRange(str: string, ranges: IndexRange[]): string[] {
+  if (ranges.length == 0) return [str];
+
   const result: string[] = [];
 
-  let nextStartIndex = 0;
-  for (let i = 0; i < ranges.length + 1; i++) {
-    let resultStr = "";
-    if (i == ranges.length) {
-      resultStr = str.substring(nextStartIndex, str.length);
-      continue;
-    }
+  let nextIndex = 0;
+  for (let i = 0; i < ranges.length; i++) {
     const { start, end } = ranges[i];
+
+    const substr = str.substring(nextIndex, start + 1);
     
-    resultStr = str.substring(nextStartIndex, start);
+    if (substr) result.push(substr);
 
-    if (resultStr.length > 0) result.push(resultStr);
-
-    nextStartIndex = end;
+    nextIndex = end;
   }
+
+  const lastRange = ranges[ranges.length - 1];
+  const substr = str.substring(lastRange.end);
+  if (substr) result.push(substr);
 
   return result;
 }

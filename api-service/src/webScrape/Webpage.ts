@@ -151,15 +151,16 @@ export default class Webpage {
       matchedDiets.push(this.dietaryRestrictionsFromString(dietLetters));
       matches.push({ start: matchStart, end: matchEnd });
     }
+    
+    const names = splitByIndexRange(name.trim(), matches);
 
-    const names = splitByIndexRange(name, matches);
-
-    // Use spread to avoid a food without diet getting cut off
-    // const names = splitByIndexRange(name, [...matches, { start: name.length - 1, end: name.length - 1}]);
+    // Create an array of empty diets for foods that do not have a dietary regex match
+    const noDietsList = new Array(names.length - matchedDiets.length).fill({isLactoseFree: false, isDairyFree: false, isGlutenFree: false});
 
     const result = {
       names: names.map(name => this.formatFoodName(name)),
-      diets: matchedDiets
+      // Combine matches and generated diets
+      diets: [...matchedDiets, ...noDietsList]
     };
     return result;
   }

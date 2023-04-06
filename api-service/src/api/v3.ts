@@ -4,8 +4,8 @@ import { getDayFromWeek } from "../foodUtils";
 import { currentMenu } from "../index";
 import { Weekday, WeekMenu } from "../types";
 import { db } from "../index";
-import { getCurrentDayIndex } from "../utils";
 import { apiResponse } from "./apiResponse";
+import { addDays, subDays } from "date-fns";
 
 const api = Router();
 api.use(cors());
@@ -18,9 +18,15 @@ api.get("/v3/menu", async (req, res) => {
 });
 
 api.get("/v3/menu/today", async (req, res) => {
-  const today = getDayFromWeek(currentMenu, getCurrentDayIndex());
+  const today = new Date();
+  const yesterday = subDays(today, 1);
 
-  apiResponse(res, 200, { ...today });
+  // Find dates between today and yesterday
+  // Finds the current date
+  // This method is used because finding exact ISO date string is really unreliable and annoying
+  const todaysMenu = await db.collection("foods").findOne({ date: { $gte: yesterday, $lt: today } });
+
+  apiResponse(res, 200, { ...todaysMenu });
 });
 
 api.get("/v3/menu/:dayId", (req, res) => {

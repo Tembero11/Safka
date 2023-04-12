@@ -18,5 +18,6 @@ const nextConfig = {
     ]
   }
 }
-
-module.exports = withPWA(nextConfig);
+// Disable pwa
+// module.exports = withPWA(nextConfig);
+module.exports = nextConfig;

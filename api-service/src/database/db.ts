@@ -1,3 +1,4 @@
+import { subDays } from "date-fns";
 import { Db, MongoClient, ObjectId } from "mongodb";
 import { currentMenu, foods } from "..";
 import { DayMenu, WeekMenu } from "../types";
@@ -52,21 +53,26 @@ export function convertFromDb(ogMenu: DatabaseMenu | DatabaseMenu[]): WeekMenu {
 
 export async function saveMenu(db: Db, convertedMenu: DatabaseMenu[]) {
   for (let i = 0; i < 7; i++) {
+    const dateBefore = subDays(convertedMenu[i].date, 1);
+
     const isEntrySaved: boolean = await foods.findOne({ hash: convertedMenu[i].hash }) !== null;
-    const isDuplicate: boolean = await foods.findOne({ date: convertedMenu[i].date }) !== null;
+    const isDuplicate: boolean = await foods.findOne({ date: { $gte: dateBefore, $lt: convertedMenu[i].date } }) !== null;
     const isWeekend: boolean = convertedMenu[i].hash === null;
 
     // Version updating; We want our frontend to take the most recent aka the least "problematic" version of the foods data.
     // Sometimes they are updated during days because of typos or some other reason. This system basically tries to get around those typos and always
     // give users the best service possible.
-    const oldVer = await foods.findOne({ date: convertedMenu[i].date, hash: !convertedMenu[i].hash });
+    const oldVer = await foods.findOne({ date: { $gte: dateBefore, $lt: convertedMenu[i].date }, hash: { $ne: convertedMenu[i].hash } });
+
     // In case a match was found, just update the version to be itself + 1
-    if (oldVer !== null) await foods.updateOne({ date: convertedMenu[i].date }, { $set: { version: oldVer.version + 1 } });
+    if (oldVer !== null) {
+      await foods.updateOne({ ...oldVer }, { $set: { version: oldVer.version + 1 } });
+    }
 
     // Workdays
     if (!isEntrySaved && !isDuplicate && !isWeekend) {
       await foods.insertOne(convertedMenu[i]);
-      // Weekends
+    // Weekends
     } else if (isWeekend && !isDuplicate) {
       await foods.insertOne(convertedMenu[i]);
     }

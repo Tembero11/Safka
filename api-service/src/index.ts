@@ -1,16 +1,16 @@
 import { WeekMenu } from "./types";
 import MenuPoller from "./webScrape/MenuPoller";
 import dotenv from "dotenv";
-import { convertMenu, createClient, saveMenu } from "./database/db";
+import { convertToDb, createClient, saveMenu } from "./database/db";
 import assert from "assert";
 import { startServer } from "./api/startServer";
-import { Db } from "mongodb";
+import { Collection, Db, Document } from "mongodb";
 
 // Env
 dotenv.config();
 
 const DISABLE_POLL = process.env.DISABLE_POLL == "true";
-const DISABLE_DB = process.env.DISABLE_DB == "true";
+const DISABLE_DB = process.env.DISABLE_DB == "true" || false ;
 export const DB_URL = process.env.DB_URL || "mongodb://127.0.0.1:27017";
 export const DB_NAME = process.env.DB_NAME || "SafkaArchiverDB";
 const API_PREFIX = process.env.API_PREFIX || "/api";
@@ -25,28 +25,31 @@ if (DISABLE_DB) {
 }
 
 export let db: Db; // Will remain undefined if not assigned to a client later on
+export let foods: Collection<Document>; // Will remain undefined if not assigned to a client later on
 export let currentMenu: WeekMenu;
 
-// Async setup code
-(async function() {
-  if (!DISABLE_DB) {
-    db = await createClient({ dbUrl: DB_URL, dbName: DB_NAME });
+if (!DISABLE_DB) {
+  createClient({ dbUrl: DB_URL, dbName: DB_NAME }).then(instance => {
+    db = instance;
+    foods = db.collection("foods");
+
     assert(db, new Error("Database undefined"));
-  }
-
-  const poller = new MenuPoller({ enableLogs: true });
-
-  poller.on("polled", (menu) => {
-    currentMenu = menu;
-
-    // Check that the database is not disabled
-    if (!DISABLE_DB) {
-      saveMenu(db, convertMenu(currentMenu))
-    }
+    assert(foods, new Error("Collection \"foods\" undefined"));
   });
+}
 
-  if (!DISABLE_POLL) poller.startPolling();
+const poller = new MenuPoller({ enableLogs: true });
 
-  // Start the http api server
-  startServer(Number(PORT), { apiBaseRoute: API_PREFIX, withDatabase: !DISABLE_DB });
-})();
+poller.on("polled", (menu) => {
+  currentMenu = menu;
+
+  // Check that the database is not disabled
+  if (!DISABLE_DB && db) {
+    saveMenu(db, convertToDb(currentMenu));
+  }
+});
+
+if (!DISABLE_POLL) poller.startPolling();
+
+// Start the http api server
+startServer(Number(PORT), { apiBaseRoute: API_PREFIX, withDatabase: !DISABLE_DB });

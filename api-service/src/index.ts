@@ -25,16 +25,18 @@ if (DISABLE_DB) {
 }
 
 export let db: Db; // Will remain undefined if not assigned to a client later on
-export let foods: Collection<Document>; // Will remain undefined if not assigned to a client later on
+export let foods: Collection<Document>;
+export let versions: Collection<Document>;
+
 export let currentMenu: WeekMenu;
 
 if (!DISABLE_DB) {
   createClient({ dbUrl: DB_URL, dbName: DB_NAME }).then(instance => {
     db = instance;
     foods = db.collection("foods");
+    versions = db.collection("versions");
 
     assert(db, new Error("Database undefined"));
-    assert(foods, new Error("Collection \"foods\" undefined"));
   });
 }
 
@@ -45,7 +47,7 @@ poller.on("polled", (menu) => {
 
   // Check that the database is not disabled
   if (!DISABLE_DB && db) {
-    saveMenu(db, convertToDb(currentMenu));
+    saveMenu(convertToDb(currentMenu));
   }
 });
 

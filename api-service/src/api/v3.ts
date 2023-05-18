@@ -25,7 +25,6 @@ api.get("/v3/menu/today", async (req, res) => {
   const today = new Date();
   const yesterday = subDays(today, 1);
 
-  // Find dates between today and yesterday
   // Finds the current date
   // This method is used because finding exact ISO date string is really unreliable and annoying
   const todaysMenu = await foods.findOne({ date: { $gte: yesterday, $lt: today } }) as DatabaseMenu;

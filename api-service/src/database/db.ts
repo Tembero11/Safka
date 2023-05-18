@@ -1,5 +1,6 @@
-import { Collection, Db, MongoClient, ObjectId } from "mongodb";
-import { WeekMenu } from "../types";
+import { Db, MongoClient, ObjectId } from "mongodb";
+import { currentMenu, foods } from "..";
+import { DayMenu, WeekMenu } from "../types";
 import { DatabaseMenu, DatabaseOptions, DatabaseWeek } from "./dbTypes";
 
 export async function createClient(opts: DatabaseOptions): Promise<Db> {
@@ -20,7 +21,7 @@ export async function createClient(opts: DatabaseOptions): Promise<Db> {
 }
 
 // Converts a WeekMenu to be suited for saving to a database
-export function convertMenu(weekMenu: WeekMenu): DatabaseMenu[] {
+export function convertToDb(weekMenu: WeekMenu): DatabaseMenu[] {
   const daysMenus: DatabaseMenu[] = [];
   weekMenu.days.forEach((dayMenu) => {
     // New object with date data for the week
@@ -34,27 +35,40 @@ export function convertMenu(weekMenu: WeekMenu): DatabaseMenu[] {
   return daysMenus;
 }
 
-export async function saveMenu(db: Db, convertedMenu: DatabaseMenu[]) {
-  const collection: Collection = db.collection("foods");
+export function convertFromDb(ogMenu: DatabaseMenu | DatabaseMenu[]): WeekMenu {
+  if (!Array.isArray(ogMenu)) {
+    ogMenu = [ogMenu];
+  }
 
+  const week: WeekMenu = { modifiedTime: currentMenu.modifiedTime, weekNumber: ogMenu[0].week.weekNumber, days: [] };
+  ogMenu.forEach((dayMenu) => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { _id, version, ...rest } = dayMenu;
+    week.days.push({ hash: rest.hash, dayId: rest.dayId, date: rest.date, menu: rest.meals });
+  });
+
+  return week as WeekMenu;
+}
+
+export async function saveMenu(db: Db, convertedMenu: DatabaseMenu[]) {
   for (let i = 0; i < 7; i++) {
-    const isEntrySaved: boolean = await collection.findOne({ hash: convertedMenu[i].hash }) !== null;
-    const isDuplicate: boolean = await collection.findOne({ date: convertedMenu[i].date }) !== null;
+    const isEntrySaved: boolean = await foods.findOne({ hash: convertedMenu[i].hash }) !== null;
+    const isDuplicate: boolean = await foods.findOne({ date: convertedMenu[i].date }) !== null;
     const isWeekend: boolean = convertedMenu[i].hash === null;
 
     // Version updating; We want our frontend to take the most recent aka the least "problematic" version of the foods data.
     // Sometimes they are updated during days because of typos or some other reason. This system basically tries to get around those typos and always
     // give users the best service possible.
-    const oldVer = await collection.findOne({ date: convertedMenu[i].date, hash: !convertedMenu[i].hash });
+    const oldVer = await foods.findOne({ date: convertedMenu[i].date, hash: !convertedMenu[i].hash });
     // In case a match was found, just update the version to be itself + 1
-    if (oldVer !== null) await collection.updateOne({ date: convertedMenu[i].date }, { $set: { version: oldVer.version + 1 } });
+    if (oldVer !== null) await foods.updateOne({ date: convertedMenu[i].date }, { $set: { version: oldVer.version + 1 } });
 
     // Workdays
     if (!isEntrySaved && !isDuplicate && !isWeekend) {
-      await collection.insertOne(convertedMenu[i]);
+      await foods.insertOne(convertedMenu[i]);
       // Weekends
     } else if (isWeekend && !isDuplicate) {
-      await collection.insertOne(convertedMenu[i]);
+      await foods.insertOne(convertedMenu[i]);
     }
   }
 }

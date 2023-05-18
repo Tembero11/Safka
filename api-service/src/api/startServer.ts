@@ -13,11 +13,7 @@ interface StartServerOptions {
 }
 
 export function startServer(port: number, options?: StartServerOptions) {
-  if (options?.withDatabase) {
-    app.use(options?.apiBaseRoute || "/api", v3)
-  } else {
-    app.use(options?.apiBaseRoute || "/api", v2);
-  }
+  app.use(options?.apiBaseRoute || "/api", options?.withDatabase ? v3 : v2);
 
   app.get("*", function(req, res) {
     apiResponse(res, 404);

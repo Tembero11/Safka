@@ -26,7 +26,7 @@
 
   /* background: linear-gradient(var(--ui-footer-color), var(--ui-footer-second-color)); */
 
-  background: var(--primary);
+  background: #720026;
 
   @include theme-mixins.dark {
     $page-background: map.get(themes.$themes, "dark", "background");

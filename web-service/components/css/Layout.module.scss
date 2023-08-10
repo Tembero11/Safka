@@ -33,11 +33,20 @@
     $footer-background: color.adjust(map.get(themes.$themes, "dark", "primary-variant"), $alpha: -0.6);
 
     background: linear-gradient($page-background, $footer-background);
+    margin: 0;
+    border-radius: 0;
+    width: 100vw;
   }
 
-  width: 100vw;
-  height: 300px;
-  padding-bottom: 20px;
+  gap: 16px;
+  width: calc(100vw - 32px);
+  padding: 16px 0;
+  margin: 0 16px 16px;
+  border-radius: 8px 8px 16px 16px;
+
+  * {
+    margin: 0;
+  }
 }
 
 .link {
@@ -45,9 +54,10 @@
   font-weight: 600;
   text-align: center;
   color: white;
-  padding: 15px;
-  border-radius: 10px;
+  padding: 12px;
+  border-radius: 8px;
   transition: 70ms;
+  display: inline-block;
 }
 
 .link:hover {
@@ -74,14 +84,13 @@
   position: relative;
   z-index: 10000;
   width: 100vw;
-  height: 130px;
 }
 
 .logo {
   font-family: Montserrat, sans-serif;
   z-index: 10000;
   color: var(--primary);
-  margin: 20px 0 20px 20px;
+  margin: 16px 0 16px 16px;
   user-select: none;
 }
 

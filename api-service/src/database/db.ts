@@ -25,10 +25,10 @@ export function convertToDb(weekMenu: WeekMenu): DatabaseMenu[] {
   const daysMenus: DatabaseMenu[] = [];
   weekMenu.days.forEach((dayMenu) => {
     // New object with date data for the week
-    const weekData: DatabaseWeek = { weekNumber: (weekMenu as WeekMenu).weekNumber, year: new Date().getUTCFullYear() };
+    const weekData: DatabaseWeek = { weekNumber: weekMenu.weekNumber, year: new Date().getUTCFullYear() };
 
     // Construct full object which is then...
-    const full = { _id: new ObjectId(), version: 0, hash: dayMenu.hash, week: weekData, date: dayMenu.date, dayId: dayMenu.dayId, meals: dayMenu.menu };
+    const full = { _id: new ObjectId(), versions: null, hash: dayMenu.hash, week: weekData, date: dayMenu.date, dayId: dayMenu.dayId, meals: dayMenu.menu };
     // pushed into the array
     daysMenus.push(full);
   });
@@ -36,14 +36,13 @@ export function convertToDb(weekMenu: WeekMenu): DatabaseMenu[] {
 }
 
 export function convertFromDb(ogMenu: DatabaseMenu | DatabaseMenu[]): WeekMenu {
-  if (!Array.isArray(ogMenu)) {
-    ogMenu = [ogMenu];
-  }
+  // Convert to array if not passed in array form
+  if (!Array.isArray(ogMenu)) ogMenu = [ogMenu];
 
   const week: WeekMenu = { modifiedTime: currentMenu.modifiedTime, weekNumber: ogMenu[0].week.weekNumber, days: [] };
   ogMenu.forEach((dayMenu) => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { _id, version, ...rest } = dayMenu;
+    const { _id, versions, ...rest } = dayMenu;
     week.days.push({ hash: rest.hash, dayId: rest.dayId, date: rest.date, menu: rest.meals });
   });
 

@@ -13,10 +13,15 @@ export interface DatabaseWeek {
 
 export interface DatabaseMenu {
     _id: ObjectId;
-    version: number;
+    versions: IDatabaseVersion[] | null;
     hash: string | null;
     week: DatabaseWeek;
     date: Date;
     dayId: Weekday;
     meals: Meal[];
+}
+
+export interface IDatabaseVersion {
+    version: number;
+    id: ObjectId;
 }

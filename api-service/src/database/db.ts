@@ -1,59 +1,37 @@
 import { Collection, Db, MongoClient, ObjectId } from "mongodb";
 import { WeekMenu } from "../types";
-import { DatabaseMenu, DatabaseOptions, DatabaseWeek } from "./dbTypes";
+import { DatabaseMenu, DatabaseWeek } from "./dbTypes";
 
-export class Database {
+export interface IDatabaseOptions {
   dbUrl: string;
   dbName: string; 
-  _client?: MongoClient = undefined;
-  _db?: Db = undefined;
+}
 
-  constructor(options: DatabaseOptions) {
-    this.dbUrl = options.dbUrl;
-    this.dbName = options.dbName;
-  }
-    
-  async newClient() {
-    // Don't do a new client if we already have a client
-    if (this.client !== undefined) return;
+export function connectToDatabase(options: IDatabaseOptions) {
+  console.log(`\nAttempting connection to "${options.dbUrl}"...\nProgram will exit if connection does not succeed\n`);
+  let client: MongoClient = new MongoClient(options.dbUrl);
 
-    console.log(`\nAttempting connection to "${this.dbUrl}"...\nProgram will exit if connection does not succeed\n`);
+  (async function () {
     try {
-      // Creating a client
-      const client = await MongoClient.connect(this.dbUrl);
-
-      console.log(`Connected successfully to server with database "${this.dbName}"\n`);
-
-      // Create a database object used to modify or read the database
-      this._db = client.db(this.dbName);
-      this._client = client;
-
-      return new Archiver({dbUrl: this.dbUrl, dbName: this.dbName}, this.database as Db); // Return a new archiver which holds crucial data in order to CRUD mongo
+      await client.connect();
+      console.log(`Connection to ${options.dbName} succesful!`);
     } catch (err) {
       console.log(`Error happened. Shutting down. Logs: ${err}`);
       process.exit(1);
     }
+    // Creating a client
+  })()
 
-  }
-
-  get database() {
-    if (this._db !== undefined)  return this._db;
-  }
-
-  get client() {
-    return this._client;
-  }
-    
+  // Create a database object used to modify or read the database
+  return client.db(options.dbName);
 }
 
-export class Archiver extends Database {
+export class Archiver {
   weekMenu?: WeekMenu;
-  _db?: Db = undefined;
+  _db: Db
 
-  constructor(options: DatabaseOptions, db: Db) {
-    super(options);
+  constructor(db: Db) {
     this._db = db;
-        
   }
 
   // Converts a WeekMenu to be suited for saving to a database
@@ -87,7 +65,7 @@ export class Archiver extends Database {
 
       const collection: Collection = this._db.collection("foods");
 
-      for (let i = 0; i < 6+1; i++) {
+      for (let i = 0; i < 6 + 1; i++) {
         const isEntrySaved: boolean = await collection.findOne({ hash: convertedMenu[i].hash }) !== null;
         const isDuplicate: boolean = await collection.findOne({ date: convertedMenu[i].date }) !== null;
         const isWeekend: boolean = convertedMenu[i].hash === null;
@@ -97,7 +75,7 @@ export class Archiver extends Database {
         // give users the best service possible.
         const oldVer = await collection.findOne({ date: convertedMenu[i].date, hash: !convertedMenu[i].hash });
         // In case a match was found, just update the version to be itself + 1
-        if (oldVer !== null) await collection.updateOne({ date: convertedMenu[i].date}, { $set: { version: oldVer.version + 1}});
+        if (oldVer !== null) await collection.updateOne({ date: convertedMenu[i].date }, { $set: { version: oldVer.version + 1 } });
 
         // Workdays
         if (!isEntrySaved && !isDuplicate && !isWeekend) {
@@ -107,14 +85,13 @@ export class Archiver extends Database {
           await collection.insertOne(convertedMenu[i]);
         }
       }
-
     }
   }
 
-  async query(term: unknown): Promise<DatabaseMenu | null>  {
+  async query(term: unknown): Promise<DatabaseMenu | null> {
     if (this._db !== undefined) {
       const collection: Collection = this._db.collection("foods");
-      const result = await collection.findOne({date: term});
+      const result = await collection.findOne({ date: term });
       if (result) {
         return result as DatabaseMenu;
       }

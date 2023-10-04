@@ -1,7 +1,7 @@
 import { WeekMenu } from "./types";
 import MenuPoller from "./webScrape/MenuPoller";
 import dotenv from "dotenv";
-import { Database } from "./database/db";
+import { connectToDatabase } from "./database/db";
 import { Archiver } from "./database/db";
 import assert from "assert";
 import { startServer } from "./api/startServer";
@@ -23,20 +23,13 @@ if (DISABLE_DB) {
   console.log("Database is disabled. This can be changed in the root directory's .env file by setting the 'DISABLE_DB=false'.");
 }
 
+export const db = connectToDatabase({ dbName: DB_NAME, dbUrl: DB_URL });
+export const archiver = new Archiver(db);
+
 export let currentMenu: WeekMenu;
-export let archiver: Archiver | undefined;
 
 // Async setup code
 (async function () {
-  const db = new Database({ dbUrl: DB_URL, dbName: DB_NAME });
-
-  assert(db, new Error("Database undefined"));
-
-  if (!DISABLE_DB) {
-    archiver = await db.newClient();
-    assert(archiver, "Archiver is undefined");
-  }
-
   const poller = new MenuPoller({ enableLogs: true });
 
   poller.on("polled", (menu) => {

@@ -1,7 +1,7 @@
-import express from "express";
+import express, { Router } from "express";
 import { apiResponse } from "./apiResponse";
-import v2 from "./v2";
 import v3 from "./v3";
+import v2 from "./v2";
 
 export const app = express();
 

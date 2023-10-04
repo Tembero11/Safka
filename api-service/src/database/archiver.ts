@@ -27,7 +27,10 @@ export class Archiver {
       return Archiver.fromDatabaseMenu(menu);
     });
 
-    return { weekNumber: databaseMenu[0].week.weekNumber, days };
+    return { 
+      restaurantId: databaseMenu[0].restaurantId, 
+      weekNumber: databaseMenu[0].week.weekNumber, 
+      days };
   }
 
   // Converts a WeekMenu to be suited for saving to a database
@@ -41,6 +44,7 @@ export class Archiver {
       const { hash, date, dayId, menu } = dayMenu;
       return {
         _id: new ObjectId(),
+        restaurantId: weekMenu.restaurantId,
         version: 0,
         week: weekData,
         meals: menu,

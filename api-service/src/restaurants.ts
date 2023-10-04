@@ -16,3 +16,4 @@ const RESTAURANTS: IRestaurant[] = [
 ];
 
 export default RESTAURANTS;
+

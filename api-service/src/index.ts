@@ -1,11 +1,11 @@
 import { IRestaurant, Restaurant, WeekMenu } from "./types";
 import MenuPoller from "./webScrape/MenuPoller";
 import dotenv from "dotenv";
-import { Database } from "./database/db";
-import { Archiver } from "./database/db";
+import { DatabaseConnection } from "./database/db";
 import assert from "assert";
 import { startServer } from "./api/startServer";
 import RESTAURANTS from "./restaurants";
+import { Archiver } from "./database/Archiver";
 
 // Env
 dotenv.config();
@@ -24,19 +24,27 @@ if (DISABLE_DB) {
   console.log("Database is disabled. This can be changed in the root directory's .env file by setting the 'DISABLE_DB=false'.");
 }
 
-export let currentMenus = new Map<Restaurant, { poller: MenuPoller } & IRestaurant>();
+export let currentMenus = new Map<Restaurant, { poller: MenuPoller, archiver: Archiver } & IRestaurant>();
 
 export let archiver: Archiver | undefined;
 
-function setupPoller(restaurant: IRestaurant) {
+function setupPoller(restaurant: IRestaurant, dbConnection: DatabaseConnection) {
   const poller = new MenuPoller(restaurant, { enableLogs: true });
+
+  const archiver = new Archiver(dbConnection, restaurant);
 
   currentMenus.set(restaurant.id, {
     poller,
+    archiver,
     ...restaurant,
   });
 
+  if (!DISABLE_DB) {
+    assert(archiver, "Archiver is undefined");
+  }
+
   poller.on("polled", (menu) => {
+    console.log(menu);
     // Check that the database is not disabled
     if (!DISABLE_DB && archiver) {
       // foodArchive menus
@@ -51,16 +59,11 @@ function setupPoller(restaurant: IRestaurant) {
 
 // Async setup code
 (async function () {
-  const db = new Database({ dbUrl: DB_URL, dbName: DB_NAME });
+  const dbConnection = await DatabaseConnection.newClient({ dbUrl: DB_URL, dbName: DB_NAME });
 
-  assert(db, new Error("Database undefined"));
+  assert(dbConnection, new Error("Database undefined"));
 
-  if (!DISABLE_DB) {
-    archiver = await db.newClient();
-    assert(archiver, "Archiver is undefined");
-  }
-
-  RESTAURANTS.forEach(setupPoller);
+  RESTAURANTS.forEach((restaurant) => setupPoller(restaurant, dbConnection));
 
   // Start the http api server
   startServer(Number(PORT), { apiBaseRoute: API_PREFIX });

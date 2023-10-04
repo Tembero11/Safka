@@ -46,7 +46,9 @@ async function run() {
     }
   });
 
-  startServer(Number(PORT), { apiBaseRoute: API_PREFIX });
+  poller.startPolling()
+
+  startServer(Number(PORT), { apiBaseRoute: API_PREFIX, withDatabase: !DISABLE_DB });
 }
 
 run()

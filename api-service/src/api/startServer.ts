@@ -5,6 +5,7 @@ import { Restaurant, WeekMenu, Weekday } from "../types";
 import { getCurrentDayIndex } from "../utils";
 import { apiResponse } from "./apiResponse";
 import { currentMenus } from "..";
+import RESTAURANTS from "../restaurants";
 
 export const app = express();
 
@@ -24,6 +25,11 @@ function getMenuFromRestaurantId(id: any): WeekMenu | undefined {
 
   return restaurant.poller.latestMenu;
 }
+
+api.get("/v3/restaurants", (req, res) => {
+  apiResponse(res, 200, {restaurants: RESTAURANTS});
+});
+
 
 api.get("/v3/menu/:restaurant", (req, res) => {
   const menu = getMenuFromRestaurantId(req.params.restaurant);

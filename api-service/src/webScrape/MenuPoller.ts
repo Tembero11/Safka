@@ -7,7 +7,7 @@ import { WeekMenu } from "../types";
 import { isValidDateString } from "../utils";
 import Webpage from "./Webpage";
 
-const TAI_SAFKA_URL = "https://www.turkuai.fi/turun-ammatti-instituutti/opiskelijalle/ruokailu-ja-ruokalistat/ruokalista-juhannuskukkula-topseli";
+const TAI_SAFKA_URL = "https://www.turkuai.fi/turun-ammatti-instituutti/opiskelijalle/ruokailu-ja-ruokalistat/ruokalista-lemminkaisenkatu-vip";
 
 interface PollerOptions {
     enableLogs?: boolean

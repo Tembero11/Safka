@@ -1,10 +1,10 @@
 import cors from "cors";
 import express, { Router } from "express";
 import { getDayFromWeek } from "../foodUtils";
-import { archiver, currentMenu } from "../index";
-import { Weekday } from "../types";
+import { Restaurant, WeekMenu, Weekday } from "../types";
 import { getCurrentDayIndex } from "../utils";
 import { apiResponse } from "./apiResponse";
+import { currentMenus } from "..";
 
 export const app = express();
 
@@ -13,21 +13,40 @@ app.disable("x-powered-by");
 const api = Router();
 api.use(cors());
 
-api.get("/v2/menu", (req, res) => {
-  apiResponse(res, 200, { ...currentMenu });
+function getMenuFromRestaurantId(id: any): WeekMenu | undefined {
+  if (typeof id != "string") return undefined;
+  
+  const IdNum = +id;
+  if (isNaN(IdNum)) return undefined;
+
+  const restaurant = currentMenus.get(IdNum);
+  if (!restaurant) return undefined;
+
+  return restaurant.poller.latestMenu;
+}
+
+api.get("/v3/menu/:restaurant", (req, res) => {
+  const menu = getMenuFromRestaurantId(req.params.restaurant);
+  apiResponse(res, 200, { ...menu });
 });
 
-api.get("/v2/menu/today", (req, res) => {
-  const today = getDayFromWeek(currentMenu, getCurrentDayIndex());
+api.get("/v3/menu/:restaurant/today", (req, res) => {
+  const menu = getMenuFromRestaurantId(req.params.restaurant);
+  if (!menu) return apiResponse(res, 404);
+
+  const today = getDayFromWeek(menu, getCurrentDayIndex());
 
   apiResponse(res, 200, { ...today });
 });
 
-api.get("/v2/menu/:dayId", (req, res) => {
+api.get("/v3/menu/:restaurant/:dayId", (req, res) => {
+  const menu = getMenuFromRestaurantId(req.params.restaurant);
+  if (!menu) return apiResponse(res, 404);
+
   const dayId = +req.params.dayId;
 
   if (Object.hasOwn(Weekday, dayId)) {
-    const day = getDayFromWeek(currentMenu, dayId);
+    const day = getDayFromWeek(menu, dayId);
     apiResponse(res, 200, { ...day });
   } else {
     apiResponse(res, 400, { msg: "Invalid dayId" });

@@ -1,10 +1,11 @@
-import { WeekMenu } from "./types";
+import { IRestaurant, Restaurant, WeekMenu } from "./types";
 import MenuPoller from "./webScrape/MenuPoller";
 import dotenv from "dotenv";
 import { Database } from "./database/db";
 import { Archiver } from "./database/db";
 import assert from "assert";
 import { startServer } from "./api/startServer";
+import RESTAURANTS from "./restaurants";
 
 // Env
 dotenv.config();
@@ -23,8 +24,30 @@ if (DISABLE_DB) {
   console.log("Database is disabled. This can be changed in the root directory's .env file by setting the 'DISABLE_DB=false'.");
 }
 
-export let currentMenu: WeekMenu;
+export let currentMenus = new Map<Restaurant, { poller: MenuPoller } & IRestaurant>();
+
 export let archiver: Archiver | undefined;
+
+function setupPoller(restaurant: IRestaurant) {
+  const poller = new MenuPoller(restaurant, { enableLogs: true });
+
+  currentMenus.set(restaurant.id, {
+    poller,
+    ...restaurant,
+  });
+
+  poller.on("polled", (menu) => {
+    // Check that the database is not disabled
+    if (!DISABLE_DB && archiver) {
+      // foodArchive menus
+      archiver.weekMenu = menu;
+      // Add current menu to MongoDb
+      archiver.saveMenus();
+    }
+  });
+
+  if (!DISABLE_POLL) poller.startPolling();
+}
 
 // Async setup code
 (async function () {
@@ -37,21 +60,7 @@ export let archiver: Archiver | undefined;
     assert(archiver, "Archiver is undefined");
   }
 
-  const poller = new MenuPoller({ enableLogs: true });
-
-  poller.on("polled", (menu) => {
-    currentMenu = menu;
-
-    // Check that the database is not disabled
-    if (!DISABLE_DB && archiver) {
-      // foodArchive menus                                                   
-      archiver.weekMenu = currentMenu;
-      // Add current menu to MongoDb                                         
-      archiver.saveMenus();
-    }
-  });
-
-  if (!DISABLE_POLL) poller.startPolling();
+  RESTAURANTS.forEach(setupPoller);
 
   // Start the http api server
   startServer(Number(PORT), { apiBaseRoute: API_PREFIX });

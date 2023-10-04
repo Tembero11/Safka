@@ -3,11 +3,9 @@ import ms from "ms";
 import assert from "node:assert";
 import { EventEmitter } from "node:events";
 import { InvalidDateError } from "../errors";
-import { WeekMenu } from "../types";
+import { IRestaurant, WeekMenu } from "../types";
 import { isValidDateString } from "../utils";
 import Webpage from "./Webpage";
-
-const TAI_SAFKA_URL = "https://www.turkuai.fi/turun-ammatti-instituutti/opiskelijalle/ruokailu-ja-ruokalistat/ruokalista-lemminkaisenkatu-vip";
 
 interface PollerOptions {
     enableLogs?: boolean
@@ -18,6 +16,7 @@ declare interface MenuPoller {
 }
 
 class MenuPoller extends EventEmitter {
+  readonly restaurant: IRestaurant;
   isRunning = false;
   // 16 min in ms
   readonly defaultTime = 16 * 60 * 1000;
@@ -29,13 +28,14 @@ class MenuPoller extends EventEmitter {
   /**
      * Contains the latest menu loaded.
      */
-  private latestMenu: WeekMenu | undefined;
+  latestMenu: WeekMenu | undefined;
 
-  constructor(options?: PollerOptions) {
+  constructor(restaurant: IRestaurant, options?: PollerOptions) {
     super();
     if (options?.enableLogs === false) {
       this.enableLogs = false;
     }
+    this.restaurant = restaurant;
   }
 
   startPolling() {
@@ -71,7 +71,7 @@ class MenuPoller extends EventEmitter {
       console.log("Page will be polled in " + ms(timeUntilNextPoll, { long: true }));
     }
 
-    const webpage = new Webpage(TAI_SAFKA_URL, document);
+    const webpage = new Webpage(this.restaurant.url, document);
         
     let menu;
     try {
@@ -85,7 +85,7 @@ class MenuPoller extends EventEmitter {
       return;
     }
 
-    this.latestMenu = menu;
+    this.latestMenu = { restaurantId: this.restaurant.id, ...menu };
 
     this.emit("polled", menu);
         
@@ -103,7 +103,7 @@ class MenuPoller extends EventEmitter {
      * @returns current page's HTML
      */
   async getWebpage() {
-    const resp = await axios.get(TAI_SAFKA_URL);
+    const resp = await axios.get(this.restaurant.url);
 
     const lastModified = resp.headers["last-modified"];
 

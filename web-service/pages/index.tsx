@@ -3,6 +3,7 @@ import Head from "next/head";
 import { Diet } from "../components/DayBox";
 import Week from "../components/Week";
 import getWeekMenu, { WeekMenu } from "../utils/getWeekMenu";
+import RestaurantSwitch from "../components/RestaurantSwitch";
 
 const Home: NextPage<{ menu: WeekMenu | null }> = ({menu}) => {
   return (
@@ -13,6 +14,7 @@ const Home: NextPage<{ menu: WeekMenu | null }> = ({menu}) => {
       <p id="short-desc">Juhannuskukkulan opiskelija- ja <br /> henkilöstöruokailun helposti luettava <br /> ruokalista netissä.</p>
       <div style={{display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", minHeight: "80%", gap: 20}}>
         <Week menu={menu}/>
+        <RestaurantSwitch/>
         <p id="letter-meanings">
           <span><Diet>L</Diet>&nbsp; Laktoositon</span>
           <span><Diet>M</Diet>&nbsp; Maidoton</span>

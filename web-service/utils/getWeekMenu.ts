@@ -1,3 +1,5 @@
+import { DefaultApiResponse } from "./common";
+
 export interface DietaryRestrictions {
   isLactoseFree: boolean;
   isDairyFree: boolean;
@@ -32,17 +34,13 @@ export interface WeekMenu {
   days: DayMenu[];
 }
 
-type DefaultApiResponse = {
-  httpCode: number
-  msg: string
-  ok: boolean
-}
-
 type WeekMenuResponse = WeekMenu & DefaultApiResponse;
 
 
-export default async function getWeekMenu() {
-  const url = process.env.API_URL || "https://api.safka.online/v1/menu/";
+export default async function getWeekMenu(restaurantId: number) {
+  const hostname = process.env.API_URL || "https://api.safka.online/v2";
+
+  const url = `${hostname}/menu/${restaurantId}`;
   console.log(url)
   const resp = await fetch(url, {
     method: "get"

@@ -1,4 +1,9 @@
-import { Weekday } from "./getWeekMenu";
+
+export type DefaultApiResponse = {
+  httpCode: number
+  msg: string
+  ok: boolean
+}
 
 export function isProduction() {
     if (process.env.NODE_ENV !== "development") return true

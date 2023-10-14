@@ -4,11 +4,11 @@ import getWeekMenu, { DayMenu, Weekday, WeekMenu } from "../utils/getWeekMenu";
 import styles from "./css/Week.module.scss";
 import DayBox from "./DayBox";
 
-export default function Week(props: { menu: WeekMenu | null }) {
+export default function Week(props: { menu?: WeekMenu }) {
   console.log(props)
   if (!props.menu) {
     return (
-      <p className="text-center on-background-slight-color">Ruokalistan lataamisessa ilmeni ongelma. Yritä pian uudelleen.</p>
+      <p className="text-center on-background-slight-color" style={{height: "60%"}}>Ruokalistan lataamisessa ilmeni ongelma. Yritä pian uudelleen.</p>
     )
   }
 

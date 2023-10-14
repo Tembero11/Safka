@@ -1,30 +1,47 @@
+@use "../../styles/theme-mixins.scss";
+@use "../../styles/themes.scss";
+@use "sass:map";
+
 .container {
+    $selection-width: 118px;
+    $padding: 8px;
+
     position: relative;
     display: flex;
-    gap: 8px;
     background-color: var(--surface);
-    padding: 8px;
+    padding: $padding;
     border-radius: 100px;
     overflow: hidden;
-    width: 210px;
+    
 
     div {
-        flex: 1;
+        width: $selection-width;
         z-index: 2;
         cursor: pointer;
         user-select: none;
         text-align: center;
+
+        span {
+            color: var(--on-surface);
+            transition: 100ms color;
+        }
+
+        &[data-selected="true"] {
+            span {
+                color: var(--on-primary);
+            }
+        }
     }
 
-    &::before {
+    .selection {
         position: absolute;
-        content: "";
         top: 0;
         left: 0;
-        width: 50%;
+        width: $selection-width + $padding;
+        border-radius: 8px;
         height: 100%;
         z-index: 1;
         background-color: var(--primary);
-        transition: 200ms;
+        transition: 160ms left ease-in;
     }
 }

@@ -3,9 +3,14 @@ import Head from "next/head";
 import { Diet } from "../components/DayBox";
 import Week from "../components/Week";
 import getWeekMenu, { WeekMenu } from "../utils/getWeekMenu";
-import RestaurantSwitch from "../components/RestaurantSwitch";
+import RestaurantSwitch, { IRestaurant } from "../components/RestaurantSwitch";
+import getRestaurants from "../utils/getRestaurants";
+import { useState } from "react";
 
-const Home: NextPage<{ menu: WeekMenu | null }> = ({menu}) => {
+const Home: NextPage<{ menu: WeekMenu[], restaurants?: IRestaurant[] }> = ({menu, restaurants}) => {
+
+  const [currentRestaurantId, setCurrentRestaurantId] = useState(0);
+
   return (
     <>
       <Head>
@@ -13,8 +18,10 @@ const Home: NextPage<{ menu: WeekMenu | null }> = ({menu}) => {
       </Head>
       <p id="short-desc">Juhannuskukkulan opiskelija- ja <br /> henkilöstöruokailun helposti luettava <br /> ruokalista netissä.</p>
       <div style={{display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", minHeight: "80%", gap: 20}}>
-        <Week menu={menu}/>
-        <RestaurantSwitch/>
+        {
+          restaurants ? <RestaurantSwitch onChange={({id}) => setCurrentRestaurantId(id)} restaurants={restaurants}/> : <></>
+        }
+        <Week menu={menu[currentRestaurantId]}/>
         <p id="letter-meanings">
           <span><Diet>L</Diet>&nbsp; Laktoositon</span>
           <span><Diet>M</Diet>&nbsp; Maidoton</span>
@@ -26,16 +33,23 @@ const Home: NextPage<{ menu: WeekMenu | null }> = ({menu}) => {
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  let menu;
+  let menu = [];
+  let restaurants = null;
+
   try {
-    menu = await getWeekMenu();
-  } catch (err) {
-    menu = null;
+    restaurants = (await getRestaurants()).restaurants;
+  } catch (err) {}
+
+  if (restaurants) {
+    try {
+      menu.push(await getWeekMenu(restaurants[0].id));
+    } catch (err) {}
   }
   
   return {
     props: {
-      menu: menu
+      menu,
+      restaurants,
     },
   };
 };

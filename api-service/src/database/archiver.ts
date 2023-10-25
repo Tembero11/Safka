@@ -59,13 +59,14 @@ export class Archiver {
     const convertedMenu = this.toDatabaseMenus(weekMenu);
 
     for (const menu of convertedMenu) {
+      const isSameRestaurant = await this.foods.findOne({ restaurantId: menu.restaurantId }) !== null;
       const isHashRecorded = await this.foods.findOne({ hash: menu.hash }) !== null;
       const isDateSaved = await this.foods.findOne({ date: menu.date }) !== null;
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const isWeekend = menu.hash === null; // Maybe needed in the future
 
       // Simple early return so new polls won't cause re-inserts
-      if (isDateSaved && isHashRecorded) continue;
+      if (isDateSaved && isHashRecorded && !isSameRestaurant) continue;
 
       // Version updating; We want our frontend to take the most recent aka the least "problematic" version of the foods data.
       // Sometimes they are updated during days because of typos or some other reason. This system basically tries to get around those typos and always

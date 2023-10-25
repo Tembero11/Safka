@@ -1,3 +1,10 @@
+<style lang="scss">
+    main {
+        flex: 1;
+    }
+</style>
+
+
 <nav>
     <h1>Safka <br/> Online.</h1>
 </nav>

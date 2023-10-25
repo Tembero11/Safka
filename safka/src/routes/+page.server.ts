@@ -4,12 +4,11 @@ import { ApiUrl, restaurantIdSchema } from "../types";
 import type { PageServerLoadEvent } from "./$types";
 
 export async function load({ cookies }: PageServerLoadEvent) {
-	const restaurantCookie = cookies.get("restaurant")
+	const restaurantCookie = Number(cookies.get("restaurant"))
 	
 	const idParseResult = restaurantIdSchema.safeParse(restaurantCookie);
 
 	const availableRestaurants = await fetchRestaurants(ApiUrl.v3_Restaurants);
-
 	const restaurant = idParseResult.success 
 		? availableRestaurants[idParseResult.data] // Indexable since it's guaranteed to have same index
 		: availableRestaurants[0]; // Default to first

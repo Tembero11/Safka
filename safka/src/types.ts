@@ -3,6 +3,8 @@ export enum ApiUrl {
 	v3 = "http://localhost:5000/api/v3/menu"
 }
 
+export type ISODateString = string;
+
 export interface DietaryRestrictions {
 	isLactoseFree: boolean;
 	isDairyFree: boolean;
@@ -19,7 +21,7 @@ export interface DayMenu {
 	// If the day has no menu the hash will be null
 	hash: string | null;
 	dayId: Weekday;
-	date: Date;
+	date: ISODateString;
 	menu: Meal[];
 }
 

@@ -22,6 +22,8 @@
         --primary: #ff3535;
         --primary-variant: #ca2e2e;
         --on-primary: #fff;
+        --secondary: #4a4a4a;
+        --on-secondary: #fff;
         --background: #f3f3f3;
         --on-background-slight: #6e6e6e;
         --on-background: #000;
@@ -32,13 +34,12 @@
         --on-surface-header: #262c30;
         --text-selection-foreground: #fff;
         --text-selection-background: #ff6767;
-        --tooltip-background: #4a4a4a;
     }
 
     :global(body) {
         margin: 0;
         
-        width: 100vw;
+        width: 100%;
         height: 100vh;
         
         font-family: "Lexend", sans-serif;

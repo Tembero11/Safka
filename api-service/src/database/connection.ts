@@ -11,7 +11,7 @@ export async function connectToDatabase(options: IDatabaseOptions) {
   try {
     const client: MongoClient = await new MongoClient(options.dbUrl).connect();
 
-    console.log("Connection succesfully established!\n")
+    console.log("Connection succesfully established!\n");
 
     // Create a database object used to modify or read the database
     return client.db(options.dbName);

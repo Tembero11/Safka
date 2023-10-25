@@ -1,5 +1,5 @@
 import { ObjectId } from "mongodb";
-import { Meal, Weekday } from "../types";
+import { DayMenu, Meal, WeekMenu, Weekday } from "../types";
 
 export interface DatabaseOptions {
     dbUrl: string
@@ -20,3 +20,6 @@ export interface DatabaseMenu {
     dayId: Weekday;
     meals: Meal[];
 }
+
+export type PublicDatabaseWeekMenu = Omit<WeekMenu, "modifiedTime" | "days"> & { days: PublicDatabaseDayMenu[] }
+export type PublicDatabaseDayMenu = DayMenu & { version: number };

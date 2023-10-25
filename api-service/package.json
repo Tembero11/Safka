@@ -9,7 +9,8 @@
     "build": "tsc -p .",
     "clean": "del-cli ./dist --force",
     "migrate": "ts-node scripts/migration.ts",
-    "lint": "eslint . --ext .ts"
+    "lint": "eslint . --ext .ts",
+    "lint-fix": "eslint . --fix --ext .ts"
   },
   "contributors": [
     {
@@ -48,6 +49,7 @@
     "@types/node": "^18.11.9",
     "axios": "^1.1.3",
     "cors": "^2.8.5",
+    "date-fns": "^2.29.3",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "mongodb": "^4.17.1",

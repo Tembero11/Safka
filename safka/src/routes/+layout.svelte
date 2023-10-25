@@ -2,7 +2,7 @@
     <a id="logo" href="/">
         <h1>Safka. <br/> Online</h1>
     </a>
-    <button>Settings</button>
+    <button class="material-symbols-rounded">settings</button>
 </nav>
 <main>
     <slot/>
@@ -10,8 +10,8 @@
 <footer>
     <h3>Resources</h3>
     <ul>
-        <li><a href="/">Source Code</a></li>
-        <li><a href="/">API</a></li>
+        <li><a href="/">Source Code <span class="material-symbols-rounded">open_in_new</span></a></li>
+        <li><a href="/">API <span class="material-symbols-rounded">open_in_new</span></a></li>
     </ul>
 </footer>
 

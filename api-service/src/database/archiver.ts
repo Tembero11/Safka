@@ -59,26 +59,27 @@ export class Archiver {
     const convertedMenu = this.toDatabaseMenus(weekMenu);
 
     for (const menu of convertedMenu) {
-      const isSameRestaurant = await this.foods.findOne({ restaurantId: menu.restaurantId }) !== null;
-      const isHashRecorded = await this.foods.findOne({ hash: menu.hash }) !== null;
-      const isDateSaved = await this.foods.findOne({ date: menu.date }) !== null;
+      const sameDateMenu = await this.foods.findOne({ date: menu.date, restaurantId: menu.restaurantId }, 
+        { sort: { version: -1}});
+      const isSameHash = sameDateMenu?.hash === menu.hash;
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const isWeekend = menu.hash === null; // Maybe needed in the future
 
       // Simple early return so new polls won't cause re-inserts
-      if (isDateSaved && isHashRecorded && !isSameRestaurant) continue;
+      console.log(sameDateMenu, isSameHash);
+      if (sameDateMenu && isSameHash) continue;
+
 
       // Version updating; We want our frontend to take the most recent aka the least "problematic" version of the foods data.
       // Sometimes they are updated during days because of typos or some other reason. This system basically tries to get around those typos and always
       // give users the best service possible.
-      if (isDateSaved && !isHashRecorded) {
-        const latestOldVersion = await this.foods.findOne<DatabaseMenu>(
-          { date: menu.date }, { sort: { version: -1 } }) as DatabaseMenu;
-
-        menu.version = latestOldVersion.version + 1;
+      if (sameDateMenu && !isSameHash) {
+        menu.version = sameDateMenu.version + 1;
       }
 
       await this.foods.insertOne(menu);
     }
   }
 }
+
+// insert if that date and that hash has been recorded but not for that restaurant.

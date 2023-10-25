@@ -1,17 +1,17 @@
 import type { WeekMenu } from "../types";
 
-const URL = "http://localhost:5000/api/v3/menu";
-export async function fetchFoods(start?: number, end?: number): Promise<WeekMenu> {
-    const res = await fetch(URL);
+
+export async function fetchFoods(url: string, start?: number, end?: number): Promise<WeekMenu | null> {
+    const res = await fetch(url);
     if (!res.ok) {
-        throw new Error("Menu fetch from API failed");
+        return null
     }
 
-    const weekMenu = await res.json()
+    const weekMenu: WeekMenu = await res.json()
+    const weekDays = weekMenu.days.slice(0, 5) // We don't want to show weekends, which have no meals
 
-    if (!start && !end) return weekMenu
+    if (!start && !end) return { ...weekMenu, days: weekDays };
 
-    const daysLength = weekMenu.days.length - 1
-    const days = weekMenu.days
-    return { ...weekMenu, days: days.slice(start ?? 0, end ?? daysLength) }
+    const daysLength = weekDays.length - 1;
+    return { ...weekMenu, days: weekDays.slice(start ?? 0, end ?? daysLength) }
 }

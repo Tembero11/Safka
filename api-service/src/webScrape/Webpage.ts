@@ -46,14 +46,12 @@ export default class Webpage {
       };
 
       // if the html for the day is not found push the empty day to the array
-      if (!dayHTML) {
+      const foodsHTML = dayHTML?.getElementsByTagName("td").at(1);
+
+      if (!dayHTML || !foodsHTML) {
         fullMenu.days.push(day);
         continue;
       }
-
-      // If not get the foods
-      const foodsHTML = dayHTML.getElementsByTagName("td").at(1);
-      assert(foodsHTML, new ElementUndefinedError("foodsHTML"));
 
       const ogFoods: string[] = [];
       const processedFoods: Meal[] = [];
@@ -101,7 +99,7 @@ export default class Webpage {
     const content = meta.getAttribute("content");
     assert(content, new Error("\"content\" attribute does not exist on \"meta\"."));
     
-    const matches = content.match(/ruokalista vko [0-9]{1,2}/i);
+    const matches = content.match(/((ruokalista vko)|(ruokalista, vk)) [0-9]{1,2}/i);
     assert(matches);
     
     const match = matches.at(0);

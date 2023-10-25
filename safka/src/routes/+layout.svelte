@@ -2,7 +2,7 @@
     <a id="logo" href="/">
         <h1>Safka. <br/> Online</h1>
     </a>
-    <button class="material-symbols-rounded">settings</button>
+    <button class="material-symbols-rounded" data-type="icon">settings</button>
 </nav>
 <main>
     <slot/>
@@ -60,6 +60,7 @@
     }
 
     :global(button) {
+        position: relative;
         display: inline-block;
         border: none;
         outline: none;
@@ -73,9 +74,40 @@
         background-color: var(--primary);
         color: var(--on-primary);
 
-        &[type=secondary] {
-            background-color: var(--primary);
-            color: var(--on-primary);
+        &[data-variant=secondary] {
+            background-color: var(--secondary);
+            color: var(--on-secondary);
+        }
+
+        &[data-type=icon] {
+            aspect-ratio: 1;
+
+            color: var(--on-background);
+            background-color: transparent;
+
+            font-size: 28px;
+
+            width: 2em;
+            height: 2em;
+
+            &::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                border-radius: 100%;
+
+                background-color: rgba(0, 0, 0, 0.1);
+                
+                transition: 150ms transform;
+                transform: scale(0);                
+            }
+
+            &:hover::before {
+                transform: scale(1);
+            }
         }
     }
 
@@ -97,6 +129,7 @@
     nav {
         display: flex;
         justify-content: space-between;
+        align-items: center;
         margin: 16px;
     }
 

@@ -1,6 +1,7 @@
 <script>
 	import DayBox from "./DayBox.svelte";
 	import DietChip from "./DietChip.svelte";
+	import Preferences from "./Preferences.svelte";
 
     const dayNames = [
         "Maanantai",
@@ -29,6 +30,8 @@
         <DietChip letter="G" name="Gluteeniton"/>
     </div>
 </article>
+
+<Preferences/>
 
 
 <style lang="scss">

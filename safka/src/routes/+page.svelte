@@ -4,13 +4,18 @@
 
     /** @type {import('./$types').PageData} */
     export let data: PageData;
+    data.foods!.days.forEach(day => console.log(day)) 
 </script>
 
-<ul>
-{#each data.foods.days as day }
-    <li>{day.menu.map(meal => meal.names.join(",")).join(",")}</li>     
-{/each}
-</ul>
+{#if !data.foods}
+    <p>No menus!</p> 
+{:else}
+    <ul>
+    {#each data.foods.days as day }
+        <li>{day.menu.map(meal => meal.names.join(",")).join(",")}</li>     
+    {/each}
+    </ul>
+{/if}
 
 <style>
 </style>

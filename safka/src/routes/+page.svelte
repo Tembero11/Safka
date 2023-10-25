@@ -8,7 +8,7 @@
 
 <ul>
 {#each data.foods.days as day }
-    <li>{day}</li>     
+    <li>{day.menu.map(meal => meal.names.join(",")).join(",")}</li>     
 {/each}
 </ul>
 

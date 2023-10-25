@@ -21,7 +21,7 @@ export async function fetchRestaurants(url: ApiUrl): Promise<IRestaurant[]> {
  * @returns Week menu from API if fetch was succesful. Returns `null` if fetch wasn't succesful.
  */
 export async function fetchFoods(url: ApiUrl, restaurant: restaurantId, start?: number, end?: number): Promise<WeekMenu | null> {
-    const res = await fetch(url);
+    const res = await fetch(`${url}/${restaurant}`);
     if (!res.ok) {
         return null
     }

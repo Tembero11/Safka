@@ -1,6 +1,19 @@
+import { z } from "zod";
+
 export enum ApiUrl {
 	v2 = "http://localhost:5000/api/v2/menu",
-	v3 = "http://localhost:5000/api/v3/menu"
+	v3_Menu = "http://localhost:5000/api/v3/menu",
+	v3_Restaurants = "http://localhost:5000/api/v3/restaurants"
+}
+
+export const restaurantIdSchema = z.number().nonnegative();
+export type restaurantId = z.infer<typeof restaurantIdSchema>;
+
+export interface IRestaurant {
+    id: restaurantId;
+    name: string;
+    schoolName: string,
+    url: string;
 }
 
 export type ISODateString = string;

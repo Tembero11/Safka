@@ -1,9 +1,9 @@
-<script>
+<script lang="ts">
 	import { getTodaysIndex } from "$lib/utils";
 	import DayBox from "./DayBox.svelte";
 	import DietChip from "./DietChip.svelte";
 
-    const todayIndex = getTodaysIndex();
+    export let data;
 
     const dayNames = [
         "Maanantai",
@@ -22,9 +22,17 @@
 
 <article id="page">
     <div id="week">
-        {#each dayNames as dayName, dayIndex}
-            <DayBox dayName={dayName} isToday={todayIndex === dayIndex}/>
-        {/each}
+        {#if !data.foods}
+            <h2>No menus!</h2> 
+        {:else}
+            {#each data.foods.days as day}
+                <DayBox date={day.date} 
+                        menu={day.menu} 
+                        dayName={dayNames[day.dayId]} 
+                        isToday={data.todayIndex === day.dayId}
+                    />
+            {/each}
+        {/if}
     </div>
     <div id="diets">
         <DietChip letter="L" name="Laktoositon"/>

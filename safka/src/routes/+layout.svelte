@@ -1,6 +1,6 @@
 <nav>
     <a id="logo" href="/">
-        <h1>Safka <br/> Online.</h1>
+        <h1>Safka. <br/> Online</h1>
     </a>
     <button>Settings</button>
 </nav>
@@ -8,6 +8,7 @@
     <slot/>
 </main>
 <footer>
+    <h3>Resources</h3>
     <ul>
         <li><a href="/">Source Code</a></li>
         <li><a href="/">API</a></li>
@@ -50,6 +51,13 @@
         justify-content: space-between;
     }
 
+    // Remove margin from all headings
+    @for $i from 1 through 6 {
+        :global(h#{$i}) {
+            margin: 0;
+        }
+    }
+
     :global(button) {
         display: inline-block;
         border: none;
@@ -59,7 +67,15 @@
         font-family: "Lexend", sans-serif;
 
         padding: 8px;
-        border-radius: 8px;
+        border-radius: 16px;
+
+        background-color: var(--primary);
+        color: var(--on-primary);
+
+        &[type=secondary] {
+            background-color: var(--primary);
+            color: var(--on-primary);
+        }
     }
 
     #logo {
@@ -93,11 +109,15 @@
         justify-content: center;
         align-items: center;
 
+        flex-direction: column;
+
         margin-top: 16px;
         padding: 16px;
+        gap: 16px;
         box-sizing: border-box;
 
         background-color: var(--primary);
+        color: var(--on-primary);
 
         ul {
             padding: 0;
@@ -113,6 +133,7 @@
 
             margin: 0 8px;
             padding: 8px;
+            border-radius: 8px;
 
             a {
                 text-decoration: none;

@@ -9,6 +9,12 @@ export async function load({ cookies }: PageServerLoadEvent) {
 	const idParseResult = restaurantIdSchema.safeParse(restaurantCookie);
 
 	const availableRestaurants = await fetchRestaurants(ApiUrl.v3_Restaurants);
+	// If we can't even get restaurants something is wrong.
+	// Just make foods null and effectively give up on showing data on the UI.
+	if (!availableRestaurants) {
+		return { foods: null }
+	}
+
 	const restaurant = idParseResult.success 
 		? availableRestaurants[idParseResult.data] // Indexable since it's guaranteed to have same index
 		: availableRestaurants[0]; // Default to first

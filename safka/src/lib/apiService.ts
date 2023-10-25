@@ -1,14 +1,18 @@
 import type { ApiUrl, IRestaurant, WeekMenu, restaurantId } from "../types";
 
-export async function fetchRestaurants(url: ApiUrl): Promise<IRestaurant[]> {
-    const res = await fetch(url);
-    if (!res.ok) {
-        // TODO: Add error handling
-        return [];
-    }
+export async function fetchRestaurants(url: ApiUrl): Promise<IRestaurant[] | null> {
+    try {
+        const res = await fetch(url);
+        if (!res.ok) {
+            // TODO: Add error handling
+            return [];
+        }
 
-    const restaurants: IRestaurant[] = (await res.json()).restaurants;
-    return restaurants;
+        const restaurants: IRestaurant[] = (await res.json()).restaurants;
+        return restaurants;
+    } catch (err) {
+        return null;
+    }
 }
 
 /**
@@ -21,15 +25,19 @@ export async function fetchRestaurants(url: ApiUrl): Promise<IRestaurant[]> {
  * @returns Week menu from API if fetch was succesful. Returns `null` if fetch wasn't succesful.
  */
 export async function fetchFoods(url: ApiUrl, restaurant: restaurantId, start?: number, end?: number): Promise<WeekMenu | null> {
-    const res = await fetch(`${url}/${restaurant}`);
-    if (!res.ok) {
-        return null
+    try {
+        const res = await fetch(`${url}/${restaurant}`);
+        if (!res.ok) {
+            return null
+        }
+
+        const weekMenu: WeekMenu = await res.json()
+        const weekDays = weekMenu.days.slice(0, 5) // Slice away weekends, because they have no meals
+
+        if (!start && !end) return { ...weekMenu, days: weekDays };
+
+        return { ...weekMenu, days: weekDays.slice(start ?? 0, end ?? weekDays.length) }
+    } catch (err) {
+        return null;
     }
-
-    const weekMenu: WeekMenu = await res.json()
-    const weekDays = weekMenu.days.slice(0, 5) // Slice away weekends, because they have no meals
-
-    if (!start && !end) return { ...weekMenu, days: weekDays };
-
-    return { ...weekMenu, days: weekDays.slice(start ?? 0, end ?? weekDays.length) }
 }

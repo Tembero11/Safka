@@ -87,7 +87,7 @@ export class MenuPoller extends EventEmitter {
 
     this.latestMenu = { restaurantId: this.restaurant.id, ...menu };
 
-    this.emit("polled", menu);
+    this.emit("polled", this.latestMenu);
         
     this.pollNextIn(timeUntilNextPoll);
   }

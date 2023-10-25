@@ -3,7 +3,6 @@ import MenuPoller from "./webScrape/MenuPoller";
 import dotenv from "dotenv";
 import { connectToDatabase } from "./database/connection";
 import { Archiver } from "./database/archiver";
-import assert from "assert";
 import { startServer } from "./api/startServer";
 import { Db } from "mongodb";
 

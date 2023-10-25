@@ -1,9 +1,5 @@
-<style lang="scss">
-    main {
-        flex: 1;
-    }
-</style>
-
+<script lang="ts">
+</script>
 
 <nav>
     <h1>Safka <br/> Online.</h1>
@@ -17,3 +13,9 @@
         <li><a href="/">API</a></li>
     </ul>
 </footer>
+
+<style lang="scss">
+    main {
+        flex: 1;
+    }
+</style>

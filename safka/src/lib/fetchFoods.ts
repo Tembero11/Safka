@@ -16,10 +16,9 @@ export async function fetchFoods(url: string, start?: number, end?: number): Pro
     }
 
     const weekMenu: WeekMenu = await res.json()
-    const weekDays = weekMenu.days.slice(0, 5) // We don't want to show weekends, which have no meals
+    const weekDays = weekMenu.days.slice(0, 5) // Slice away weekends, because they have no meals
 
     if (!start && !end) return { ...weekMenu, days: weekDays };
 
-    const daysLength = weekDays.length - 1;
-    return { ...weekMenu, days: weekDays.slice(start ?? 0, end ?? daysLength) }
+    return { ...weekMenu, days: weekDays.slice(start ?? 0, end ?? weekDays.length) }
 }

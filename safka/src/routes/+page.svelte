@@ -2,8 +2,9 @@
 	import type { WeekMenu } from "../types";
 	import type { PageData } from "./$types";
 
-    /** @type {import('./$types').PageData["foods"]} */
-    export let foods: WeekMenu;
+    /** @type {import('./$types').PageData} */
+    export let data: PageData;
+    const foods = data.foods;
 </script>
 
 {#if !foods}

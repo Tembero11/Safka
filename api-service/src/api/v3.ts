@@ -15,14 +15,14 @@ const api = Router();
 api.use(cors());
 
 api.get("/v3/menu", async (req, res) => {
-  console.log(currentMenu)
+  console.log(currentMenu);
   const week = await archiver.foods
     // Find using weekNumber AND year since week numbers are not year specific
     .find(
       { week: { weekNumber: currentMenu.weekNumber, year: new Date().getFullYear() } }, {sort: { version: -1}})
     .limit(7).toArray();
 
-  const payload = Archiver.fromDatabaseMenus(week)
+  const payload = Archiver.fromDatabaseMenus(week);
 
   return apiResponse(res, 200, { ...payload });
 });
@@ -54,7 +54,7 @@ api.get("/v3/menu/:dayId", async (req, res) => {
     return apiResponse(res, 500);
   }
 
-  const payload = Archiver.fromDatabaseMenu(menuOnDay)
+  const payload = Archiver.fromDatabaseMenu(menuOnDay);
 
   return apiResponse(res, 200, { ...payload });
 });

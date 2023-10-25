@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { getTodaysIndex } from "$lib/utils";
 	import DayBox from "./DayBox.svelte";
 	import DietChip from "./DietChip.svelte";
 

@@ -1,3 +1,15 @@
+export interface IRestaurant {
+    id: Restaurant;
+    name: string;
+    schoolName: string,
+    url: string;
+}
+
+export enum Restaurant {
+    Safka,
+    Amistoteles,
+}
+
 export interface DietaryRestrictions {
     isLactoseFree: boolean;
     isDairyFree: boolean;

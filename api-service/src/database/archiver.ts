@@ -1,5 +1,5 @@
-import { Collection, Db, ObjectId, Filter } from "mongodb";
-import { DayMenu, WeekMenu } from "../types";
+import { Collection, Db, ObjectId } from "mongodb";
+import { WeekMenu } from "../types";
 import { DatabaseMenu, DatabaseWeek, PublicDatabaseDayMenu, PublicDatabaseWeekMenu } from "./dbTypes";
 
 export class Archiver {
@@ -19,13 +19,13 @@ export class Archiver {
       dayId,
       date,
       menu: meals
-    }
+    };
   }
 
   static fromDatabaseMenus(databaseMenu: DatabaseMenu[]): PublicDatabaseWeekMenu {
     const days: PublicDatabaseDayMenu[] = databaseMenu.map((menu) => {
-      return Archiver.fromDatabaseMenu(menu)
-    })
+      return Archiver.fromDatabaseMenu(menu);
+    });
 
     return { weekNumber: databaseMenu[0].week.weekNumber, days };
   }
@@ -60,7 +60,7 @@ export class Archiver {
       const isWeekend = menu.hash === null; // Maybe needed in the future
 
       // Simple early return so new polls won't cause re-inserts
-      if (isDateSaved && isHashRecorded) continue
+      if (isDateSaved && isHashRecorded) continue;
 
       // Version updating; We want our frontend to take the most recent aka the least "problematic" version of the foods data.
       // Sometimes they are updated during days because of typos or some other reason. This system basically tries to get around those typos and always

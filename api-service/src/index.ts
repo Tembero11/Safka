@@ -32,7 +32,7 @@ export let archiver: Archiver;
 
 async function run() {
   if (!DISABLE_DB) {
-    const db = await connectToDatabase({ dbName: DB_NAME, dbUrl: DB_URL })
+    const db = await connectToDatabase({ dbName: DB_NAME, dbUrl: DB_URL });
     archiver = new Archiver(db);
   }
 
@@ -46,9 +46,9 @@ async function run() {
     }
   });
 
-  poller.startPolling()
+  poller.startPolling();
 
   startServer(Number(PORT), { apiBaseRoute: API_PREFIX, withDatabase: !DISABLE_DB });
 }
 
-run()
+run();

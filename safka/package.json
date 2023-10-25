@@ -35,5 +35,8 @@
 		"vite": "^4.4.2",
 		"vitest": "^0.32.2"
 	},
-	"type": "module"
+	"type": "module",
+	"dependencies": {
+		"date-fns": "^2.30.0"
+	}
 }

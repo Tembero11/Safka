@@ -21,13 +21,34 @@ api.get("/v3/menu/:restaurantId", validateRestaurantId, async (req, res) => {
   const currentYear = getYear(new Date());
 
   const restaurantId = res.locals.restaurantId;
-  const week = await archiver.foods
-    // Find using weekNumber AND year since week numbers are not year specific
-    .find(
-      { restaurantId: restaurantId, week: { weekNumber: currentWeek, year: currentYear } }, {sort: { date: 1, version: -1}})
-    .limit(7).toArray();
 
-  const payload = Archiver.fromDatabaseMenus(week);
+  const pipeline = [{
+    $match: {
+      restaurantId: restaurantId, week: { weekNumber: currentWeek, year: currentYear  }
+    },
+  },
+  { 
+    $group: {
+      "_id": null,  // Sort by menu name
+      "highestVersion": { $max: "$version" }  // Then sort by version in descending order
+    }
+  },
+  { 
+    $sort: {
+      "dayId": 1,  // Sort by menu name
+      "version": -1  // Then sort by version in descending order
+    }
+  }];
+
+  //  const menus = await archiver.foods.find(
+  //{ restaurantId: restaurantId, week: { weekNumber: currentWeek, year: currentYear }},
+  //{ sort: { dayId: 1, version: -1 }}
+  //).toArray();
+
+  const menus = await archiver.foods.aggregate<DatabaseMenu>(pipeline).toArray();
+  console.log(menus);
+
+  const payload = Archiver.fromDatabaseMenus(menus);
 
   return apiResponse(res, 200, { ...payload });
 });

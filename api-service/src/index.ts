@@ -1,11 +1,10 @@
-import { WeekMenu } from "./types";
-import MenuPoller from "./webScrape/MenuPoller";
+import { IRestaurant, Restaurant, WeekMenu } from "./types";
 import dotenv from "dotenv";
+import { MenuPoller } from "./webScrape/MenuPoller";
 import { connectToDatabase } from "./database/connection";
 import { Archiver } from "./database/archiver";
-import assert from "assert";
 import { startServer } from "./api/startServer";
-import { Db } from "mongodb";
+import RESTAURANTS from "./restaurants";
 
 // Env
 dotenv.config();
@@ -25,10 +24,26 @@ if (DISABLE_DB) {
   console.log("Database is disabled. This can be changed in the root directory's .env file by setting the 'DISABLE_DB=false'.");
 }
 
-export let db: Db; // Will remain undefined if not assigned to a client later on
-
-export let currentMenu: WeekMenu;
 export let archiver: Archiver;
+export const currentMenus = new Map<Restaurant, { poller: MenuPoller } & IRestaurant>();
+
+function setupPoller(restaurant: IRestaurant) {
+  const poller = new MenuPoller(restaurant, { enableLogs: true });
+
+  currentMenus.set(restaurant.id, {
+    poller,
+    ...restaurant,
+  });
+
+  poller.on("polled", (menu: WeekMenu) => {
+    // Check that the database is not disabled
+    if (!DISABLE_DB) {
+      archiver.saveMenus(menu);
+    }
+  });
+
+  if (!DISABLE_POLL) poller.startPolling();
+}
 
 async function run() {
   if (!DISABLE_DB) {
@@ -36,17 +51,7 @@ async function run() {
     archiver = new Archiver(db);
   }
 
-  const poller = new MenuPoller({ enableLogs: true });
-
-  poller.on("polled", (menu) => {
-    currentMenu = menu;
-
-    if (!DISABLE_DB) {
-      archiver.saveMenus(currentMenu);
-    }
-  });
-
-  poller.startPolling();
+  RESTAURANTS.forEach(setupPoller);
 
   startServer(Number(PORT), { apiBaseRoute: API_PREFIX, withDatabase: !DISABLE_DB });
 }

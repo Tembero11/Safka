@@ -4,7 +4,7 @@ import restaurants from "../../restaurants";
 import { apiResponse } from "../apiResponse";
 import { NextFunction } from "express";
 
-const restaurantIdSchema = z.number().min(0).max(restaurants.length);
+const restaurantIdSchema = z.number().min(0).max(restaurants.length-1);
 
 /**
  * Safely validates restaurant id given as a request parameter.

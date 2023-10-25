@@ -13,6 +13,10 @@
     ];
 </script>
 
+<svelte:head>
+    <title>Safka Online</title> 
+</svelte:head>
+
 <article id="page">
     <div id="week">
         {#each dayNames as dayName}

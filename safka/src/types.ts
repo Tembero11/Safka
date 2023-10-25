@@ -1,3 +1,8 @@
+export enum ApiUrl {
+	v2 = "http://localhost:5000/api/v2/menu",
+	v3 = "http://localhost:5000/api/v3/menu"
+}
+
 export interface DietaryRestrictions {
 	isLactoseFree: boolean;
 	isDairyFree: boolean;
@@ -15,7 +20,7 @@ export interface DayMenu {
 	hash: string | null;
 	dayId: Weekday;
 	date: Date;
-	meals: Meal[];
+	menu: Meal[];
 }
 
 export interface WeekData {

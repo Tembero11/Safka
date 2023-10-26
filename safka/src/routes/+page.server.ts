@@ -22,6 +22,7 @@ export async function load({ cookies }: PageServerLoadEvent) {
 	const todayIndex = getTodaysIndex();
 	return {
 		foods: await fetchFoods(ApiUrl.v3_Menu, restaurant.id, todayIndex),
+		restaurant,
 		availableRestaurants,
 		todayIndex
 	}

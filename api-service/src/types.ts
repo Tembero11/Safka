@@ -1,3 +1,17 @@
+
+export interface IRestaurant {
+    id: Restaurant;
+    name: string;
+    schoolName: string,
+    url: string;
+}
+
+export enum Restaurant {
+    Safka,
+    Amistoteles,
+}
+
+
 export interface DietaryRestrictions {
     isLactoseFree: boolean;
     isDairyFree: boolean;
@@ -27,12 +41,10 @@ export enum Weekday {
 }
 
 export interface WeekMenu {
+    restaurantId: Restaurant;
     modifiedTime: Date;
     weekNumber: number;
     days: DayMenu[];
 }
 
-export interface Menus {
-    weekMenu: WeekMenu
-    dayMenu: DayMenu
-}
+export type NoRestaurantWeekMenu = Omit<WeekMenu, "restaurantId">;

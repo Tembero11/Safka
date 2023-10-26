@@ -1,12 +1,37 @@
 <script lang="ts">
+	import type { ISODateString, Meal } from "../types";
+    import { format, parseISO } from "date-fns";
+	import DietChip from "./DietChip.svelte";
+
+    export let date: ISODateString;
+    export let menu: Meal[];
     export let dayName: string;
     export let isToday: boolean;
+
+    const formattedDate = format(parseISO(date), "dd.MM.yyyy")
 </script>
 
 <div class="container" data-is-today={isToday}>
     <h1 class="day-name">{dayName}</h1>
     <div class="divider"></div>
-    <div class="box"></div>
+    <div class="box">
+        <p class="date">{formattedDate}</p>
+        <ul>
+            {#each menu as meal}
+                <li>
+                    {#each meal.names as name, index}
+                        <span>{name}</span>
+                        {#if meal.diets[index].isLactoseFree}
+                            <DietChip name="Laktoositon" letter="L" />
+                        {:else if meal.diets[index].isDairyFree}
+                            <DietChip name="Maidoton" letter="M" />
+                        {:else if meal.diets[index].isGlutenFree}
+                            <DietChip name="Gluteeniton" letter="G" />
+                        {/if}
+                    {/each}
+                </li>
+            {/each}
+    </div>
 </div>
 
 

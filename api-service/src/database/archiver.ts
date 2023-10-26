@@ -66,9 +66,7 @@ export class Archiver {
       const isWeekend = menu.hash === null; // Maybe needed in the future
 
       // Simple early return so new polls won't cause re-inserts
-      console.log(sameDateMenu, isSameHash);
       if (sameDateMenu && isSameHash) continue;
-
 
       // Version updating; We want our frontend to take the most recent aka the least "problematic" version of the foods data.
       // Sometimes they are updated during days because of typos or some other reason. This system basically tries to get around those typos and always

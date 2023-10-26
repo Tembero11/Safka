@@ -46,6 +46,8 @@
 
 
 <style lang="scss">
+    $animation-duration: 150ms;
+
     #preferences-container {
         display: flex;
         visibility: hidden;
@@ -62,18 +64,27 @@
         background-color: rgba(0, 0, 0, 0.2);
 
         &[data-is-open=true] {
-            animation: prefs-open 300ms ease-in-out 0ms 1 normal forwards;
+            animation: prefs-open $animation-duration ease-in-out 0ms 1 normal forwards;
+
+            #preferences {
+                transform: scale(1);
+            }
         }
 
         &[data-is-open=false] {
-            animation: prefs-close 300ms ease-in-out 0ms 1 normal forwards;
+            animation: prefs-close $animation-duration ease-in-out 0ms 1 normal forwards;
+
+            #preferences {
+                transform: scale(0.8);
+            }
         }
     }
 
     #preferences {
         width: 70%;
         height: 70%;
-
+        transform: scale(0.8);
+        transition: transform 300ms;
         background-color: var(--background);
     }
 

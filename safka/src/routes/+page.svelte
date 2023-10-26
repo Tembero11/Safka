@@ -1,9 +1,12 @@
 <script lang="ts">
+	import { fetchFoods } from "$lib/apiService";
+	import { ApiUrl, type restaurantId } from "../types";
 	import DayBox from "./DayBox.svelte";
 	import DietChip from "./DietChip.svelte";
 	import Preferences from "./Preferences.svelte";
 
     export let data;
+    $: foods = data.foods
 
     const dayNames = [
         "Maanantai",
@@ -14,6 +17,10 @@
         // "Lauantai",
         // "Sunnuntai",
     ];
+
+    async function handleRestaurantSwitch(newRestaurantId: restaurantId) {
+        data.foods = await fetchFoods(ApiUrl.v3_Menu, newRestaurantId, data.todayIndex)
+    }
 </script>
 
 <svelte:head>
@@ -39,10 +46,13 @@
         <DietChip letter="M" name="Maidoton"/>
         <DietChip letter="G" name="Gluteeniton"/>
     </div>
+
+    {#if data.availableRestaurants}
+        {#each data.availableRestaurants as restaurant}
+            <button style="cursor: pointer;" on:click={() => handleRestaurantSwitch(restaurant.id)}>{restaurant.name}</button>
+        {/each}
+    {/if}
 </article>
-
-<Preferences/>
-
 
 <style lang="scss">
 

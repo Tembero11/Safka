@@ -19,7 +19,7 @@
     }
 
     function onKeyUp(e: KeyboardEvent) {
-        if (e.key == "Escape") close();
+        if (e.key == "Escape" || e.key == "Enter") close();
     }
 
     onMount(() => {
@@ -39,14 +39,39 @@
 <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
 <!-- svelte-ignore a11y-click-events-have-key-events -->
 <div id="preferences-container" data-is-open={isOpen} bind:this={containerEl} on:click={onBgClick}>
-    <div id="preferences">
-        <h1>This is preferences text</h1>
-    </div>
+    <form id="preferences">
+        <div id="preferences-content">
+            <h2>Käyttäjän Asetukset</h2>
+            <div class="divider"></div>
+            <h3>Teema</h3>
+            <p>Mukauta käyttöliittymän ulkonäköä</p>
+        </div>
+        <div id="preferences-actions">
+            <div id="preferences-shortcuts">
+                <span style="display: block; margin-bottom: 8px;">Paina <kbd>Esc</kbd> -näppäintä poistuaksesi tallentamatta.</span>
+                <span>Paina <kbd>Enter</kbd> -näppäintä tallentaaksesi.</span>
+            </div>
+            <div id="preferences-buttons">
+                <button data-variant="secondary">Cancel</button>
+                <button data-variant="primary">Save</button>
+            </div>
+        </div>
+    </form>
 </div>
 
 
 <style lang="scss">
     $animation-duration: 150ms;
+
+    h2, h3 {
+        margin: 0;
+        margin-bottom: 16px;
+        color: var(--on-background-header);
+    }
+    
+    p {
+        color: var(--on-background-slight);
+    }
 
     #preferences-container {
         display: flex;
@@ -81,11 +106,71 @@
     }
 
     #preferences {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: stretch;
         width: 70%;
         height: 70%;
+
+        border-radius: 16px;
+        padding: 16px;
+
         transform: scale(0.8);
         transition: transform 300ms;
-        background-color: var(--background);
+        background-color: var(--surface);
+
+        @media only screen and (max-width: 650px) {
+            width: 100%;
+            height: 100%;
+        }
+    }
+
+    #preferences-content {
+        overflow: auto;
+        flex: 1;
+    }
+
+    .divider {
+        width: 10em;
+        height: 2px;
+        margin: 16px 0;
+        background-color: var(--surface-variant);
+    }
+
+    #preferences-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    #preferences-shortcuts span {
+        color: var(--on-background-slight);
+        visibility: collapse;
+        @media (hover: hover) and (pointer: fine) { 
+            visibility: visible;
+        }
+
+        @media only screen and (min-width: 999px) { 
+            visibility: visible;
+        }
+    }
+
+    kbd {
+        font-family: "Lexend", sans-serif;
+        background-color: #eee;
+        border-radius: 3px;
+        border: 1px solid #b4b4b4;
+        box-shadow:
+            0 1px 1px rgba(0, 0, 0, 0.2),
+            0 2px 0 0 rgba(255, 255, 255, 0.7) inset;
+        color: #333;
+        display: inline-block;
+        font-size: 0.85em;
+        font-weight: 700;
+        line-height: 1;
+        padding: 2px 4px;
+        white-space: nowrap;
     }
 
     @keyframes prefs-open {

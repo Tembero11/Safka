@@ -20,8 +20,8 @@ export async function fetchRestaurants(url: ApiUrl): Promise<IRestaurant[] | nul
  * Additional slicing can be controlled via `start` and `end` params.
  * @param url - URL of the API used for fetching.
  * @param restaurant - ID of restaurant where fetch() fetches the foods
- * @param [start] - End index of `days`. Example: `4` would cut days off from Thursday.
- * @param [end] - URL of the API used for fetching.
+ * @param [start] - Start index of `days`. Example: `2` would start the array from Wednesday.
+ * @param [end] - End index of `days`. Example: `4` would cut days off from Thursday.
  * @returns Week menu from API if fetch was succesful. Returns `null` if fetch wasn't succesful.
  */
 export async function fetchFoods(url: ApiUrl, restaurant: restaurantId, start?: number, end?: number): Promise<WeekMenu | null> {

@@ -27,11 +27,9 @@ export function validateRestaurantId(req: Request, res: Response, next: NextFunc
 }
 
 export function validateDateRange(req: Request, res: Response, next: NextFunction) {
-  console.log(req.params);
   const startDate = parse(req.query.start as string, "dd.MM.yyyy", new Date());
   const endDate = parse(req.query.end as string, "dd.MM.yyyy", new Date());
 
-  console.log("s", startDate, endDate);
   if (!isValid(startDate) || !isValid(endDate)) {
     return apiResponse(res, 400, { msg: "Invalid date given"});
   }
@@ -41,6 +39,7 @@ export function validateDateRange(req: Request, res: Response, next: NextFunctio
   }
 
   const durationInDays = differenceInBusinessDays(endDate, startDate);
+  // Don't allow queries that can be like 500 entries long
   if (durationInDays > 14) {
     return apiResponse(res, 400, { msg: "Date range is over 14 business days"});
   }

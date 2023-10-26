@@ -1,6 +1,7 @@
 <script lang="ts">
 	import DayBox from "./DayBox.svelte";
 	import DietChip from "./DietChip.svelte";
+	import Preferences from "./Preferences.svelte";
 
     export let data;
 
@@ -39,6 +40,8 @@
         <DietChip letter="G" name="Gluteeniton"/>
     </div>
 </article>
+
+<Preferences/>
 
 
 <style lang="scss">

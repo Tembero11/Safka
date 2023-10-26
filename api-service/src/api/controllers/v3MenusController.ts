@@ -13,6 +13,10 @@ export class v3MenusController {
 
     const restaurantId = res.locals.restaurantId;
 
+    // Core logic of this pipeline gotten from:
+    // https://www.mongodb.com/community/forums/t/selecting-documents-with-largest-value-of-a-field/107032
+    // This is still very hard for me to grasp currently. So there might be easier methods.
+    // But this is the best method I've seen so far.
     const pipeline = [{ $sort: { dayId: 1, version: -1 } },
       { $match: { restaurantId: restaurantId, week: { weekNumber: currentWeek, year: currentYear }}},
       { $group: { _id: "$dayId", doc_with_max_ver: { $first: "$$ROOT" } }},
@@ -47,6 +51,7 @@ export class v3MenusController {
     const { startDate, endDate } = res.locals.dateRange;
     const  restaurantId = res.locals.restaurantId;
 
+    // Refer to getRestaurantMenus
     const pipeline = [{ $sort: { date: 1, version: -1 } },
       { $match: { restaurantId: restaurantId, date: { $gte: startDate, $lte: endDate } }},
       { $group: { _id: "$dayId", doc_with_max_ver: { $first: "$$ROOT" } }},

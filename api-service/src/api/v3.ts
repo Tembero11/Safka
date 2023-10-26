@@ -22,31 +22,14 @@ api.get("/v3/menu/:restaurantId", validateRestaurantId, async (req, res) => {
 
   const restaurantId = res.locals.restaurantId;
 
-  const pipeline = [{
-    $match: {
-      restaurantId: restaurantId, week: { weekNumber: currentWeek, year: currentYear  }
-    },
-  },
-  { 
-    $group: {
-      "_id": null,  // Sort by menu name
-      "highestVersion": { $max: "$version" }  // Then sort by version in descending order
-    }
-  },
-  { 
-    $sort: {
-      "dayId": 1,  // Sort by menu name
-      "version": -1  // Then sort by version in descending order
-    }
-  }];
-
-  //  const menus = await archiver.foods.find(
-  //{ restaurantId: restaurantId, week: { weekNumber: currentWeek, year: currentYear }},
-  //{ sort: { dayId: 1, version: -1 }}
-  //).toArray();
+  const pipeline = [{ $sort: { dayId: 1, version: -1 } },
+    { $match: { restaurantId: restaurantId, week: { weekNumber: currentWeek, year: currentYear }}},
+    { $group: { _id: "$dayId", doc_with_max_ver: { $first: "$$ROOT" } } },
+    { $replaceWith: "$doc_with_max_ver" },
+    { $sort: { dayId: 1 } }
+  ];
 
   const menus = await archiver.foods.aggregate<DatabaseMenu>(pipeline).toArray();
-  console.log(menus);
 
   const payload = Archiver.fromDatabaseMenus(menus);
 

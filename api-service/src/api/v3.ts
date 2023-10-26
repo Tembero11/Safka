@@ -7,7 +7,8 @@ import { DatabaseMenu } from "../database/dbTypes";
 import { archiver } from "../";
 import { Archiver } from "../database/archiver";
 import restaurants from "../restaurants";
-import { validateRestaurantId } from "./middlewares/validation";
+import { validateDateRange, validateRestaurantId } from "./middlewares/validation";
+import { parse } from "date-fns";
 
 const api = Router();
 api.use(cors());
@@ -53,6 +54,26 @@ api.get("/v3/menu/:restaurantId/today", validateRestaurantId, async (req, res) =
   return apiResponse(res, 200, { ...payload });
 });
 
+api.get("/v3/menu/:restaurantId/between", validateRestaurantId, validateDateRange, async (req, res) => {
+  const { startDate, endDate } = res.locals.dateRange;
+  const  restaurantId = res.locals.restaurantId;
+
+  console.log(startDate, endDate);
+
+  const pipeline = [{ $sort: { date: 1, version: -1 } },
+    { $match: { restaurantId: restaurantId, date: { $gte: startDate, $lte: endDate } }},
+    { $group: { _id: "$dayId", doc_with_max_ver: { $first: "$$ROOT" } } },
+    { $replaceWith: "$doc_with_max_ver" },
+    { $sort: { date: 1 } }
+  ];
+
+  const menusForRange = await archiver.foods.aggregate<DatabaseMenu>(pipeline).toArray();
+
+  const payload = menusForRange.map(Archiver.fromDatabaseMenu);
+  console.log(payload);
+  return apiResponse(res, 200, { ...payload });
+});
+
 api.get("/v3/menu/:restaurantId/:dayId", validateRestaurantId, async (req, res) => {
   const dayId = +req.params.dayId;
 
@@ -71,5 +92,6 @@ api.get("/v3/menu/:restaurantId/:dayId", validateRestaurantId, async (req, res) 
 
   return apiResponse(res, 200, { ...payload });
 });
+
 
 export default api;

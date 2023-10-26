@@ -75,6 +75,7 @@
 
     #preferences-container {
         display: flex;
+        z-index: 999;
         visibility: hidden;
         position: fixed;
         justify-content: center;

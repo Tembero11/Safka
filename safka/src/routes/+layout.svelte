@@ -1,8 +1,19 @@
+<script lang="ts">
+	import Preferences from "./Preferences.svelte";
+
+    let showPreferences: boolean | null; 
+    $: showPreferences = null;
+    function openPreferences() {
+        showPreferences = true
+    }
+
+</script>
+
 <nav>
     <a id="logo" href="/">
         <h1>Safka. <br/> Online</h1>
     </a>
-    <button class="material-symbols-rounded" data-type="icon">settings</button>
+    <button class="material-symbols-rounded" data-type="icon" on:click={openPreferences}>settings</button>
 </nav>
 <main>
     <slot/>
@@ -14,6 +25,8 @@
         <li><a href="/">API <span class="material-symbols-rounded">open_in_new</span></a></li>
     </ul>
 </footer>
+
+<Preferences bind:isOpen={showPreferences}/>
 
 
 <style lang="scss">

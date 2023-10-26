@@ -1,12 +1,13 @@
 <script lang="ts">
 	import { fetchFoods } from "$lib/apiService";
-	import { ApiUrl, type restaurantId } from "../types";
+	import { ApiUrl, type IRestaurant, type restaurantId } from "../types";
 	import DayBox from "./DayBox.svelte";
 	import DietChip from "./DietChip.svelte";
 	import Preferences from "./Preferences.svelte";
+	import RestaurantSwitcher from "./RestaurantSwitcher.svelte";
 
     export let data;
-    $: foods = data.foods
+    let currentRestaurant = data.restaurant;
 
     const dayNames = [
         "Maanantai",
@@ -18,8 +19,9 @@
         // "Sunnuntai",
     ];
 
-    async function handleRestaurantSwitch(newRestaurantId: restaurantId) {
-        data.foods = await fetchFoods(ApiUrl.v3_Menu, newRestaurantId, data.todayIndex)
+    async function handleRestaurantSwitch(newRestaurant: IRestaurant) {
+        data.foods = await fetchFoods(ApiUrl.v3_Menu, newRestaurant.id, data.todayIndex)
+        currentRestaurant = newRestaurant;
     }
 </script>
 
@@ -47,15 +49,14 @@
         <DietChip letter="G" name="Gluteeniton"/>
     </div>
 
-    {#if data.availableRestaurants}
-        {#each data.availableRestaurants as restaurant}
-            <button style="cursor: pointer;" on:click={() => handleRestaurantSwitch(restaurant.id)}>{restaurant.name}</button>
-        {/each}
+    {#if currentRestaurant && data.availableRestaurants}
+        {#key currentRestaurant}
+            <RestaurantSwitcher on:change={(e) => handleRestaurantSwitch(e.detail)} currentRestaurant={currentRestaurant.id} restaurants={data.availableRestaurants} />
+        {/key}
     {/if}
 </article>
 
 <style lang="scss">
-
     #page {
         display: flex;
         justify-content: center;

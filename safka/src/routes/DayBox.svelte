@@ -17,7 +17,7 @@
     <div class="divider"></div>
     <div class="box">
         <p class="date">{formattedDate}</p>
-        <ul>
+        <ul class="meals-list">
             {#each menu as meal}
                 <li>
                     {#each meal.names as name, index}
@@ -56,6 +56,20 @@
 
     .day-name {
         color: var(--on-background-header);
+    }
+
+    .date {
+        opacity: 0.65;
+        text-align: center;
+    }
+
+    .meals-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1.11em;
+        width: calc(100% - 20px);
+        list-style: none;
+        padding: 0;
     }
 
     .divider {

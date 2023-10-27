@@ -100,4 +100,30 @@ export class v3MenusController {
     return apiResponse(res, 200, { ...payload });
   }
 
+  static async getMenusByWeekNumber(req: Request, res: Response) {
+    const currentYear = getYear(new Date());
+    const weekToQuery = Number(req.params.weekNumber);
+
+    if (isNaN(weekToQuery)) {
+      return apiResponse(res, 400, { msg: "Invalid week number" });
+    }
+
+    const restaurantId = res.locals.restaurantId;
+    const pipeline = [{ $sort: { date: 1, version: -1 } },
+      { $match: { restaurantId: restaurantId, week: { weekNumber: weekToQuery, year: currentYear }  }},
+      { $group: { _id: "$dayId", doc_with_max_ver: { $first: "$$ROOT" } }},
+      { $replaceWith: "$doc_with_max_ver" },
+      { $sort: { date: 1 } }
+    ];
+
+    const menus = await archiver.foods.aggregate<DatabaseMenu>(pipeline).toArray();
+
+    if (!menus.length) {
+      return apiResponse(res, 404, { msg: "No menus" }); // TODO: Figure what response code to return
+    }
+
+    const payload = Archiver.fromDatabaseMenus(menus);
+
+    return apiResponse(res, 200, { ...payload });
+  }
 }

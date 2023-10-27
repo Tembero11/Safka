@@ -2,13 +2,14 @@
 	import type { ISODateString, Meal } from "../types";
     import { format, parseISO } from "date-fns";
 	import DietChip from "./DietChip.svelte";
+	import { formatDate } from "$lib/utils";
 
     export let date: ISODateString;
     export let menu: Meal[];
     export let dayName: string;
     export let isToday: boolean;
 
-    const formattedDate = format(parseISO(date), "dd.MM.yyyy")
+    const formattedDate = formatDate(parseISO(date));
 </script>
 
 <div class="container" data-is-today={isToday}>

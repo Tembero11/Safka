@@ -4,7 +4,6 @@
 	import { ApiUrl, type IRestaurant, type restaurantId } from "../types";
 	import DayBox from "./DayBox.svelte";
 	import DietChip from "./DietChip.svelte";
-	import Preferences from "./Preferences.svelte";
 	import RestaurantSwitcher from "./RestaurantSwitcher.svelte";
 
     export let data;
@@ -22,7 +21,7 @@
 
     async function handleRestaurantSwitch(newRestaurant: IRestaurant) {
         if (browser) {
-            data.foods = await fetchFoods(ApiUrl.v3_Menu, newRestaurant.id, data.todayIndex)
+            data.foods = await fetchFoods(ApiUrl.v3_Menu, newRestaurant.id)
             currentRestaurant = newRestaurant;
 
             document.cookie = `restaurant=${newRestaurant.id};samesite=strict`
@@ -40,7 +39,7 @@
             {#if !data.foods}
                 <h2>No menus!</h2> 
             {:else}
-                {#each data.foods.days as day}
+                {#each data.foods as day}
                     <DayBox date={day.date} 
                             menu={day.menu} 
                             dayName={dayNames[day.dayId]} 
@@ -59,7 +58,10 @@
     <div id="restaurant-switcher">
         {#if currentRestaurant && data.availableRestaurants}
             {#key currentRestaurant}
-                <RestaurantSwitcher on:change={(e) => handleRestaurantSwitch(e.detail)} currentRestaurant={currentRestaurant.id} restaurants={data.availableRestaurants} />
+                <RestaurantSwitcher 
+                    on:change={(e) => handleRestaurantSwitch(e.detail)} 
+                    currentRestaurant={currentRestaurant.id} 
+                    restaurants={data.availableRestaurants} />
             {/key}
         {/if}
     </div>
@@ -78,7 +80,7 @@
         width: 100%;
         height: 100%;
 
-        @media only screen and (max-width: 433px) {
+        @media only screen and (max-width: 999px) {
             flex-direction: column-reverse;
         }
     }
@@ -102,6 +104,8 @@
         justify-content: center;
         align-items: center;
         flex-wrap: wrap;
+
+        gap: 48px;
 
         @media only screen and (max-width: 999px) {
             flex-wrap: nowrap;

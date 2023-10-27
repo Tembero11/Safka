@@ -35,30 +35,34 @@
 </svelte:head>
 
 <article id="page">
-    <div id="week">
-        {#if !data.foods}
-            <h2>No menus!</h2> 
-        {:else}
-            {#each data.foods.days as day}
-                <DayBox date={day.date} 
-                        menu={day.menu} 
-                        dayName={dayNames[day.dayId]} 
-                        isToday={data.todayIndex === day.dayId}
-                    />
-            {/each}
-        {/if}
-    </div>
-    <div id="diets">
-        <DietChip letter="L" name="Laktoositon"/>
-        <DietChip letter="M" name="Maidoton"/>
-        <DietChip letter="G" name="Gluteeniton"/>
+    <div id="week-with-diets">
+        <div id="week">
+            {#if !data.foods}
+                <h2>No menus!</h2> 
+            {:else}
+                {#each data.foods.days as day}
+                    <DayBox date={day.date} 
+                            menu={day.menu} 
+                            dayName={dayNames[day.dayId]} 
+                            isToday={data.todayIndex === day.dayId}
+                        />
+                {/each}
+            {/if}
+        </div>
+        <div id="diets">
+            <DietChip letter="L" name="Laktoositon"/>
+            <DietChip letter="M" name="Maidoton"/>
+            <DietChip letter="G" name="Gluteeniton"/>
+        </div>
     </div>
 
-    {#if currentRestaurant && data.availableRestaurants}
-        {#key currentRestaurant}
-            <RestaurantSwitcher on:change={(e) => handleRestaurantSwitch(e.detail)} currentRestaurant={currentRestaurant.id} restaurants={data.availableRestaurants} />
-        {/key}
-    {/if}
+    <div id="restaurant-switcher">
+        {#if currentRestaurant && data.availableRestaurants}
+            {#key currentRestaurant}
+                <RestaurantSwitcher on:change={(e) => handleRestaurantSwitch(e.detail)} currentRestaurant={currentRestaurant.id} restaurants={data.availableRestaurants} />
+            {/key}
+        {/if}
+    </div>
 </article>
 
 
@@ -73,6 +77,16 @@
 
         width: 100%;
         height: 100%;
+
+        @media only screen and (max-width: 433px) {
+            flex-direction: column-reverse;
+        }
+    }
+
+    #week-with-diets {
+        display: flex;
+        flex-direction: column;
+        gap: 32px;
     }
 
     #diets {
@@ -88,8 +102,6 @@
         justify-content: center;
         align-items: center;
         flex-wrap: wrap;
-
-        gap: 32px;
 
         @media only screen and (max-width: 999px) {
             flex-wrap: nowrap;

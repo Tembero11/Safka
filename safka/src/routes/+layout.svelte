@@ -1,4 +1,12 @@
+<svelte:head>
+    {#if isProduction()}
+        <script data-goatcounter={`${import.meta.env.VITE_ANALYTICS_URL}`}
+            async src="//gc.zgo.at/count.js"></script>
+    {/if}
+</svelte:head>
+
 <script lang="ts">
+	import { isProduction } from "$lib/utils";
 	import Preferences from "./Preferences.svelte";
 
     let showPreferences: boolean | null; 

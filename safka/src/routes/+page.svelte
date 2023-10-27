@@ -1,12 +1,15 @@
 <script lang="ts">
 	import { browser } from "$app/environment";
 	import { fetchFoods } from "$lib/apiService";
+	import { getTodaysIndex } from "$lib/utils";
 	import { ApiUrl, type IRestaurant, type restaurantId } from "../types";
+	import type { PageData } from "./$types";
 	import DayBox from "./DayBox.svelte";
 	import DietChip from "./DietChip.svelte";
 	import RestaurantSwitcher from "./RestaurantSwitcher.svelte";
 
-    export let data;
+
+    export let data: PageData;
     let currentRestaurant = data.restaurant;
 
     const dayNames = [
@@ -43,7 +46,7 @@
                     <DayBox date={day.date} 
                             menu={day.menu} 
                             dayName={dayNames[day.dayId]} 
-                            isToday={data.todayIndex === day.dayId}
+                            isToday={getTodaysIndex() === day.dayId}
                         />
                 {/each}
             {/if}

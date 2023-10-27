@@ -1,5 +1,5 @@
 import type { ApiUrl, DayMenu, IRestaurant, restaurantId } from "../types";
-import { addBusinessDays } from "date-fns";
+import { addBusinessDays, isWeekend, nextMonday } from "date-fns";
 import { formatDate } from "./utils";
 
 export async function fetchRestaurants(url: ApiUrl): Promise<IRestaurant[] | null> {
@@ -19,7 +19,10 @@ export async function fetchRestaurants(url: ApiUrl): Promise<IRestaurant[] | nul
 
 
 /**
- * Fetches foods from an URL. Automatically slices off weekends, so days is 5-length and is 0 (monday) to 5 (friday).
+ * Fetches foods from an URL. Automatically filters off weekends.
+ * 
+ * Menus are queried via the /between-endpoint which uses start and end query strings.
+ * 
  * Additional slicing can be controlled via `start` and `end` params.
  * @param url - URL of the API used for fetching.
  * @param restaurant - ID of restaurant where fetch() fetches the foods
@@ -27,9 +30,9 @@ export async function fetchRestaurants(url: ApiUrl): Promise<IRestaurant[] | nul
  */
 export async function fetchFoods(url: ApiUrl, restaurant: restaurantId): Promise<DayMenu[] | null> {
     try {
-        const today = new Date();
-        const startDate = formatDate(today);
-        const endDate = formatDate(addBusinessDays((today), 3));
+        const baseline = isWeekend(new Date()) ? nextMonday(new Date()) : new Date();
+        const startDate = formatDate(baseline);
+        const endDate = formatDate(addBusinessDays(baseline, 3));
 
         const res = await fetch(`${url}/${restaurant}/between?start=${startDate}&end=${endDate}`);
         if (!res.ok) {

@@ -1,6 +1,9 @@
 <script lang="ts">
-    export let letter: string;
-    export let name: string
+    type Letter = "L" | "M" | "G"
+    type Name = "Maidoton" | "Gluteeniton" | "Laktoositon"
+
+    export let letter: Letter;
+    export let name: Name;
 </script>
 
 <span class="diet-chip"><div class="diet-letter"><div>{letter}</div></div> <b>{name}</b></span>

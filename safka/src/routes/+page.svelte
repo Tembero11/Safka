@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { browser } from "$app/environment";
 	import { fetchFoods } from "$lib/apiService";
 	import { ApiUrl, type IRestaurant, type restaurantId } from "../types";
 	import DayBox from "./DayBox.svelte";
@@ -20,8 +21,12 @@
     ];
 
     async function handleRestaurantSwitch(newRestaurant: IRestaurant) {
-        data.foods = await fetchFoods(ApiUrl.v3_Menu, newRestaurant.id, data.todayIndex)
-        currentRestaurant = newRestaurant;
+        if (browser) {
+            data.foods = await fetchFoods(ApiUrl.v3_Menu, newRestaurant.id, data.todayIndex)
+            currentRestaurant = newRestaurant;
+
+            document.cookie = `restaurant=${newRestaurant.id};samesite=strict`
+        }
     }
 </script>
 

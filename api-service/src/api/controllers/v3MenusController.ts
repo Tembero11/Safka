@@ -28,9 +28,9 @@ export class v3MenusController {
     // This is still very hard for me to grasp currently. So there might be easier methods.
     // But this is the best method I've seen so far.
     const { week, year } = dateQueryData;
-    const pipeline = [
+    const pipeline = [{ $sort: { date: 1, version: -1 } },
       { $match: { restaurantId, "week.weekNumber": week, "week.year": year }},
-      { $group: { _id: "$dayId", doc_with_max_ver: { $first: "$$ROOT" } }},
+      { $group: { _id: "$date", doc_with_max_ver: { $first: "$$ROOT" } }},
       { $replaceWith: "$doc_with_max_ver" },
       { $sort: { dayId: 1, version: -1 } }
     ];
@@ -70,7 +70,7 @@ export class v3MenusController {
     // Refer to getRestaurantMenus
     const pipeline = [{ $sort: { date: 1, version: -1 } },
       { $match: { restaurantId: restaurantId, date: { $gte: startDate, $lte: endDate } }},
-      { $group: { _id: "$dayId", doc_with_max_ver: { $first: "$$ROOT" } }},
+      { $group: { _id: "$date", doc_with_max_ver: { $first: "$$ROOT" } }},
       { $replaceWith: "$doc_with_max_ver" },
       { $sort: { date: 1 } }
     ];
@@ -78,7 +78,7 @@ export class v3MenusController {
     const menusForRange = await archiver.foods.aggregate<DatabaseMenu>(pipeline).toArray();
 
     const payload = menusForRange.map(Archiver.fromDatabaseMenu);
-    return apiResponse(res, 200, { ...payload });
+    return apiResponse(res, 200, { restaurantId, days: payload });
   }
 
   static async getMenuByDayId(req: Request, res: Response) {
@@ -111,7 +111,7 @@ export class v3MenusController {
     const restaurantId = res.locals.restaurantId;
     const pipeline = [{ $sort: { date: 1, version: -1 } },
       { $match: { restaurantId: restaurantId, week: { weekNumber: weekToQuery, year: currentYear }  }},
-      { $group: { _id: "$dayId", doc_with_max_ver: { $first: "$$ROOT" } }},
+      { $group: { _id: "$date", doc_with_max_ver: { $first: "$$ROOT" } }},
       { $replaceWith: "$doc_with_max_ver" },
       { $sort: { date: 1 } }
     ];

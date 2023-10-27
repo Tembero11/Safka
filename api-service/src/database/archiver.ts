@@ -1,6 +1,7 @@
 import { Collection, Db, ObjectId } from "mongodb";
 import { WeekMenu } from "../types";
 import { DatabaseMenu, DatabaseWeek, PublicDatabaseDayMenu, PublicDatabaseWeekMenu } from "./dbTypes";
+import { da } from "date-fns/locale";
 
 export class Archiver {
   _db: Db;
@@ -22,14 +23,17 @@ export class Archiver {
     };
   }
 
-  static fromDatabaseMenus(databaseMenu: DatabaseMenu[]): PublicDatabaseWeekMenu {
-    const days: PublicDatabaseDayMenu[] = databaseMenu.map((menu) => {
-      return Archiver.fromDatabaseMenu(menu);
-    });
+  static fromDatabaseMenus(databaseMenus: DatabaseMenu[]): PublicDatabaseWeekMenu | null {
+    // Handles empty menus which could be holidays, etc.
+    if (!databaseMenus.length) {
+      return null;
+    }
 
+    const days: PublicDatabaseDayMenu[] = databaseMenus.map(Archiver.fromDatabaseMenu);
+    
     return { 
-      restaurantId: databaseMenu[0].restaurantId, 
-      weekNumber: databaseMenu[0].week.weekNumber, 
+      restaurantId: databaseMenus[0].restaurantId, 
+      weekNumber: databaseMenus[0].week.weekNumber,
       days };
   }
 
@@ -77,6 +81,11 @@ export class Archiver {
 
       await this.foods.insertOne(menu);
     }
+  }
+
+  async hasMenusAfter(compareTo: Date) {
+    const menus = await this.foods.find<DatabaseMenu>({ date: { $gt: compareTo }}).limit(1).toArray();
+    return menus.length >= 1;
   }
 }
 

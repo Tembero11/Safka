@@ -15,6 +15,7 @@ api.get("/v3/restaurants", async (req, res) => {
 api.get("/v3/menu/:restaurantId", validateRestaurantId, v3MenusController.getRestaurantMenus);
 api.get("/v3/menu/:restaurantId/today", validateRestaurantId, v3MenusController.getTodayMenu);
 api.get("/v3/menu/:restaurantId/between", validateRestaurantId, validateDateRange, v3MenusController.getMenusBetweenDates);
+api.get("/v3/menu/:restaurantId/week/:weekNumber", validateRestaurantId, v3MenusController.getMenusByWeekNumber);
 api.get("/v3/menu/:restaurantId/:dayId", validateRestaurantId, v3MenusController.getMenuByDayId);
 
 

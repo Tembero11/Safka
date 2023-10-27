@@ -17,8 +17,8 @@ export async function load({ cookies }: PageServerLoadEvent): Promise<ServerLoad
 	const availableRestaurants = await fetchRestaurants(ApiUrl.v3_Restaurants);
 	// If we can't even get restaurants something is wrong.
 	// Just make foods null and effectively give up on showing data on the UI.
-	if (!availableRestaurants) {
-		throw error(500, "No available restaurants");
+	if (!availableRestaurants || !availableRestaurants.length) {
+		throw error(500, { message: "Ravintoloiden lataamisessa ilmeni ongelmia. Yritä pian uudelleen." });
 	}
 
 	const restaurant = idParseResult.success 
@@ -27,7 +27,7 @@ export async function load({ cookies }: PageServerLoadEvent): Promise<ServerLoad
 
 	const foods = await fetchFoods(ApiUrl.v3_Menu, restaurant.id);
 	if (!foods) {
-		throw error(404, "No menus");
+		throw error(404, { message: "Ruokalistojen lataamisessa ilmeni ongelmia. Yritä pian uudelleen." });
 	}
 
 	return {

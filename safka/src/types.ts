@@ -12,7 +12,8 @@ export type restaurantId = z.infer<typeof restaurantIdSchema>;
 export interface IRestaurant {
     id: restaurantId;
     name: string;
-    schoolName: string,
+	desc: string;
+    schoolName: string;
     url: string;
 }
 

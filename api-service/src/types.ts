@@ -2,7 +2,8 @@
 export interface IRestaurant {
     id: Restaurant;
     name: string;
-    schoolName: string,
+    desc: string;
+    schoolName: string;
     url: string;
 }
 

@@ -9,13 +9,12 @@ interface ServerLoadResult {
 }
 
 export async function load({ cookies }): Promise<ServerLoadResult> {
+	console.log("rerun", new Date())
 	const restaurantCookie = Number(cookies.get("restaurant"));
 	
 	const validCookie = restaurantIdSchema.safeParse(restaurantCookie);
 
 	const availableRestaurants = await fetchRestaurants(ApiUrl.v3_Restaurants);
-	// If we can't even get restaurants something is wrong.
-	// Just make foods null and effectively give up on showing data on the UI.
 	if (!availableRestaurants || !availableRestaurants.length) {
 		throw error(500, { message: "Ravintoloiden lataamisessa ilmeni ongelmia. Yritä pian uudelleen." });
 	}

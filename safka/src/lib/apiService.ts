@@ -2,7 +2,7 @@ import type { ApiUrl, DayMenu, IRestaurant, restaurantId } from "../types";
 import { addBusinessDays, isWeekend, nextMonday } from "date-fns";
 import { formatDate } from "./utils";
 
-export async function fetchRestaurants(url: ApiUrl): Promise<IRestaurant[] | null> {
+export async function fetchRestaurants(url: ApiUrl): Promise<IRestaurant[]> {
     try {
         const res = await fetch(url);
         if (!res.ok) {
@@ -13,7 +13,7 @@ export async function fetchRestaurants(url: ApiUrl): Promise<IRestaurant[] | nul
         const restaurants: IRestaurant[] = (await res.json()).restaurants;
         return restaurants;
     } catch (err) {
-        return null;
+        return [];
     }
 }
 

@@ -5,11 +5,11 @@
 	import DayBox from "./DayBox.svelte";
 	import DietChip from "./DietChip.svelte";
 	import RestaurantSwitcher from "./RestaurantSwitcher.svelte";
-	import { ApiUrl, restaurantIdSchema, type IRestaurant, type DayMenu } from "../types";
-	import { fetchFoods } from "$lib/apiService";
-    import { foods, restaurant } from "../lib/store";
+	import { invalidateAll } from "$app/navigation";
+	import type { IRestaurant } from "../types";
 
     export let data: PageData;
+    $: ({ availableRestaurants, restaurant, foods } = data);
 
     const dayNames = [
         "Maanantai",
@@ -23,12 +23,7 @@
 
     async function handleRestaurantSwitch(newRestaurant: IRestaurant) {
         Cookies.set("restaurant", newRestaurant.id.toString());
-        restaurant.set(newRestaurant);
-        
-        const newFoods = await fetchFoods(ApiUrl.v3_Menu, $restaurant.id);
-        foods.set(newFoods);
-
-        Cookies.set("restaurant", newRestaurant.id.toString());
+        invalidateAll()
     }
 </script>
 
@@ -39,11 +34,11 @@
 <article id="page">
     <div id="week-with-diets">
         <div id="week">
-            {#if !$foods.length}
+            {#if !foods.length}
                 <h2>No menus!</h2> 
             {:else}
-                {#key $foods}
-                {#each $foods as day}
+                {#key foods}
+                {#each foods as day}
                     <DayBox date={day.date} 
                             menu={day.menu} 
                             dayName={dayNames[day.dayId]} 
@@ -61,10 +56,10 @@
     </div>
 
     <div id="restaurant-switcher">
-        {#if $restaurant && data.availableRestaurants}
+        {#if restaurant && data.availableRestaurants}
             <RestaurantSwitcher 
                 on:switch={(e) => handleRestaurantSwitch(e.detail)}
-                currentRestaurant={$restaurant.id} 
+                currentRestaurant={restaurant.id} 
                 restaurants={data.availableRestaurants} />
         {/if}
     </div>

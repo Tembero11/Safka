@@ -1,3 +1,5 @@
 import { writable } from "svelte/store";
+import type { DayMenu, IRestaurant } from "../types";
 
-const cars = writable<string>("")
+export const restaurant = writable<IRestaurant>();
+export const foods = writable<DayMenu[]>();

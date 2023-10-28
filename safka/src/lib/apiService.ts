@@ -28,7 +28,7 @@ export async function fetchRestaurants(url: ApiUrl): Promise<IRestaurant[] | nul
  * @param restaurant - ID of restaurant where fetch() fetches the foods
  * @returns Week menu from API if fetch was succesful. Returns `null` if fetch wasn't succesful.
  */
-export async function fetchFoods(url: ApiUrl, restaurant: restaurantId): Promise<DayMenu[] | null> {
+export async function fetchFoods(url: ApiUrl, restaurant: restaurantId): Promise<DayMenu[]> {
     try {
         const baseline = isWeekend(new Date()) ? nextMonday(new Date()) : new Date();
         const startDate = formatDate(baseline);
@@ -36,7 +36,7 @@ export async function fetchFoods(url: ApiUrl, restaurant: restaurantId): Promise
 
         const res = await fetch(`${url}/${restaurant}/between?start=${startDate}&end=${endDate}`);
         if (!res.ok) {
-            return null
+            return []
         }
 
         const days: DayMenu[] = (await res.json()).days;
@@ -45,6 +45,6 @@ export async function fetchFoods(url: ApiUrl, restaurant: restaurantId): Promise
         return weekDays;
     } catch (err) {
         console.error(err)
-        return null;
+        return [];
     }
 }

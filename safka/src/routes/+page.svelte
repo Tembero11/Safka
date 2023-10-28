@@ -1,16 +1,15 @@
 <script lang="ts">
-	import { browser } from "$app/environment";
-	import { fetchFoods } from "$lib/apiService";
 	import { getTodaysIndex } from "$lib/utils";
-	import { ApiUrl, type IRestaurant, type restaurantId } from "../types";
+	import Cookies from "js-cookie";
 	import type { PageData } from "./$types";
 	import DayBox from "./DayBox.svelte";
 	import DietChip from "./DietChip.svelte";
 	import RestaurantSwitcher from "./RestaurantSwitcher.svelte";
-
+	import { ApiUrl, restaurantIdSchema, type IRestaurant, type DayMenu } from "../types";
+	import { fetchFoods } from "$lib/apiService";
+    import { foods, restaurant } from "../lib/store";
 
     export let data: PageData;
-    let currentRestaurant = data.restaurant;
 
     const dayNames = [
         "Maanantai",
@@ -23,12 +22,13 @@
     ];
 
     async function handleRestaurantSwitch(newRestaurant: IRestaurant) {
-        if (browser) {
-            data.foods = await fetchFoods(ApiUrl.v3_Menu, newRestaurant.id)
-            currentRestaurant = newRestaurant;
+        Cookies.set("restaurant", newRestaurant.id.toString());
+        restaurant.set(newRestaurant);
+        
+        const newFoods = await fetchFoods(ApiUrl.v3_Menu, $restaurant.id);
+        foods.set(newFoods);
 
-            document.cookie = `restaurant=${newRestaurant.id};samesite=strict`
-        }
+        Cookies.set("restaurant", newRestaurant.id.toString());
     }
 </script>
 
@@ -39,16 +39,18 @@
 <article id="page">
     <div id="week-with-diets">
         <div id="week">
-            {#if !data.foods}
+            {#if !$foods.length}
                 <h2>No menus!</h2> 
             {:else}
-                {#each data.foods as day}
+                {#key $foods}
+                {#each $foods as day}
                     <DayBox date={day.date} 
                             menu={day.menu} 
                             dayName={dayNames[day.dayId]} 
                             isToday={getTodaysIndex() === day.dayId}
                         />
                 {/each}
+                {/key}
             {/if}
         </div>
         <div id="diets">
@@ -59,13 +61,11 @@
     </div>
 
     <div id="restaurant-switcher">
-        {#if currentRestaurant && data.availableRestaurants}
-            {#key currentRestaurant}
-                <RestaurantSwitcher 
-                    on:change={(e) => handleRestaurantSwitch(e.detail)} 
-                    currentRestaurant={currentRestaurant.id} 
-                    restaurants={data.availableRestaurants} />
-            {/key}
+        {#if $restaurant && data.availableRestaurants}
+            <RestaurantSwitcher 
+                on:switch={(e) => handleRestaurantSwitch(e.detail)}
+                currentRestaurant={$restaurant.id} 
+                restaurants={data.availableRestaurants} />
         {/if}
     </div>
 </article>
@@ -74,7 +74,7 @@
 <style lang="scss">
     #page {
         display: flex;
-        justify-content: center;
+        justify-content: start;
         align-items: center;
         flex-direction: column;
 

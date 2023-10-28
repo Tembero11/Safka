@@ -7,7 +7,16 @@
 
 <script lang="ts">
 	import { isProduction } from "$lib/utils";
+    import { page } from "$app/stores";
 	import Preferences from "./Preferences.svelte";
+	import type { DayMenu, IRestaurant } from "../types";
+	import { writable } from "svelte/store";
+	import { foods, restaurant } from "$lib/store";
+
+    export let data;
+    
+    $: restaurant.set(data.restaurant);
+    $: foods.set(data.foods);
 
     let showPreferences: boolean | null; 
     $: showPreferences = null;
@@ -24,13 +33,14 @@
     <button class="material-symbols-rounded" data-type="icon" on:click={openPreferences}>settings</button>
 </nav>
 <main>
+    <p id="restaurant-desc">{$restaurant.desc}</p>
     <slot/>
 </main>
 <footer>
     <h3>Resources</h3>
     <ul>
         <li><a href="/">Source Code <span class="material-symbols-rounded">open_in_new</span></a></li>
-        <li><a href="/">API <span class="material-symbols-rounded">open_in_new</span></a></li>
+        <li><a href={$restaurant.url}>API <span class="material-symbols-rounded">open_in_new</span></a></li>
     </ul>
 </footer>
 

@@ -5,7 +5,7 @@
     export let restaurants: IRestaurant[];
     export let currentRestaurant: restaurantId;
 
-    const dispatch = createEventDispatcher<{change: IRestaurant}>();
+    const dispatch = createEventDispatcher<{switch: IRestaurant}>();
 
     const restaurantWidth = 118;
     const padding = 8;
@@ -17,7 +17,7 @@
     {#each restaurants as restaurant}
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <!-- svelte-ignore a11y-no-static-element-interactions -->
-        <div on:click={() => dispatch("change", restaurant)} data-selected={restaurant.id == currentRestaurant}>
+        <div on:click={() => dispatch("switch", restaurant)} data-selected={restaurant.id == currentRestaurant}>
             <span>{restaurant.name}</span>
         </div>
     {/each}

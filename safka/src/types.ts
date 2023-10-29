@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+export type Theme = "os" | "dark" | "light";
+
 export enum ApiUrl {
 	v2 = "http://localhost:5000/api/v2/menu",
 	v3_Menu = "http://localhost:5000/api/v3/menu",

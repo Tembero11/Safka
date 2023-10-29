@@ -1,9 +1,11 @@
 <script lang="ts">
 	import { createEventDispatcher } from "svelte";
 	import type { Theme } from "../types";
+	import { getSystemPreferenceTheme, systemPreferenceTheme } from "$lib/themes";
 
     export let previewUrl: string;
     export let isSelected: boolean;
+    export let representsSystemPreference = false;
     export let name: string;
 
     const dispatch = createEventDispatcher();
@@ -16,26 +18,31 @@
     role="button">
         <div style={`background-image: url(${previewUrl}); border-width: ${isSelected ? "5px" : "0"}`} class="preview" />
         <span>{name}</span>
+        {#if representsSystemPreference}
+            <span id="system-preference-suffix">
+                ({$systemPreferenceTheme === "dark" ? "Tumma" : "Vaalea"})
+            </span>
+        {/if}
 </div>
 
 <style lang="scss">
     .container {
-        position: relative;
         display: flex;
         justify-content: start;
         align-items: center;
         flex-direction: column;
-        text-align: center;
         gap: 10px;
         min-width: 180px;
         max-width: 180px;
-        background-color: var(--surface);
+        background-color: var(--on-secondary);
         color: var(--on-surface);
-        user-select: none;
         border-radius: 10px;
-        cursor: pointer;
-        transition: background-color 120ms;
-        padding: 10px;
+        transition: background-color .12s;
+
+        #system-preference-suffix {
+            font-weight: bold;
+            opacity: 0.75;
+        }
     }
 
     .preview {

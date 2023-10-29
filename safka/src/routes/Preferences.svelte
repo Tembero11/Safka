@@ -73,6 +73,7 @@
                 <ThemeSelectButton 
                     previewUrl={uiSystemPreferencePreview}
                     name="Järjestelmän oletus"
+                    representsSystemPreference={true}
                     isSelected={currentPendingTheme === "os"}
                     on:select={() => handleThemeSelect("os")}
                     />
@@ -174,6 +175,7 @@
     #preferences-content {
         .themes {
             display: flex;
+            gap: 20px;
             flex-direction: row;
         }
         

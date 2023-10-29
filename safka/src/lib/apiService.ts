@@ -32,7 +32,7 @@ export async function fetchFoods(url: ApiUrl, restaurant: restaurantId): Promise
     try {
         const baseline = isWeekend(new Date()) ? nextMonday(new Date()) : new Date();
         const startDate = formatDate(baseline);
-        const endDate = formatDate(addBusinessDays(baseline, 3));
+        const endDate = formatDate(addBusinessDays(baseline, 4));
 
         const res = await fetch(`${url}/${restaurant}/between?start=${startDate}&end=${endDate}`);
         if (!res.ok) {

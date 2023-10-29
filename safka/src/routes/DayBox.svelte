@@ -59,6 +59,7 @@
     }
 
     .date {
+        font-weight: bold;
         opacity: 0.65;
         text-align: center;
     }

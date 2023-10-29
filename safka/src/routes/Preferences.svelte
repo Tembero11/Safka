@@ -26,10 +26,14 @@
         isOpen = false;
     }
 
+    function saveAndClose() {
+        theme.set(currentPendingTheme);
+        close();
+    }
+
     function onKeyUp(e: KeyboardEvent) {
         if (e.key == "Enter") {
-            theme.set(currentPendingTheme);
-            close();
+            saveAndClose();
         }
 
         if (e.key == "Escape" || e.key == "Enter") {
@@ -92,8 +96,8 @@
                 <span>Paina <kbd>Enter</kbd> -näppäintä tallentaaksesi.</span>
             </div>
             <div id="preferences-buttons">
-                <button data-variant="secondary">Cancel</button>
-                <button data-variant="primary">Save</button>
+                <button data-variant="secondary" on:click={() => close()}>Cancel</button>
+                <button data-variant="primary" on:click={() => saveAndClose()} >Save</button>
             </div>
         </div>
     </form>

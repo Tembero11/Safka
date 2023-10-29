@@ -1,17 +1,22 @@
 <script lang="ts">
 	import { createEventDispatcher } from "svelte";
 	import type { Theme } from "../types";
+	import { theme } from "$lib/themes";
 
     export let previewUrl: string;
-    export let isSelected: boolean;
+    export let type: Theme;
     export let name: string;
 
     const dispatch = createEventDispatcher<{select: Theme}>();
 </script>
 
-<div class="container">
-    <div style={`background-image: url(${previewUrl});`} class="preview" />
-    <span>{name}</span>
+<div class="container" 
+    on:click={() => dispatch("select", type)} 
+    on:keypress={() => dispatch("select", type)} 
+    tabindex=0 
+    role="button">
+        <div style={`background-image: url(${previewUrl}); border-width: ${type === $theme} ? 1 : 0`} class="preview" />
+        <span>{name}</span>
 </div>
 
 <style lang="scss">
@@ -42,7 +47,9 @@
         box-sizing: border-box;
         background-size: cover;
         overflow: hidden;
-        border: 0 solid var(--primary);
+        border-width: 0;
+        border-style: solid;
+        border-color: var(--primary);
         transition: border 50ms;
     }
 </style>

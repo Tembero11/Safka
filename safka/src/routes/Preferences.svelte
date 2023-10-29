@@ -2,7 +2,7 @@
 	import { browser } from "$app/environment";
 	import { onDestroy, onMount } from "svelte";
 	import ThemeSelectButton from "./ThemeSelectButton.svelte";
-	import { theme } from "$lib/stores";
+	import { theme } from "$lib/themes";
     import uiLightPreview from "$lib/assets/ui_light.svg";
     import uiDarkPreview from "$lib/assets/ui_dark.svg";
     import uiSystemPreferencePreview from "$lib/assets/ui_system_preference.svg";
@@ -54,18 +54,21 @@
             <div class="themes">
                 <ThemeSelectButton 
                     previewUrl={uiSystemPreferencePreview}
-                    isSelected={$theme === "os"} 
+                    type="os"
                     name="Järjestelmän oletus"
+                    on:select={() => theme.set("os")}
                     />
                 <ThemeSelectButton 
                     previewUrl={uiLightPreview}
-                    isSelected={$theme === "light"} 
+                    type="light"
                     name="Vaalea Teema"
+                    on:select={(newTheme) => theme.set(newTheme.detail)}
                     />
                 <ThemeSelectButton 
                     previewUrl={uiDarkPreview}
-                    isSelected={$theme === "dark"} 
+                    type="dark"
                     name="Tumma Teema"
+                    on:select={(newTheme) => theme.set(newTheme.detail)}
                     />
             </div>
         </div>

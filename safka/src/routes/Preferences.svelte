@@ -1,6 +1,11 @@
 <script lang="ts">
 	import { browser } from "$app/environment";
 	import { onDestroy, onMount } from "svelte";
+	import ThemeSelectButton from "./ThemeSelectButton.svelte";
+	import { theme } from "$lib/stores";
+    import uiLightPreview from "$lib/assets/ui_light.svg";
+    import uiDarkPreview from "$lib/assets/ui_dark.svg";
+    import uiSystemPreferencePreview from "$lib/assets/ui_system_preference.svg";
 
     export let isOpen: boolean | null;
 
@@ -45,6 +50,24 @@
             <div class="divider"></div>
             <h3>Teema</h3>
             <p>Mukauta käyttöliittymän ulkonäköä</p>
+
+            <div class="themes">
+                <ThemeSelectButton 
+                    previewUrl={uiSystemPreferencePreview}
+                    isSelected={$theme === "os"} 
+                    name="Järjestelmän oletus"
+                    />
+                <ThemeSelectButton 
+                    previewUrl={uiLightPreview}
+                    isSelected={$theme === "light"} 
+                    name="Vaalea Teema"
+                    />
+                <ThemeSelectButton 
+                    previewUrl={uiDarkPreview}
+                    isSelected={$theme === "dark"} 
+                    name="Tumma Teema"
+                    />
+            </div>
         </div>
         <div id="preferences-actions">
             <div id="preferences-shortcuts">
@@ -128,6 +151,11 @@
     }
 
     #preferences-content {
+        .themes {
+            display: flex;
+            flex-direction: row;
+        }
+        
         overflow: auto;
         flex: 1;
     }

@@ -23,7 +23,9 @@
 
     async function handleRestaurantSwitch(newRestaurant: IRestaurant) {
         Cookies.set("restaurant", newRestaurant.id.toString());
-        invalidateAll()
+        // re-runs load and thus fetches everything new
+        // TODO: Cache menus for restaurants for a short period of time to avoid empty requesting.
+        invalidateAll() 
     }
 </script>
 

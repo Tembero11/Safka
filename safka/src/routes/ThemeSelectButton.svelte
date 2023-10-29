@@ -17,18 +17,20 @@
     tabindex=0 
     role="button">
         <div style={`background-image: url(${previewUrl}); border-width: ${isSelected ? "5px" : "0"}`} class="preview" />
-        <span>{name}</span>
-        {#if representsSystemPreference}
-            <span id="system-preference-suffix">
-                ({$systemPreferenceTheme === "dark" ? "Tumma" : "Vaalea"})
-            </span>
-        {/if}
-</div>
+        <div class="names">
+            <span>{name}</span>
+            {#if representsSystemPreference}
+                <span id="system-preference-suffix">
+                    ({$systemPreferenceTheme === "dark" ? "Tumma" : "Vaalea"})
+                </span>
+            {/if}
+        </div>
+       </div>
 
 <style lang="scss">
     .container {
         display: flex;
-        justify-content: start;
+        justify-content: space-evenly;
         align-items: center;
         flex-direction: column;
         gap: 10px;
@@ -38,6 +40,10 @@
         color: var(--on-surface);
         border-radius: 10px;
         transition: background-color .12s;
+
+        .names {
+            text-align: center;
+        }
 
         #system-preference-suffix {
             font-weight: bold;

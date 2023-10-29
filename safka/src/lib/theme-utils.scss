@@ -1,0 +1,23 @@
+@use "sass:selector";
+
+@mixin light() {
+  @media (prefers-color-scheme: light) {
+    :root[data-theme]:not(:root[data-theme=dark]):not(:root[data-theme=light]) {
+      @content;
+    }
+  }
+  :root[data-theme=light]{
+    @content;
+  }
+}
+
+@mixin dark() {
+  @media (prefers-color-scheme: dark) {
+    :root[data-theme]:not(:root[data-theme=dark]):not(:root[data-theme=light]) {
+      @content;
+    }
+  }
+  :root[data-theme=dark]{
+    @content;
+  }
+}

@@ -9,6 +9,8 @@
 	import { isProduction } from "$lib/utils";
     import { page } from "$app/stores";
 	import Preferences from "./Preferences.svelte";
+	import { browser } from "$app/environment";
+	import { onMount } from "svelte";
 
     let showPreferences: boolean | null; 
     $: showPreferences = null;
@@ -40,8 +42,11 @@
 
 
 <style lang="scss">
+    @use "sass:color";
+    @import "../lib/theme-utils.scss";
     @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@400;600;700;800;900&family=Montserrat:wght@700&display=swap');
-    :global(:root) {
+
+    @include light {
         --primary: #ff3535;
         --primary-variant: #ca2e2e;
         --on-primary: #fff;
@@ -57,6 +62,24 @@
         --on-surface-header: #262c30;
         --text-selection-foreground: #fff;
         --text-selection-background: #ff6767;
+    }
+
+    @include dark {
+        --primary: #fa3a3a;
+        --primary-variant: #ca2e2e;
+        --on-primary: white;
+        --background: #0e0f14;
+        --on-background-slight: #cfcfcf;
+        --on-background: white;
+        --on-background-header: white;
+        --surface: #251d22;
+        --surface-variant: #282426;
+        --on-surface: white;
+        --on-surface-header: white;
+        --text-selection-foreground: white;
+        --text-selection-background: #ff6767;
+        --tooltip-background: #4a4a4a;
+
     }
 
     :global(body) {
@@ -175,6 +198,11 @@
 
         background-color: var(--primary);
         color: var(--on-primary);
+
+        :root[data-theme=dark] {
+            $footer-background: #{'rgba(var(--color_rgb), 0.5)'};
+            background: linear-gradient($footer-background, var(--primary));
+        }
 
         ul {
             padding: 0;

@@ -1,17 +1,20 @@
 <script lang="ts">
 	import { browser } from "$app/environment";
-	import { onDestroy, onMount } from "svelte";
+	import { onDestroy, onMount, setContext } from "svelte";
 	import ThemeSelectButton from "./ThemeSelectButton.svelte";
 	import { theme } from "$lib/themes";
     import uiLightPreview from "$lib/assets/ui_light.svg";
     import uiDarkPreview from "$lib/assets/ui_dark.svg";
     import uiSystemPreferencePreview from "$lib/assets/ui_system_preference.svg";
+	import type { Theme } from "../types";
 
     export let isOpen: boolean | null;
 
     $: console.log("prefs", isOpen);
 
     let containerEl;
+
+    let currentPendingTheme: Theme = $theme;
 
     function onBgClick(e: any) {
         if (e.target.id == "preferences-container") {
@@ -24,7 +27,18 @@
     }
 
     function onKeyUp(e: KeyboardEvent) {
-        if (e.key == "Escape" || e.key == "Enter") close();
+        if (e.key == "Enter") {
+            theme.set(currentPendingTheme);
+            close();
+        }
+
+        if (e.key == "Escape" || e.key == "Enter") {
+            close();
+        }
+    }
+
+    function handleThemeSelect(newTheme: Theme) {
+        currentPendingTheme = newTheme;
     }
 
     onMount(() => {
@@ -54,21 +68,21 @@
             <div class="themes">
                 <ThemeSelectButton 
                     previewUrl={uiSystemPreferencePreview}
-                    type="os"
                     name="Järjestelmän oletus"
-                    on:select={() => theme.set("os")}
+                    isSelected={currentPendingTheme === "os"}
+                    on:select={() => handleThemeSelect("os")}
                     />
                 <ThemeSelectButton 
                     previewUrl={uiLightPreview}
-                    type="light"
                     name="Vaalea Teema"
-                    on:select={(newTheme) => theme.set(newTheme.detail)}
+                    isSelected={currentPendingTheme === "light"}
+                    on:select={() => handleThemeSelect("light")}
                     />
                 <ThemeSelectButton 
                     previewUrl={uiDarkPreview}
-                    type="dark"
                     name="Tumma Teema"
-                    on:select={(newTheme) => theme.set(newTheme.detail)}
+                    isSelected={currentPendingTheme === "dark"}
+                    on:select={() => handleThemeSelect("dark")}
                     />
             </div>
         </div>

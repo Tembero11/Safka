@@ -62,6 +62,7 @@
         --on-surface-header: #262c30;
         --text-selection-foreground: #fff;
         --text-selection-background: #ff6767;
+        --footer-background: var(--primary);
     }
 
     @include dark {
@@ -79,6 +80,7 @@
         --text-selection-foreground: white;
         --text-selection-background: #ff6767;
         --tooltip-background: #4a4a4a;
+        --footer-background: linear-gradient(var(--background), rgba(202,46,46, 0.4))
 
     }
 
@@ -196,13 +198,8 @@
         gap: 16px;
         box-sizing: border-box;
 
-        background-color: var(--primary);
         color: var(--on-primary);
-
-        :root[data-theme=dark] {
-            $footer-background: #{'rgba(var(--color_rgb), 0.5)'};
-            background: linear-gradient($footer-background, var(--primary));
-        }
+        background: var(--footer-background);
 
         ul {
             padding: 0;

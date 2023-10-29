@@ -9,6 +9,7 @@
 	import { isProduction } from "$lib/utils";
     import { page } from "$app/stores";
 	import Preferences from "./Preferences.svelte";
+	import { ApiUrl } from "../types";
 
     let showPreferences: boolean | null; 
     $: showPreferences = null;
@@ -29,10 +30,11 @@
     <slot/>
 </main>
 <footer>
-    <h3>Resources</h3>
+    <h3>Links</h3>
     <ul>
-        <li><a href="/">Source Code <span class="material-symbols-rounded">open_in_new</span></a></li>
-        <li><a href={$page.data.restaurant?.name ?? ""}>API <span class="material-symbols-rounded">open_in_new</span></a></li>
+        <li><a href="https://github.com/Tembero11/Safka">Source Code <span class="material-symbols-rounded">open_in_new</span></a></li>
+        <li><a href={ApiUrl.v3_Menu}>API <span class="material-symbols-rounded">open_in_new</span></a></li>
+        <li><a href={$page.data.restaurant?.url ?? ""}>Food Source <span class="material-symbols-rounded">open_in_new</span></a></li>
     </ul>
 </footer>
 
@@ -79,7 +81,6 @@
         --text-selection-background: #ff6767;
         --tooltip-background: #4a4a4a;
         --footer-background: linear-gradient(var(--background), rgba(202,46,46, 0.4))
-
     }
 
     :global(body) {

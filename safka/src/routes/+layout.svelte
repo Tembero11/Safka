@@ -9,8 +9,6 @@
 	import { isProduction } from "$lib/utils";
     import { page } from "$app/stores";
 	import Preferences from "./Preferences.svelte";
-	import { browser } from "$app/environment";
-	import { onMount } from "svelte";
 
     let showPreferences: boolean | null; 
     $: showPreferences = null;

@@ -88,7 +88,7 @@
         box-sizing: border-box;
         box-shadow: 17px 17px 32px rgba(0, 0, 0, .145), -17px -17px 32px rgba(0, 0, 0, .035);
 
-        background-color: var(--background);
+        background-color: var(--surface);
         color: var(--on-surface);
     }
 </style>

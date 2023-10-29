@@ -17,6 +17,10 @@
 		</style>
 		%sveltekit.head%
 	</head>
+	<script>
+		const theme = localStorage.getItem("theme") ?? "os";
+		document.documentElement.dataset.theme = theme;
+	</script>
 	<body data-sveltekit-preload-data="hover">
 		<div style="display: contents">%sveltekit.body%</div>
 	</body>

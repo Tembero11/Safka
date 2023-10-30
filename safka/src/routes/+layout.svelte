@@ -15,6 +15,10 @@
     $: showPreferences = null;
     function openPreferences() {
         showPreferences = true
+    } 
+
+    const parseDesc = (unparsedDesc: string) => {
+        return unparsedDesc.replaceAll("\n", "<br>");
     }
 
 </script>
@@ -26,7 +30,7 @@
     <button class="material-symbols-rounded" data-type="icon" on:click={openPreferences}>settings</button>
 </nav>
 <main>
-    <p id="restaurant-desc">{$page.data.restaurant?.desc ?? ""}</p>
+    <p id="restaurant-desc">{@html $page.data.restaurant?.desc ? parseDesc($page.data.restaurant?.desc) : ""}</p>
     <slot/>
 </main>
 <footer>

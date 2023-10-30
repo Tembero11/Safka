@@ -11,7 +11,7 @@ const RESTAURANTS: IRestaurant[] = [
   {
     id: Restaurant.Amistoteles,
     name: "Amistoteles",
-    desc: "Amistoteles-lounasravintolan helposti luettava\nruokalista netissä.",
+    desc: "Amistoteles-lounasravintolan\nhelposti luettava\nruokalista netissä.",
     schoolName: "Lemminkäisenkadun koulutalo",
     url: "https://www.turkuai.fi/turun-ammatti-instituutti/opiskelijalle/ruokailu-ja-ruokalistat/ruokalista-lemminkaisenkatu-vip"
   },

@@ -205,12 +205,20 @@
         background: var(--footer-background);
 
         ul {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
             padding: 0;
             margin: 0;
+
+            @media screen and (max-width: 404px) {
+                flex-direction: column;
+            }
         }
 
         li {
             display: inline-block;
+            white-space: nowrap;
             list-style-type: none;
             width: fit-content;
             user-select: none;

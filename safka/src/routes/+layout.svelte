@@ -43,11 +43,13 @@
             </a>
         </li>
         <li>
-            <a target="_blank" href={ApiUrl.v3_Menu}>API <img src={externalLink} alt="external-link-icon" />
+            <a target="_blank" href={ApiUrl.v3_Menu}>
+                API <img src={externalLink} alt="external-link-icon" />
             </a>
         </li>
         <li>
-            <a target="_blank" href={$page.data.restaurant?.url ?? ""}>Food Source <img src={externalLink} alt="external-link-icon"/>
+            <a target="_blank" href={$page.data.restaurant?.url ?? ""}>
+                Food Source <img src={externalLink} alt="external-link-icon"/>
             </a>
         </li>
     </ul>

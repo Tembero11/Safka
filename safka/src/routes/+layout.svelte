@@ -43,7 +43,7 @@
             </a>
         </li>
         <li>
-            <a target="_blank" href={ApiUrl.v3_Menu}>
+            <a target="_blank" href={`${ApiUrl.v3_Menu}/${$page.data.restaurant?.id}`}>
                 API <img src={externalLink} alt="external-link-icon" />
             </a>
         </li>

@@ -213,6 +213,7 @@
 
             @media screen and (max-width: 404px) {
                 flex-direction: column;
+                align-items: center;
             }
         }
 

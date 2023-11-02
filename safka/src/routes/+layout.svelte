@@ -10,6 +10,7 @@
     import { page } from "$app/stores";
 	import Preferences from "./Preferences.svelte";
 	import { ApiUrl } from "../types";
+    import externalLink from "../lib/assets/external-link.svg";
 
     let showPreferences: boolean | null; 
     $: showPreferences = null;
@@ -36,9 +37,19 @@
 <footer>
     <h3>Links</h3>
     <ul>
-        <li><a href="https://github.com/Tembero11/Safka">Source Code <span class="material-symbols-rounded">open_in_new</span></a></li>
-        <li><a href={ApiUrl.v3_Menu}>API <span class="material-symbols-rounded">open_in_new</span></a></li>
-        <li><a href={$page.data.restaurant?.url ?? ""}>Food Source <span class="material-symbols-rounded">open_in_new</span></a></li>
+        <li>
+            <a target="_blank" href="https://github.com/Tembero11/Safka">
+                Source Code <img src={externalLink} alt="external-link-icon" />
+            </a>
+        </li>
+        <li>
+            <a target="_blank" href={ApiUrl.v3_Menu}>API <img src={externalLink} alt="external-link-icon" />
+            </a>
+        </li>
+        <li>
+            <a target="_blank" href={$page.data.restaurant?.url ?? ""}>Food Source <img src={externalLink} alt="external-link-icon"/>
+            </a>
+        </li>
     </ul>
 </footer>
 
@@ -203,6 +214,13 @@
 
         color: var(--on-primary);
         background: var(--footer-background);
+
+        .link-icon {
+            display: inline-block;
+            background-image: url("../lib/assets/external-link.svg");
+            width: 32px;
+            height: 32px;
+        }
 
         ul {
             display: flex;

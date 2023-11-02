@@ -44,7 +44,7 @@
         align-items: center;
         gap: 16px;
 
-        width: 300px;
+        width: 320px;
         height: 450px;
 
         &[data-is-today=true] {
@@ -59,6 +59,8 @@
     }
 
     .date {
+        margin-top: auto;
+        padding: 12px;
         font-weight: bold;
         opacity: 0.65;
         text-align: center;

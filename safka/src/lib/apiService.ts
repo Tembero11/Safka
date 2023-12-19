@@ -1,5 +1,5 @@
 import type { ApiUrl, DayMenu, IRestaurant, restaurantId } from "../types";
-import { addBusinessDays, isWeekend, nextMonday } from "date-fns";
+import { addBusinessDays, isFriday, isWeekend, nextMonday } from "date-fns";
 import { formatDate } from "./utils";
 
 export async function fetchRestaurants(url: ApiUrl): Promise<IRestaurant[]> {
@@ -30,9 +30,10 @@ export async function fetchRestaurants(url: ApiUrl): Promise<IRestaurant[]> {
  */
 export async function fetchFoods(url: ApiUrl, restaurant: restaurantId): Promise<DayMenu[]> {
     try {
-        const baseline = isWeekend(new Date()) ? nextMonday(new Date()) : new Date();
+        const now = new Date()
+        const baseline = isWeekend(now) ? nextMonday(now) : now;
         const startDate = formatDate(baseline);
-        const endDate = formatDate(addBusinessDays(baseline, 4));
+        const endDate = formatDate(addBusinessDays(baseline, isFriday(baseline) ? 3 : 4));
 
         const res = await fetch(`${url}/${restaurant}/between?start=${startDate}&end=${endDate}`);
         if (!res.ok) {

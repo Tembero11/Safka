@@ -1,6 +1,6 @@
 import { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
-import { Diet } from "../components/DayBox";
+import DietChip from "../components/DietChip";
 import Week from "../components/Week";
 import getWeekMenu, { WeekMenu } from "../utils/getWeekMenu";
 
@@ -14,9 +14,9 @@ const Home: NextPage<{ menu: WeekMenu | null }> = ({menu}) => {
       <div style={{display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", minHeight: "80%", gap: 20}}>
         <Week menu={menu}/>
         <p id="letter-meanings">
-          <span><Diet>L</Diet>&nbsp; Laktoositon</span>
-          <span><Diet>M</Diet>&nbsp; Maidoton</span>
-          <span><Diet>G</Diet>&nbsp; Gluteeniton</span>
+          <span><DietChip>L</DietChip>&nbsp; Laktoositon</span>
+          <span><DietChip>M</DietChip>&nbsp; Maidoton</span>
+          <span><DietChip>G</DietChip>&nbsp; Gluteeniton</span>
         </p>
       </div>
     </>

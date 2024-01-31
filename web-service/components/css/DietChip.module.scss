@@ -1,0 +1,32 @@
+.diet {
+    position: relative;
+    display: inline-block;
+    background: var(--primary);
+    border-radius: 10px;
+    padding: 1px 4px;
+    font-size: small;
+    font-weight: bold;
+    color: white;
+    user-select: none;
+    cursor: pointer;
+}
+
+
+.diet-tooltip {
+    position: absolute;
+    top: -40px;
+    left: 50%;
+    transform: translateX(-50%) scale(0);
+    padding: 10px;
+    border-radius: 10px;
+    background: var(--tooltip-background);
+    user-select: none;
+    /* stylelint-disable-next-line color-function-notation */
+    box-shadow: 1px 1px 10px rgba(0, 0, 0, 7.5%);
+    transition: transform 100ms linear;
+}
+
+.diet:hover .diet-tooltip {
+    transform: translateX(-50%) scale(1);
+    transition: transform 200ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}

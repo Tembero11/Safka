@@ -1,7 +1,8 @@
 import { Fragment, useEffect, useState } from "react";
 import { toLocaleDateString } from "../utils/common";
-import { DayMenu, Weekday } from "../utils/getWeekMenu";
+import { DayMenu } from "../utils/getWeekMenu";
 import styles from "./css/DayBox.module.scss";
+import DietChip from "./DietChip";
 
 interface IProps {
   dayName: string;
@@ -41,9 +42,9 @@ export default function DayBox(props: IProps) {
                           <>
                             {index > 0 ? <>{" "}</> : null}
                             <span>{name}</span>
-                            {diets.isLactoseFree ? <>{" "}<Diet longName="Laktoositon">L</Diet></> : <></>}
-                            {diets.isDairyFree ? <>{" "}<Diet longName="Maidoton">M</Diet></> : <></>}
-                            {diets.isGlutenFree ? <>{" "}<Diet longName="Gluteeniton">G</Diet></> : <></>}
+                            {diets.isLactoseFree ? <>{" "}<DietChip longName="Laktoositon">L</DietChip></> : <></>}
+                            {diets.isDairyFree ? <>{" "}<DietChip longName="Maidoton">M</DietChip></> : <></>}
+                            {diets.isGlutenFree ? <>{" "}<DietChip longName="Gluteeniton">G</DietChip></> : <></>}
                           </>
                         );
                       })
@@ -62,11 +63,3 @@ export default function DayBox(props: IProps) {
   )
 }
 
-export function Diet(props: { children: string, longName?: string }) {
-  return (
-    <span className={styles.diet} style={{cursor: props.longName ? "pointer" : "default"}}>
-      {props.children}
-      {props.longName ? <div className={styles["diet-tooltip"]}>{props.longName}</div> : <></>}
-    </span>
-  )
-}
